@@ -1,7 +1,6 @@
 import sys
-sys.path.append('./../')
-sys.path.append('./../utils')
-sys.path.append('./../RAMBO')
+sys.path.append('./../models/')
+sys.path.append('./../phase/')
 import os
 
 import numpy as np

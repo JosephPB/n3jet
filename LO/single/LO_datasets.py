@@ -1,6 +1,7 @@
 import sys
-sys.path.append('./../')
-sys.path.append('./../utils/')
+sys.path.append('./../../utils/')
+sys.path.append('./../../phase/')
+sys.path.append('./../../models/')
 import os
 
 import numpy as np

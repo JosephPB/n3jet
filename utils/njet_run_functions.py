@@ -15,7 +15,11 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 #import njet
 import imp
-njet = imp.load_source('njet', os.path.join(os.path.dirname(__file__), '../../blha/njet.py'))
+NJET_DIR = '/mt/home/jbullock/njet-2.0.0/'
+sys.path.append(NJET_DIR)
+sys.path.append(NJET_DIR + '/examples/')
+
+njet = imp.load_source('njet', os.path.join(os.path.dirname(__file__), NJET_DIR + '/blha/njet.py'))
 
 OLP = njet.OLP
 
@@ -27,12 +31,12 @@ CCTEST = None
 NPOINTS = 10000000
 VIEW = 'NJ'
 if sys.platform.startswith('linux'):
-    LIBNJET = os.path.join(os.path.dirname(__file__), '../../.libs/libnjet2.so')
+    LIBNJET = os.path.join(os.path.dirname(__file__), NJET_DIR + '/.libs/libnjet2.so')
 elif sys.platform.startswith('darwin'):
-    LIBNJET = os.path.join(os.path.dirname(__file__), '../../.libs/libnjet2.dylib')
+    LIBNJET = os.path.join(os.path.dirname(__file__), NJET_DIR + '/libnjet2.dylib')
 else:
     print ("Warning: unknown system '%s'. Library will probably fail to load." % sys.platform)
-    LIBNJET = os.path.join(os.path.dirname(__file__), '../../.libs/libnjet2.dll')
+    LIBNJET = os.path.join(os.path.dirname(__file__), NJET_DIR + '/.libs/libnjet2.dll')
 
 factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]  # n!
 

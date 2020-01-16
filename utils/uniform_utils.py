@@ -1,7 +1,7 @@
 import argparse
 import sys
-sys.path.append('./../')
-sys.path.append('./../utils/')
+sys.path.append('./../models/')
+sys.path.append('./../phase/')
 import os
 
 import numpy as np
@@ -17,11 +17,8 @@ import multiprocessing
 from multiprocessing import Pool
 
 from njet_run_functions import *
-from model import Model
 from rambo_while import *
 from utils import *
-from uniform_utils import *
-
 from model import Model
 
 from keras.models import load_model
