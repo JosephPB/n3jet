@@ -29,6 +29,21 @@ ease of use and comparison.
 
 ## Usage
 
+### Requirements
+
+This package was written in Python 2 since the current NJet interface
+is not Python 3 compatible, although this should also be Python 3
+compatible.
+
+The user is expected to have downloaded and installed NJet.
+
+The `requirements.txt` should contain all remaining packages.
+
+**Note:** Every file in this directory should be internally references
+  with the only external reference pointing to you version of the NJet
+  home directory. Please change this in:
+  `n3jet/utils/njet_run_functions.py`.
+
 ### Structure
 
 The directory is structured as follows:
@@ -55,9 +70,12 @@ The directory is structured as follows:
 n3jet is designed to enable data generation suitable for machine
 learning models from NJet through a Python interface. Therefore, this
 package requires NJet to be installed, although does not require the
-use of additional package linkings. Currently, the code here is set up
-to work in with the main NJet directory being placed in parallel,
-i.e.` NJet` and `n3jet`should be in the same directory.
+use of additional package linkings.
+
+**Note:** Every file in this directory should be internally references
+  with the only external reference pointing to you version of the NJet
+  home directory. Please change this in:
+  `n3jet/utils/njet_run_functions.py`.
 
 Most of the functions interfacing with NJet have been taken and
 adapted from the `NJet/blha/njeyt.py` and  `NJet/examples/runtests.py`
