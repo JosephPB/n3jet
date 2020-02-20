@@ -2,8 +2,7 @@
 
 Neural Network NJet (n3jet) is a package to enable training and
 inference of neural networks using the NJet numerical matrix element
-calculation package. The package presented here accompanies the paper
-[to add].
+calculation package. The package presented here accompanies the paper [arXiv:2002.07516](https://arxiv.org/abs/2002.07516).
 
 Specifically, we aim to use neural networks as a multi-dimensional
 interpolation function for complex, high-multiplicity QCD processes at
