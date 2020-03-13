@@ -9,7 +9,10 @@ from njet_run_functions import *
 
 def run_njet(n_gluon, **kwargs):
     
+    run_accuracy = kwargs.get('run_accuracy', False)
     mur = kwargs.get('mur_factor', None)
+    
+    
     print (mur)
     t = 'NJ_4j_test'
     channel_name = 'eeqq'
@@ -35,7 +38,11 @@ def run_njet(n_gluon, **kwargs):
         mur = mur*707.1067811865476
         curtests[0]['test']['params']['mur'] = mur
         
-        
+    
+    # add error checking to order file
+    if run_accuracy == True:
+        curorder += '\nNJetReturnAccuracy yes'
+    
     #print (curtests[0]['test']['params']['mur'])
     
     curtests[0]['test']['data'] = \
