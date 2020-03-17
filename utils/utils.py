@@ -7,6 +7,58 @@ import time
 import pickle
 from njet_run_functions import *
 
+def run_njet_generic(process, aspow, aepow, **kwargs):
+    '''
+    :param process: 2D list of different lengths
+        process[0] = array of incoming particle MC numbers
+        process[1] = array of outgoing particle MC numbers
+    :param aspow: alpha_s power
+    :param awpow: alpha_e power
+    '''
+    
+    run_accuracy = kwargs.get('run_accuracy', False)
+    mur = kwargs.get('mur', None)
+    
+    process_in = process[0]
+    process_out = process[1]
+    
+    t = 'NJ_4j_test'
+    channel_name = 'eeqq'
+    channel_inc = process_in
+    channel_out = process_out
+    
+    mods, tests = action_run(t)
+    
+    curorder, curtests = run_tests(mods, tests)
+    
+    curtests[0]['test']['params']['aspow'] = aspow
+    curtests[0]['test']['params']['aepow'] = aepow
+    curtests[0]['test']['params']['ae'] = 1.
+    
+    if mur is not None:
+        mur = mur #*707.1067811865476 #91.188
+        curtests[0]['test']['params']['mur'] = mur
+        
+    
+    # add error checking to order file
+    if run_accuracy == True:
+        curorder += '\nNJetReturnAccuracy yes'
+        
+    curtests[0]['test']['data'] = \
+    [{'born': 0,
+      #'has_lc': False,
+      'inc': channel_inc,
+      'loop': 0,
+      'mcn': 1,
+      'name': channel_name,
+      'out': channel_out}]
+    
+    # pass the curtests to the run_bactj function which will run njet_init    
+    test_data, ptype, order = run_batch(curorder, curtests)
+    
+    return test_data, ptype, order
+
+
 def run_njet(n_gluon, **kwargs):
     
     run_accuracy = kwargs.get('run_accuracy', False)

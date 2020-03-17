@@ -285,7 +285,7 @@ def run_cc_test(mom, params, data):
         treevals = []
         for j in tqdm(range(npoints)):
             #print "... point %d ..." % j
-            ccvals = OLP.OLP_EvalSubProcess(mcn+1, mom[j], alphas=alphas, alpha=alpha, mur=mur, retlen=legs*(legs-1)/2)
+            #ccvals = OLP.OLP_EvalSubProcess(mcn+1, mom[j], alphas=alphas, alpha=alpha, mur=mur, retlen=legs*(legs-1)/2)
             treeval = OLP.OLP_EvalSubProcess(mcn+2, mom[j], alphas=alphas, alpha=alpha, mur=mur)
             born = treeval[0]
             treevals.append(treeval)
