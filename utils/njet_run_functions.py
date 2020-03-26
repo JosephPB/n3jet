@@ -15,7 +15,9 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 #import njet
 import imp
-NJET_DIR = '/mt/home/jbullock/njet-2.0.0/'
+NJET_DIR = '/mt/home/jbullock/njet/njet-develop/'
+# NJET_LIB = NJET_DIR + /.libs/
+NJET_LIB = '/mt/home/jbullock/local/lib/'
 sys.path.append(NJET_DIR)
 sys.path.append(NJET_DIR + '/examples/')
 
@@ -31,7 +33,7 @@ CCTEST = None
 NPOINTS = 10000000
 VIEW = 'NJ'
 if sys.platform.startswith('linux'):
-    LIBNJET = os.path.join(os.path.dirname(__file__), NJET_DIR + '/.libs/libnjet2.so')
+    LIBNJET = os.path.join(os.path.dirname(__file__), NJET_LIB + '/libnjet2.so')
 elif sys.platform.startswith('darwin'):
     LIBNJET = os.path.join(os.path.dirname(__file__), NJET_DIR + '/libnjet2.dylib')
 else:
@@ -49,9 +51,9 @@ BLHA1TwoCouplings       yes
 
 # changable
 #Extra NJetMultiPrec 2
-#Extra Precision 1e-2
+Extra Precision 1e-20
 Extra NJetPrintStats yes
-
+Extra NJetVectorClass yes
 # test-specific
 %s
 
@@ -80,16 +82,16 @@ def relerr(a, b):
         return abs(a-b)
 
 
-def out_vals(pref, norm1, val1, error):
+def out_vals(pref, norm1, val1, error, VIEW = VIEW):
     'Returns values'
     
     if VIEW == 'MC':
         vals = (pref, val1, error)
     else:
-        vals = (pref, val1/norm1, error)
+        vals = (pref, val1/norm1, error) # VIEW is set by default to 'NJ'
     return vals
     
-def pretty_print_results(p, j, params, rval, mode=None):
+def pretty_print_results(p, j, params, rval, mode=None, VIEW = VIEW):
     'Set up calculation of results'
     if mode is None:
         mode = params.get('mode', 'PLAIN')
@@ -105,9 +107,9 @@ def pretty_print_results(p, j, params, rval, mode=None):
         norm = born
 
     vals0 = out_vals("A0", 1, born,'NO ERROR')
-    vals1_2 = out_vals("A1_2", norm, ep2, ep2_err)
-    vals1_1 = out_vals("A1_1", norm, ep1, ep1_err)
-    vals1_0 = out_vals("A1_0", norm, ep0, ep0_err)
+    vals1_2 = out_vals("A1_2", norm, ep2, ep2_err, VIEW=VIEW)
+    vals1_1 = out_vals("A1_1", norm, ep1, ep1_err, VIEW=VIEW)
+    vals1_0 = out_vals("A1_0", norm, ep0, ep0_err, VIEW=VIEW)
     
     # NOTE: Now we output all accuracies without requiring DEBUG
     
@@ -177,7 +179,15 @@ def mom_dot(p1,p2):
     p_3 = p1[3]*p2[3]
     return p_0**2 - p_1**2 - p_2**2 - p_3**2
 
-def run_generic_test(mom, params, data, new_mur = None):
+def run_generic_test(mom, params, data, new_mur = None, VIEW = VIEW):
+    '''
+    :param mom: list of momenta
+    :param params: test_data[1]
+    :param data: test_data[2]
+    :param new_mur: new renormalisation scale
+    :param VIEW: 'NJ' for k-factor and 'MC' otherwise?
+    '''
+    
     alphas = params.get('as', 1.)
     alpha = params.get('ae', 1.)
     mur = params.get('mur', 1.)
@@ -224,7 +234,7 @@ def run_generic_test(mom, params, data, new_mur = None):
                     rval = get_vals(allmoms, mcn, alphas=alphas, alpha=alpha, mur=u)
                 else:
                     rval = get_vals(allmoms, mcn, alphas=alphas, alpha=alpha, mur=mur)
-                vals0, vals1_2, vals1_1, vals1_0 = pretty_print_results(p, j, params, rval)
+                vals0, vals1_2, vals1_1, vals1_0 = pretty_print_results(p, j, params, rval, VIEW = VIEW)
                 point_vals.append([vals0, vals1_2, vals1_1, vals1_0])
             
             ## check meaning of canonical list for a channel in has_chan_lc
@@ -406,7 +416,7 @@ def order_global(mod):
         order.append('Extra NJetRenormalize yes')
     else:
         order.append('Extra NJetRenormalize no')
-    order.append('Extra NJetNf %d' % mod.Nf)
+    #order.append('Extra SetParameter qcd(%d)' % mod.Nf)
     order.append(mod.extraorder)
     order = '\n'.join(order).rstrip(' \n')
     order = re.sub(r'\n\n+', r'\n', order)

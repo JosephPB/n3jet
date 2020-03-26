@@ -7,7 +7,37 @@ import time
 import pickle
 from njet_run_functions import *
 
-def run_njet_generic(process, aspow, aepow, **kwargs):
+known = {
+        21: (2, 2),
+        1: (2, 1),
+        2: (2, 1),
+        3: (2, 1),
+        4: (2, 1),
+        5: (2, 1),
+        # 6 : (2,1),  # skip the t-quark
+        22: (2, 0),
+        25: (1, 0),
+        11: (2, 0),
+        12: (2, 0),
+        13: (2, 0),
+        14: (2, 0),
+        15: (2, 0),
+        16: (2, 0),
+    }
+# helicity dof's and colour dof's (0 - singlet, 1 - fundamental, 2 - adjoint)
+
+def get_alpha_powers(process_in, process_out):
+    full = process_in + process_out
+
+    aspow = sum(known[abs(p)][1] != 0 for p in full) - 2
+    aepow = len(full) - (aspow + 2)
+
+    print ('AlphasPower = {}, AlphaPower = {}'.format(aspow, aepow))
+
+
+    return aspow, aepow
+
+def run_njet_generic(process, **kwargs):
     '''
     :param process: 2D list of different lengths
         process[0] = array of incoming particle MC numbers
@@ -30,6 +60,8 @@ def run_njet_generic(process, aspow, aepow, **kwargs):
     mods, tests = action_run(t)
     
     curorder, curtests = run_tests(mods, tests)
+
+    aspow, aepow = get_alpha_powers(process_in, process_out)
     
     curtests[0]['test']['params']['aspow'] = aspow
     curtests[0]['test']['params']['aepow'] = aepow

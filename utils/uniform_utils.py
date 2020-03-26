@@ -39,10 +39,10 @@ def generate_LO_njet(momenta, test_data):
         
     return NJ_treevals 
 
-def generate_NLO_njet(momenta, test_data):
+def generate_NLO_njet(momenta, test_data, VIEW = 'NJ', k = True):
     NJ_loop_vals = []
     for i in test_data:
-        vals = run_generic_test(momenta, i[1], i[2])
+        vals = run_generic_test(momenta, i[1], i[2], VIEW = VIEW)
         NJ_loop_vals.append(vals)
     
     # select the first test of the runs
@@ -66,9 +66,12 @@ def generate_NLO_njet(momenta, test_data):
         
     NJ_treevals = np.array(A0)
     A1_0 = np.array(A1_0)
-    k_factor = A1_0/NJ_treevals
-    
-    return k_factor, NJ_loop_vals
+
+    if k == True:
+        k_factor = A1_0/NJ_treevals
+        return k_factor, NJ_loop_vals
+    else:
+        return A1_0, NJ_loop_vals
     
 
 def generate_NLO_njet_multiprocess_1(momenta):
