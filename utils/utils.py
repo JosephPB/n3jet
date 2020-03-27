@@ -92,6 +92,9 @@ def run_njet_generic(process, **kwargs):
 
 
 def run_njet(n_gluon, **kwargs):
+    '''
+    Run function for njet initilisation specifically designed for e+e-->q\bar{q} + jets
+    '''
     
     run_accuracy = kwargs.get('run_accuracy', False)
     mur = kwargs.get('mur_factor', None)

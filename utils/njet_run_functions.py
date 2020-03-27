@@ -51,7 +51,7 @@ BLHA1TwoCouplings       yes
 
 # changable
 #Extra NJetMultiPrec 2
-Extra Precision 1e-20
+#Extra Precision 1e-20
 Extra NJetPrintStats yes
 Extra NJetVectorClass yes
 # test-specific
