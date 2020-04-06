@@ -15,9 +15,9 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 #import njet
 import imp
-NJET_DIR = '/mt/home/jbullock/njet/njet-develop/'
-# NJET_LIB = NJET_DIR + /.libs/
-NJET_LIB = '/mt/home/jbullock/local/lib/'
+NJET_DIR = '/mt/home/jbullock/njet-2.0.0/'
+NJET_LIB = NJET_DIR + '/.libs/'
+#NJET_LIB = '/mt/home/jbullock/local/lib/'
 sys.path.append(NJET_DIR)
 sys.path.append(NJET_DIR + '/examples/')
 
