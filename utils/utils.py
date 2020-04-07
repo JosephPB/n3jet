@@ -146,6 +146,21 @@ def run_njet(n_gluon, **kwargs):
     
     return test_data, ptype, order
 
+
+def load_momenta(data_dir, file):
+    momenta = np.load(data_dir + file, allow_pickle = True)
+    return momenta
+
+def save_momenta(data_dir, file, momenta):
+    np.save(data_dir + file + '.npy', momenta, allow_pickle = True)
+
+def load_njet(data_dir, file):
+    njet = np.load(data_dir + file, allow_pickle = True)
+    return njet
+
+def save_njet(data_dir, file, njet):
+    np.save(data_dir + file + '.npy', njet, allow_pickle = True)
+
 def cs(test_momenta_array, NJ_test, y_pred):
     '''
     Calculate cross section and MC errors

@@ -15,9 +15,9 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 #import njet
 import imp
-NJET_DIR = '/mt/home/jbullock/njet-2.0.0/'
-NJET_LIB = NJET_DIR + '/.libs/'
-#NJET_LIB = '/mt/home/jbullock/local/lib/'
+NJET_DIR = '/mt/home/jbullock/njet/njet-develop/'
+#NJET_LIB = NJET_DIR + '/.libs/'
+NJET_LIB = '/mt/home/jbullock/local/lib/'
 sys.path.append(NJET_DIR)
 sys.path.append(NJET_DIR + '/examples/')
 
@@ -32,7 +32,7 @@ SLCTEST = None
 CCTEST = None
 NPOINTS = 10000000
 VIEW = 'NJ'
-if sys.platform.startswith('linux'):
+if sys.platform.startswith('linux'):         
     LIBNJET = os.path.join(os.path.dirname(__file__), NJET_LIB + '/libnjet2.so')
 elif sys.platform.startswith('darwin'):
     LIBNJET = os.path.join(os.path.dirname(__file__), NJET_DIR + '/libnjet2.dylib')
@@ -43,7 +43,7 @@ else:
 factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]  # n!
 
 
-# Create order file form scratch -> contract file generated automatically
+# Create order file form scratch -> co3ntract file generated automatically   
 ORDER_TPL = """
 # fixed
 CorrectionType          QCD
