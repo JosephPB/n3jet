@@ -1,5 +1,6 @@
 # OLE_order for diphoton production
 
+#InterfaceVersion        BLHA2
 AmplitudeType           loopsq
 CorrectionType          QCD
 IRregularisation        CDR

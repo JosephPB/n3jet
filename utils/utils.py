@@ -147,15 +147,21 @@ def run_njet(n_gluon, **kwargs):
     return test_data, ptype, order
 
 
-def load_momenta(data_dir, file):
-    momenta = np.load(data_dir + file, allow_pickle = True)
+def load_momenta(data_dir, file, python_3 = False):
+    if python_3 == True:
+        momenta = np.load(data_dir + file, allow_pickle = True, encoding='latin1')
+    else:
+        momenta = np.load(data_dir + file, allow_pickle = True)
     return momenta
 
 def save_momenta(data_dir, file, momenta):
     np.save(data_dir + file + '.npy', momenta, allow_pickle = True)
 
-def load_njet(data_dir, file):
-    njet = np.load(data_dir + file, allow_pickle = True)
+def load_njet(data_dir, file, python_3 = False):
+    if python_3 == True:
+        njet = np.load(data_dir + file, allow_pickle = True, encoding='latin1')
+    else:
+        njet = np.load(data_dir + file, allow_pickle = True)
     return njet
 
 def save_njet(data_dir, file, njet):

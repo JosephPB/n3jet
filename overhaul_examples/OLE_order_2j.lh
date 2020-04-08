@@ -1,6 +1,6 @@
 # OLE_order for 2jet production
 
-AmplitudeType           tree
+AmplitudeType           loop
 CorrectionType          QCD
 IRregularisation        CDR
 AlphasPower             2
