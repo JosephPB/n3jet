@@ -26,7 +26,7 @@ print ( "  NJet: simple example of the BLHA interface")
 
 olp = njet.OLP()
 
-status = njet_init(contract_file)
+status = olp.OLP_Start(contract_file)
 
 if status == True:
     print ("OLP read in correctly")
