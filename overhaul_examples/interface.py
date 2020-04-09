@@ -9,10 +9,108 @@ sys.path.append(global_dict['NJET_BLHA'])
 sys.path.append(global_dict['N3JET_BASE'] + '/phase/')
 sys.path.append(global_dict['N3JET_BASE'] + '/utils/')
 
-#from ctypes import c_int, c_double, c_char_p, POINTER
-
 import numpy as np
-from njet_run_functions import *
+import argparse
+
+from rambo_while import generate
+import njet
+
+parser = argparse.ArgumentParser(description='NJet Python interface for single process BLHA files')
+
+parser.add_argument(
+    '--order',
+    dest='order',
+    help='name of order file',
+    type=str
+)
+
+parser.add_argument(
+    '--contract',
+    dest='contract',
+    help='name of contract file, default: None',
+    type=str
+)
+
+parser.add_argument(
+    '--proc_order',
+    dest='proc_order',
+    help='process order file to create contract file and save in same directory as order file, default: False',
+    type=str,
+)
+
+parser.add_argument(
+    '-mom',
+    dest='mom_file',
+    help='momenta file',
+    type=str,
+)
+
+parser.add_argument(
+    '-generate_mom',
+    dest='generate_mom',
+    help='generate momenta file even if it already exists, default: False',
+    type=str,
+)
+
+parser.add_argument(
+    '-nj_file',
+    dest='nj_file',
+    help='NJet file',
+    type=str,
+)
+
+parser.add_argument(
+    '-generate_nj',
+    dest='generate_nj',
+    help='generate NJet file even if it already exists, default: False',
+    type=str,
+)
+
+args = parser.parse_args()
+
+order_file = args.order
+contract_file = args.contract
+proc_order = args.proc_order
+mom_file = args.mom_file
+generate_mom = args.generate_mom
+nj_file = args.nj_file
+generate_nj = args.generate_nj
+
+def convert_bool(variable_name, variable):
+    if variable == 'True':
+        variable = True
+    elif variable == 'False':
+        variable = False
+    else:
+        raise ValueError('{} must either take on the value of True or False'.format(variable_name))
+
+convert_bool('proc_order', proc_order)
+    
+if contract == 'None':
+    contract = None
+
+if proc_order == False and contract == None:
+    raise ValueError('in order for contract to be None, proc_order must be set to True')
+
+convert_bool('generate_mom', generate_mom)
+
+convert_bool('generate_nj', generate_nj)
+
+
+###########################  Up tp here #################################
+# TODO
+# Work out some more arguments
+# Parse AmplitudeType
+# Parse process
+# Add BLHA 1 or 2 flag
+# Work out corret output type
+### Add options for:
+######### full array
+######### just finitie part (or tree)
+######### drop epsilon
+# Think about implementing accuracy
+# Think about how much can be parsed from order and contract file
+
 
 contract_file = 'OLE_contract_diphoton.lh'
 mom_data_dir = './'
@@ -24,7 +122,7 @@ njet_file = 'ex_diphoton_njet'
 
 print ( "  NJet: simple example of the BLHA interface")
 
-olp = njet.OLP()
+olp = njet.OLP
 
 status = olp.OLP_Start(contract_file)
 
@@ -32,6 +130,17 @@ if status == True:
     print ("OLP read in correctly")
 else:
     print ("seems to be a problem with the contract file...")
+
+
+momenta = generate(4,100,1000.,0.01)
+momenta = momenta.tolist()
+
+#test = momenta[0]
+
+#test = [[0.5000000000000000E+03,  0.0000000000000000E+00,  0.0000000000000000E+00,  0.5000000000000000E+03],
+#      [0.5000000000000000E+03,  0.0000000000000000E+00,  0.0000000000000000E+00, -0.5000000000000000E+03],
+#      [0.4999999999999998E+03,  0.1109242844438328E+03,  0.4448307894881214E+03, -0.1995529299308788E+03],
+#      [0.5000000000000000E+03, -0.1109242844438328E+03, -0.4448307894881214E+03,  0.1995529299308787E+03]]
 
 test =  [[5.0000000000000000E+00,0.0000000000000000E+00,0.0000000000000000E+00,5.0000000000000000E+00],
         [5.0000000000000000E+00,0.0000000000000000E+00,0.0000000000000000E+00,-5.0000000000000000E+00],
@@ -43,7 +152,13 @@ test =  [[5.0000000000000000E+00,0.0000000000000000E+00,0.0000000000000000E+00,5
 mur = 91.188
 alphas = 0.118
 alpha = 1./137.035999084
+#alpha = 1.
 
-rval = olp.OLP_EvalSubProcess(1, test, mur=mur,retlen=11)
+olp.OLP_SetParameter(alpha=alpha,alphas=alphas,set_alpha=True)
+
+acc = 0
+rval = olp.OLP_EvalSubProcess2(1, test, mur, retlen=11, acc=acc)
+
+#rval = olp.OLP_EvalSubProcess(1, test, mur=mur, alpha=alpha, alphas=alphas, retlen=11)
 
 print (rval)

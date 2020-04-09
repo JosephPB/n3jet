@@ -17,7 +17,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 import imp
 NJET_DIR = '/mt/home/jbullock/njet/njet-develop/'
 #NJET_LIB = NJET_DIR + '/.libs/'
-NJET_LIB = '/mt/home/jbullock/local/lib/'
+NJET_LIB = '/mt/home/jbullock/local/njet_diphoton/lib/'
 sys.path.append(NJET_DIR)
 sys.path.append(NJET_DIR + '/examples/')
 
@@ -27,7 +27,7 @@ OLP = njet.OLP
 
 import testdata #folder containing testdata - TODO: No not require this data and should be able to custom input
 
-DEBUG = False
+ DEBUG = False
 SLCTEST = None
 CCTEST = None
 NPOINTS = 10000000
