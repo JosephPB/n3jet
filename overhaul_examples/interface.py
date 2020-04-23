@@ -268,6 +268,7 @@ print ('Momenta success')
 
 
 ## NJet ##
+rvals = []
 if blha == 2:
     print ('Using BLHA2')
     olp.OLP_SetParameter(alpha=alpha,alphas=alphas,set_alpha=True)
@@ -280,6 +281,7 @@ if blha == 2:
     else:
         for momentum in tqdm(momenta):
             rval = olp.OLP_EvalSubProcess2(1, momentum, mur, retlen=11, acc=acc)
+            rvals.append(rval)
 else:
     print ('Using BLHA1')
     if debug == True:
@@ -289,19 +291,37 @@ else:
     else:
         for momentum in tqdm(momenta):
             rval = olp.OLP_EvalSubProcess(1, momentum, mur=mur, alpha=alpha, alphas=alphas, retlen=11)
-
+            rvals.append(rval)
 print ('NJet successully run and points generated')
 
 ## Saving NJet ##
 if amp_type == 'tree':
     if debug == True:
         print ("Tree    : {}".format(rval[0]))
+    else:
+        print ("Formatting and cleaning output")
+        output = []
+        for i in tqdm(rvals):
+            output.append(i[0])
+        np.save(nj_file, output, allow_pickle=True)
 elif amp_type == 'loop':
     if debug == True:
         print ("Tree    : {}".format(rval[3]))
         print ("Loop(-2): {}".format(rval[0]))
         print ("Loop(-1): {}".format(rval[1]))
         print ("Loop(0) : {}".format(rval[2]))
+    else:
+        print ("Formatting and cleaning output")
+        output = []
+        for i in tqdm(rvals):
+            to_add = []
+            # Currently 3rd entry is the accuracy which we are not recording if debug = False
+            to_add.append(['A0',   rval[3]])
+            to_add.append(['A1_2', rval[0]])
+            to_add.append(['A1_1', rval[1]])
+            to_add.append(['A1_0', rval[2]])
+            output.append(to_append)
+            np.save(nj_file, output, allow_pickle=True)
 elif amp_type == 'loopsq':
     if debug == True:
         print ("Loop(-4): {}".format(rval[0]))
@@ -309,6 +329,19 @@ elif amp_type == 'loopsq':
         print ("Loop(-2): {}".format(rval[2]))
         print ("Loop(-1): {}".format(rval[3]))
         print ("Loop(0) : {}".format(rval[4]))
+    else:
+        print ("Formatting and cleaning output")
+        output = []
+        for i in tqdm(rvals):
+            to_add = []
+            # Currently 3rd entry is the accuracy which we are not recording if debug = False
+            to_add.append(['A1_4', rval[0]])
+            to_add.append(['A1_3', rval[1]])
+            to_add.append(['A1_2', rval[2]])
+            to_add.append(['A1_1', rval[3]])
+            to_add.append(['A1_0', rval[4]])
+            output.append(to_append)
+            np.save(nj_file, output, allow_pickle=True)
         
 
 
