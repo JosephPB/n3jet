@@ -301,8 +301,8 @@ if amp_type == 'tree':
     else:
         print ("Formatting and cleaning output")
         output = []
-        for i in tqdm(rvals):
-            output.append(i[0])
+        for rval in tqdm(rvals):
+            output.append(rval[0])
         np.save(nj_file, output, allow_pickle=True)
 elif amp_type == 'loop':
     if debug == True:
@@ -313,14 +313,14 @@ elif amp_type == 'loop':
     else:
         print ("Formatting and cleaning output")
         output = []
-        for i in tqdm(rvals):
+        for rval in tqdm(rvals):
             to_add = []
             # Currently 3rd entry is the accuracy which we are not recording if debug = False
             to_add.append(['A0',   rval[3]])
             to_add.append(['A1_2', rval[0]])
             to_add.append(['A1_1', rval[1]])
             to_add.append(['A1_0', rval[2]])
-            output.append(to_append)
+            output.append(to_add)
             np.save(nj_file, output, allow_pickle=True)
 elif amp_type == 'loopsq':
     if debug == True:
@@ -332,7 +332,7 @@ elif amp_type == 'loopsq':
     else:
         print ("Formatting and cleaning output")
         output = []
-        for i in tqdm(rvals):
+        for rval in tqdm(rvals):
             to_add = []
             # Currently 3rd entry is the accuracy which we are not recording if debug = False
             to_add.append(['A1_4', rval[0]])
@@ -340,7 +340,7 @@ elif amp_type == 'loopsq':
             to_add.append(['A1_2', rval[2]])
             to_add.append(['A1_1', rval[3]])
             to_add.append(['A1_0', rval[4]])
-            output.append(to_append)
+            output.append(to_add)
             np.save(nj_file, output, allow_pickle=True)
         
 
