@@ -175,7 +175,7 @@ if contract_file == 'None':
 if nlegs == 'None':
     nlegs = None
     
-if proc_order == False and contract == None:
+if proc_order == False and contract_file == None:
     raise ValueError('in order for contract to be None, proc_order must be set to True')
 
 
@@ -293,6 +293,11 @@ else:
             rval = olp.OLP_EvalSubProcess(1, momentum, mur=mur, alpha=alpha, alphas=alphas, retlen=11)
             rvals.append(rval)
 print ('NJet successully run and points generated')
+
+
+im_nj_file = nj_file.split('.')[0] + '_intermediate.' + nj_file.split('.')[1]
+
+np.save(im_nj_file, rvals, allow_pickle=True)
 
 ## Saving NJet ##
 if amp_type == 'tree':
