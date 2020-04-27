@@ -1,9 +1,0 @@
-# OLE_order for 2jet production
-
-AmplitudeType           loop
-CorrectionType          QCD
-IRregularisation        CDR
-AlphasPower             2
-
-# process list
-21 21 -> 21 21
