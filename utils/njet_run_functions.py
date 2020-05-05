@@ -27,7 +27,7 @@ OLP = njet.OLP
 
 import testdata #folder containing testdata - TODO: No not require this data and should be able to custom input
 
- DEBUG = False
+DEBUG = False
 SLCTEST = None
 CCTEST = None
 NPOINTS = 10000000

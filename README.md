@@ -1,5 +1,7 @@
 # n3jet
 
+**Note:** For use of the generaic NJet python interface see `NJet_interface/` directory.
+
 Neural Network NJet (n3jet) is a package to enable training and
 inference of neural networks using the NJet numerical matrix element
 calculation package. The package presented here accompanies the paper [arXiv:2002.07516](https://arxiv.org/abs/2002.07516).
