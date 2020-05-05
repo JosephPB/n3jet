@@ -184,6 +184,54 @@ def train_near_networks(pairs, near_momenta, NJ_split, order, n_gluon, delta_nea
         
     return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
 
+
+def train_near_networks_general(input_size, pairs, near_momenta, NJ_split, delta_near, model_dir = '', all_jets=False, **kwargs):
+    '''
+    Train 'near' networks on pairs of jets
+    '''
+    
+    lr = kwargs.get('lr', 0.001)
+    layers = kwargs.get('layers', [20,40,20])
+    print ('Using learning rate {}'.format(lr))
+    epochs = kwargs.get('epochs', 1000000)
+    
+    if type(near_momenta) != list:
+        raise AssertionError('Momentum must be in the form of a list')
+    
+    NN_near = []
+    model_near = []
+    
+    x_mean_near = []
+    x_std_near = []
+    y_mean_near = []
+    y_std_near = []
+    for idx,i in enumerate(pairs):
+        NN = Model(input_size,near_momenta, NJ_split[idx], all_jets)
+        
+        model, x_mean, x_std, y_mean, y_std = NN.fit(layers=layers, lr=lr, epochs=epochs)
+        
+        NN_near.append(NN)
+        model_near.append(model)
+        x_mean_near.append(x_mean)
+        x_std_near.append(x_std)
+        y_mean_near.append(y_mean)
+        y_std_near.append(y_std)
+        
+        
+        if model_dir != '':
+            pair_dir = model_dir + 'pair_{}_{}'.format(delta_near,idx)
+        
+            if os.path.exists(pair_dir) == False:
+                os.mkdir(pair_dir)
+            
+            model.save(pair_dir + '/model')
+            metadata = {'x_mean': x_mean, 'x_std': x_std, 'y_mean': y_mean, 'y_std': y_std}
+            pickle_out = open(pair_dir + "/dataset_metadata.pickle","wb")
+            pickle.dump(metadata, pickle_out)
+            pickle_out.close()
+        
+    return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
+
 def train_network(moms, labs, n_gluon, layers, lr, models, x_means, x_stds, y_means, y_stds, indices, index):
     NN = Model((n_gluon+2-1)*4,moms,labs)
     model, x_mean, x_std, y_mean, y_std = NN.fit(layers=[20,40,20], lr=lr)
@@ -242,6 +290,34 @@ def multiprocess_train_near_networks(pairs, near_momenta, NJ_split, order, n_glu
             pickle_out.close()
     
     
+def get_near_networks_general(NN, pairs, delta_near, model_dir):
+    '''
+    Retrieve the near networks given the assigned file structure
+    '''
+    model_near = []
+
+    x_mean_near = []
+    x_std_near = []
+    y_mean_near = []
+    y_std_near = []
+    for idx,i in enumerate(pairs):
+        
+        pair_dir = model_dir + 'pair_{}_{}'.format(delta_near,idx)
+        
+        model = load_model(pair_dir + '/model',custom_objects={'root_mean_squared_error':NN.root_mean_squared_error})
+        model_near.append(model)
+        pickle_out = open(pair_dir + "/dataset_metadata.pickle","rb")
+        metadata = pickle.load(pickle_out)
+        pickle_out.close()
+        
+        x_mean_near.append(metadata['x_mean'])
+        y_mean_near.append(metadata['y_mean'])
+        x_std_near.append(metadata['x_std'])
+        y_std_near.append(metadata['y_std'])
+        
+    return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
+
+
 
 def get_near_networks(NN, pairs, order, n_gluon, delta_near, points, model_dir):
     '''
@@ -278,6 +354,29 @@ def get_near_networks(NN, pairs, order, n_gluon, delta_near, points, model_dir):
         
     return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
 
+
+def train_cut_network_general(input_size, cut_momenta, NJ_cut, delta_near, model_dir = '', all_jets = False, **kwargs):
+    
+    lr = kwargs.get('lr', 0.001)
+    
+    NN_cut = Model(input_size,cut_momenta,NJ_cut, all_jets)
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=[16,32,16], lr=lr)
+    
+    if model_dir != '':
+        cut_dir = model_dir + 'cut_{}'.format(delta_near)
+        
+        if os.path.exists(cut_dir) == False:
+            os.mkdir(cut_dir)
+        
+        model_cut.save(cut_dir + '/model')
+        metadata = {'x_mean': x_mean_cut, 'x_std': x_std_cut, 'y_mean': y_mean_cut, 'y_std': y_std_cut}
+        
+        pickle_out = open(cut_dir + '/dataset_metadata.pickle',"wb")
+        pickle.dump(metadata, pickle_out)
+        pickle_out.close()
+    
+    return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
+
 def train_cut_network(cut_momenta, NJ_cut,order, n_gluon, delta_cut, points, model_dir = '', **kwargs):
     
     lr = kwargs.get('lr', 0.001)
@@ -297,6 +396,24 @@ def train_cut_network(cut_momenta, NJ_cut,order, n_gluon, delta_cut, points, mod
         pickle_out.close()
     
     return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
+
+def get_cut_network_general(NN, delta_near, model_dir):
+
+    cut_dir = model_dir + 'cut_{}'.format(delta_near)
+    
+    model_cut = load_model(cut_dir + '/model',custom_objects={'root_mean_squared_error':NN.root_mean_squared_error})
+    
+    pickle_out = open(cut_dir + '/dataset_metadata.pickle',"rb")
+    metadata = pickle.load(pickle_out)
+    pickle_out.close()
+    
+    x_mean_cut = (metadata['x_mean'])
+    y_mean_cut = (metadata['y_mean'])
+    x_std_cut = (metadata['x_std'])
+    y_std_cut = (metadata['y_std'])
+    
+    return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
+
 
 def get_cut_network(NN, order, n_gluon, delta_cut, points, model_dir):
     
