@@ -115,9 +115,6 @@ nlegs = len(momenta[0][0])
 
 cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near)
 
-cut_momenta = cut_momenta.tolist()
-near_momenta = near_momenta.tolist()
-
 pairs, near_nj_split = weighting(near_momenta, nlegs+1-2-2, near_nj)
     
 NN = Model((nlegs+1-2)*4,near_momenta,near_nj_split[0],all_jets=True)
