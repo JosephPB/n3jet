@@ -42,6 +42,14 @@ parser.add_argument(
     default='False'
 )
 
+parser.add_argument(
+    '--com',
+    dest='com',
+    help='com energy (GeV), default: 1TeV',
+    type=float,
+    default=1000.
+)
+
 # This could be made redundant by parsing the BLHA file to access the number of particles in the process
 parser.add_argument(
     '--nlegs',
@@ -143,6 +151,7 @@ args = parser.parse_args()
 order_file = args.order
 contract_file = args.contract
 proc_order = args.proc_order
+com = args.com
 nlegs = args.nlegs
 nps = args.nps
 mom_file = args.mom_file
@@ -243,7 +252,7 @@ else:
 if os.path.exists(mom_file) == False or generate_mom == True:
     print ('Gennerating momenta')
     # Currently this is fixing the com at 10000 and the JADE delta at 0.01
-    momenta = generate(nlegs-2,nps,1000.,0.01)
+    momenta = generate(nlegs-2,nps,com,0.01)
     np.save(mom_file, momenta, allow_pickle = True)
 elif os.path.exists(mom_file) == True and generate_mom == False:
     print ('Loading momenta')

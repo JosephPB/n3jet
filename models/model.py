@@ -33,7 +33,7 @@ class Model:
         :param data: an array over which to standardise (this array may be a variable column) 
         '''
         array = np.array(data)
-        mean= np.mean(array)
+        mean = np.mean(array)
         std = np.std(array)
         standard = (array-mean)/(std)
         return mean, std, standard

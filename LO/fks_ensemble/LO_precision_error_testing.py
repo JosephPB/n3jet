@@ -1,7 +1,8 @@
 import sys
 sys.path.append('./../')
-sys.path.append('./../utils')
-sys.path.append('./../RAMBO')
+sys.path.append('./../../utils/')
+sys.path.append('./../../phase/')
+sys.path.append('./../../models/')
 import os
 
 import numpy as np
@@ -23,7 +24,7 @@ from fks_partition import *
 from keras.models import load_model
 from tqdm import tqdm
 from fks_utils import *
-from piecewise_utils import *
+#from piecewise_utils import *
 from utils import *
 from uniform_utils import *
 import rambo_piecewise_balance as rpb
