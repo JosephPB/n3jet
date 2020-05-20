@@ -101,9 +101,9 @@ print ('Training on {} PS points'.format(len(test_momenta)))
 
 print ('############### Inferring on models ###############')
 
-nlegs = len(test_momenta[0][0])
+nlegs = len(test_momenta[0])-2
 
-NN = Model((nlegs+1-2)*4,test_momenta,test_nj,all_jets=True)
+NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True)
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []

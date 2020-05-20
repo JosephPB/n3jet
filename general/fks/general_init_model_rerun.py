@@ -111,7 +111,7 @@ if os.path.exists(model_base_dir) == False:
 else:
     print ('Base directory already exists')
 
-nlegs = len(momenta[0][0])
+nlegs = len(momenta[0])-2
 
 cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near)
 

@@ -109,7 +109,7 @@ print ('Training on {} PS points'.format(len(test_momenta)))
 
 print ('############### Inferring on models ###############')
 
-nlegs = len(test_momenta[0][0])
+nlegs = len(test_momenta[0])-2
 
 test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, delta_cut=0.01, delta_near=delta_near)
 

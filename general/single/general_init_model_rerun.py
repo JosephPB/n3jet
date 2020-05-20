@@ -101,10 +101,9 @@ if os.path.exists(model_base_dir) == False:
 else:
     print ('Base directory already exists')
 
-nlegs = len(momenta[0][0])
+nlegs = len(momenta[0])-2
     
-NN = Model((nlegs+1-2)*4,momenta,nj,all_jets=True)
-# input to Model is [no. all legs = nlegs + 1] - [incoming legs = 2] * [len 4- momentum = 4]
+NN = Model(nlegs*4,momenta,nj,all_jets=True)
 
 for i in range(training_reruns):
     print ('Working on model {}'.format(i))
