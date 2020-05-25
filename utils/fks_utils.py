@@ -59,8 +59,6 @@ def weighting(moms, n_gluon, labs):
     if type(moms) != list:
         raise AssertionError('Momentum must be in the form of a list')
     
-    if type(moms) != list:
-        raise AssertionError('The momentum array is not a list')
     D_1, pairs = D_ij(moms[0],n_gluon)
     S_near = []
     
@@ -77,6 +75,31 @@ def weighting(moms, n_gluon, labs):
         labs_split.append(labs*i)
     
     return pairs, labs_split
+
+def weighting_all(moms, labs):
+    if type(moms) != list:
+        raise AssertionError('Momentum must be in the form of a list')
+
+    D_1, pairs = D_ij_all(moms[0])
+    S_near = []
+
+    for idx, i in enumerate(pairs):
+        print ('Pair {} of {}'.format(idx+1, len(pairs)))
+        S = []
+        for j in tqdm(moms):
+            S.append(S_ij_all(j, i[0], i[1]))
+        S_near.append(np.array(S))
+    S_near = np.array(S_near)
+
+    labs_split = []
+    for i in S_near:
+        labs_split.append(labs*i)
+
+    return pais, labs_split
+        
+    
+    
+    
 
 def pair_off(moms,pairs,n_gluon,S_near,job_index,job_indices):
     S_middle = []

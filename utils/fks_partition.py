@@ -23,7 +23,23 @@ def D_ij(mom,n_gluon):
             pairs.append([i,j])
     return np.sum(1/np.array(ds)), pairs
 
+def D_ij(mom):
+    ds = []
+    pairs = []
+    for i in range(len(mom)):
+        for j in range(i+1, len(mom)):
+            if i == 0 and j == 1:
+                pass
+            else:
+                ds.append(d_ij(mom, ij))
+                pairs.append([i,j])
+    return np.sum(1/np.array(ds)), pairs
+
 def S_ij(mom,n_gluon,i,j):
     'Partition function'
     D_1,_ = D_ij(mom,n_gluon)
+    return (1/(D_1*d_ij(mom,i,j)))
+
+def S_ij_all(mom, i, j):
+    D_1,_ = D_ij_all(mom):
     return (1/(D_1*d_ij(mom,i,j)))
