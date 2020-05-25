@@ -23,7 +23,8 @@ def D_ij(mom,n_gluon):
             pairs.append([i,j])
     return np.sum(1/np.array(ds)), pairs
 
-def D_ij(mom):
+def D_ij_all(mom):
+    "Reciprocal of CoM energy for pairwise sum except for incoming particles"
     ds = []
     pairs = []
     for i in range(len(mom)):
@@ -31,7 +32,7 @@ def D_ij(mom):
             if i == 0 and j == 1:
                 pass
             else:
-                ds.append(d_ij(mom, ij))
+                ds.append(d_ij(mom,i,j))
                 pairs.append([i,j])
     return np.sum(1/np.array(ds)), pairs
 
@@ -41,5 +42,6 @@ def S_ij(mom,n_gluon,i,j):
     return (1/(D_1*d_ij(mom,i,j)))
 
 def S_ij_all(mom, i, j):
-    D_1,_ = D_ij_all(mom):
+    "Parition function for all jets"
+    D_1,_ = D_ij_all(mom)
     return (1/(D_1*d_ij(mom,i,j)))

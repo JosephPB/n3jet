@@ -77,6 +77,14 @@ parser.add_argument(
     default='False',
 )
 
+parser.add_argument(
+    '--all_pairs',
+    dest='all_pairs',
+    help='train on data from all pairs (except for initial state particles), not just all jets, default: False',
+    type=str,
+    default='False',
+)
+
 
 args = parser.parse_args()
 mom_file = args.mom_file
@@ -86,6 +94,7 @@ model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
 all_legs = args.all_legs
+all_pairs = args.all_pairs
 
 lr=0.01
 
@@ -121,14 +130,20 @@ else:
 
 nlegs = len(momenta[0])-2
 
-cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near)
+if all_legs == 'False':
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near, all_legs=False)
+else:
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near, all_legs=True)
 
-pairs, near_nj_split = weighting(near_momenta, nlegs-2, near_nj)
+if all_pairs == 'False':
+    pairs, near_nj_split = weighting(near_momenta, nlegs-2, near_nj)
+else:
+    pairs, near_nj_split = weighting_all(near_momenta, near_nj)
 
 if all_legs == 'False':
-    NN = Model((nlegs)*4,near_momenta,near_nj_split[0],all_jets=True)
+    NN = Model((nlegs)*4,near_momenta,near_nj_split[0],all_jets=True,all_legs=False)
 else:
-    NN = Model((nlegs+2)*4,near_momenta,near_nj_split[0],all_legs=True)
+    NN = Model((nlegs+2)*4,near_momenta,near_nj_split[0],all_jets=False,all_legs=True)
 # input to Model is [no. all legs = nlegs + 1] - [incoming legs = 2] * [len 4- momentum = 4]
 
 
@@ -142,7 +157,12 @@ for i in range(training_reruns):
     else:
         print ('Directory already exists')
     if model_dir != '':
-        model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general((nlegs+1-2)*4, pairs, near_momenta, near_nj_split, delta_near, model_dir=model_dir_new, all_jets=True, lr=lr)
-        model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general((nlegs+1-2)*4, cut_momenta, cut_nj, delta_near, model_dir=model_dir_new, all_jets=True, lr=lr)
+        if all_legs == 'False':
+            model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general((nlegs)*4, pairs, near_momenta, near_nj_split, delta_near, model_dir=model_dir_new, all_jets=True, all_legs=False, lr=lr)
+            model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general((nlegs)*4, cut_momenta, cut_nj, delta_near, model_dir=model_dir_new, all_jets=True, all_legs=False, lr=lr)
+        else:
+            model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general((nlegs+2)*4, pairs, near_momenta, near_nj_split, delta_near, model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr)
+            model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general((nlegs+2)*4, cut_momenta, cut_nj, delta_near, model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr)
+            
         
-print ('############### Finished ###############')
+print ('############### Finished ##

@@ -25,11 +25,12 @@ def pair_check(p1,p2,delta,s_com):
         
     return close, distance
 
-def check_all(p_array,delta,s_com):
-    'Given an array of 4-momenta, check proximity of all paira'
+def check_all(p_array,delta,s_com, all_jets=False):
+    'Given an array of 4-momenta, check proximity of all pairs'
     too_close = False
-    
-    p_array = p_array[2:]
+
+    if not all_jets:
+        p_array = p_array[2:]
     #print ('Checking {}'.format(p_array))
     distances = []
     for idx, p in enumerate(p_array):

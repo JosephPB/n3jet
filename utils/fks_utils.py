@@ -20,7 +20,7 @@ from fks_partition import *
 from keras.models import load_model
 from tqdm import tqdm
 
-def cut_near_split(test_momenta, NJ_test, delta_cut, delta_near):
+def cut_near_split(test_momenta, NJ_test, delta_cut, delta_near, all_legs=False):
     '''
     Split momenta into near and cut arrays - near is the region close to the PS cuts and the cut region is the rest of the cut PS
     :param test_momenta: list of momenta
@@ -36,7 +36,10 @@ def cut_near_split(test_momenta, NJ_test, delta_cut, delta_near):
     NJ_near_test_treevals = []
     NJ_cut_test_treevals = []
     for idx, i in tqdm(enumerate(test_momenta), total = len(test_momenta)):
-        close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]))
+        if all_legs:
+            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_jets=True)
+        else:
+            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_jets=False)
         if close == False:
             if min_distance < delta_near:
                 test_near_momenta.append(i)
@@ -95,11 +98,7 @@ def weighting_all(moms, labs):
     for i in S_near:
         labs_split.append(labs*i)
 
-    return pais, labs_split
-        
-    
-    
-    
+    return pairs, labs_split
 
 def pair_off(moms,pairs,n_gluon,S_near,job_index,job_indices):
     S_middle = []
@@ -208,7 +207,7 @@ def train_near_networks(pairs, near_momenta, NJ_split, order, n_gluon, delta_nea
     return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
 
 
-def train_near_networks_general(input_size, pairs, near_momenta, NJ_split, delta_near, model_dir = '', all_jets=False, **kwargs):
+def train_near_networks_general(input_size, pairs, near_momenta, NJ_split, delta_near, model_dir = '', all_jets=False, all_legs=False, **kwargs):
     '''
     Train 'near' networks on pairs of jets
     '''
@@ -229,7 +228,7 @@ def train_near_networks_general(input_size, pairs, near_momenta, NJ_split, delta
     y_mean_near = []
     y_std_near = []
     for idx,i in enumerate(pairs):
-        NN = Model(input_size,near_momenta, NJ_split[idx], all_jets)
+        NN = Model(input_size,near_momenta, NJ_split[idx], all_jets, all_legs)
         
         model, x_mean, x_std, y_mean, y_std = NN.fit(layers=layers, lr=lr, epochs=epochs)
         
@@ -378,11 +377,11 @@ def get_near_networks(NN, pairs, order, n_gluon, delta_near, points, model_dir):
     return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
 
 
-def train_cut_network_general(input_size, cut_momenta, NJ_cut, delta_near, model_dir = '', all_jets = False, **kwargs):
+def train_cut_network_general(input_size, cut_momenta, NJ_cut, delta_near, model_dir = '', all_jets = False, all_legs=False, **kwargs):
     
     lr = kwargs.get('lr', 0.001)
     
-    NN_cut = Model(input_size,cut_momenta,NJ_cut, all_jets)
+    NN_cut = Model(input_size,cut_momenta,NJ_cut, all_jets, all_legs)
     model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=[16,32,16], lr=lr)
     
     if model_dir != '':
