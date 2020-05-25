@@ -60,6 +60,14 @@ parser.add_argument(
     default=1,
 )
 
+parser.add_argument(
+    '--all_legs',
+    dest='all_legs',
+    help='train on data from all legs, not just all jets, default: False',
+    type=str,
+    default='False',
+)
+
 
 
 args = parser.parse_args()
@@ -68,6 +76,7 @@ nj_file = args.nj_file
 model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
+all_legs = args.all_legs
 
 lr=0.01
 
@@ -102,8 +111,11 @@ else:
     print ('Base directory already exists')
 
 nlegs = len(momenta[0])-2
-    
-NN = Model(nlegs*4,momenta,nj,all_jets=True)
+
+if all_legs == 'False':    
+    NN = Model(nlegs*4,momenta,nj,all_jets=True)
+else:
+    NN = Model((nlegs + 2)*4, momenta, nj, all_legs=True)
 
 for i in range(training_reruns):
     print ('Working on model {}'.format(i))

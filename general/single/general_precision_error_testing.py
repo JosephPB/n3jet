@@ -69,6 +69,14 @@ parser.add_argument(
     default=1,
 )
 
+parser.add_argument(
+    '--all_legs',
+    dest='all_legs',
+    help='train on data from all legs, not just all jets, default: False',
+    type=str,
+    default='False',
+)
+
 args = parser.parse_args()
 test_mom_file = args.test_mom_file
 test_nj_file = args.test_nj_file
@@ -103,7 +111,10 @@ print ('############### Inferring on models ###############')
 
 nlegs = len(test_momenta[0])-2
 
-NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True)
+if all_legs == 'False':    
+    NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True)
+else:
+    NN = Model((nlegs + 2)*4, test_momenta, test_nj_all, all_legs=True)
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []

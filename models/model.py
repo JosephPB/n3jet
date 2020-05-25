@@ -16,7 +16,7 @@ import time
 
 class Model:
     
-    def __init__(self, input_size, momenta, labels, all_jets = False):
+    def __init__(self, input_size, momenta, labels, all_jets = False, all_legs = False):
         '''
         :param input_size: the flattened input dim for the model
             e.g. 3 jets has input_dim of (3-1)*4=8
@@ -27,6 +27,7 @@ class Model:
         self.momenta = momenta
         self.labels = labels
         self.all_jets = all_jets
+        self.all_legs = all_legs
     
     def standardise(self, data):
         '''standardise data
@@ -52,10 +53,13 @@ class Model:
         moms = kwargs.get('moms', self.momenta)
         labs = kwargs.get('labs', self.labels)
 
-        if self.all_jets == False:
-            momenta = np.array(moms)[:,3:,:] #pick out all but one jet
-        else:
+        if self.all_legs == True:
+            momenta = np.array(moms)
+        elif self.all_jets == True:
             momenta = np.array(moms)[:,2:,:] #include all outgoing jets
+        else:
+            momenta = np.array(moms)[:,3:,:] #pick out all but one jet
+            
         labels = np.array(labs)
         
         x_standard = momenta.reshape(-1,4).copy() #shape for standardising each momentum element
@@ -121,11 +125,13 @@ class Model:
         '''
             
         labs = kwargs.get('labs', None)
-        if self.all_jets == False:
-            momenta = np.array(moms)[:,3:,:] #pick out all but one jet
+        if self.all_legs == True:
+            momenta = np.array(moms)
+        elif self.all_jets == True:
+            momenta = np.array(moms)[:,2:,:] #include all outgoing jets
         else:
-            momenta = np.array(moms)[:,2:,:] #all jets
-        
+            momenta = np.array(moms)[:,3:,:] #pick out all but one jet
+
         y_mean = kwargs.get('y_mean', self.y_mean)
         
         print_y = kwargs.get('print_y', True)
