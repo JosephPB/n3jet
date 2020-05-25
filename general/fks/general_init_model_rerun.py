@@ -69,6 +69,13 @@ parser.add_argument(
     default=1,
 )
 
+parser.add_argument(
+    '--all_legs',
+    dest='all_legs',
+    help='train on data from all legs, not just all jets, default: False',
+    type=str,
+    default='False',
+)
 
 
 args = parser.parse_args()
@@ -116,8 +123,11 @@ nlegs = len(momenta[0])-2
 cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near)
 
 pairs, near_nj_split = weighting(near_momenta, nlegs+1-2-2, near_nj)
-    
-NN = Model((nlegs+1-2)*4,near_momenta,near_nj_split[0],all_jets=True)
+
+if all_legs == 'False':
+    NN = Model((nlegs)*4,near_momenta,near_nj_split[0],all_jets=True)
+else:
+    NN = Model((nlegs+2)*4,near_momenta,near_nj_split[0],all_legs=True)
 # input to Model is [no. all legs = nlegs + 1] - [incoming legs = 2] * [len 4- momentum = 4]
 
 

@@ -114,7 +114,7 @@ nlegs = len(test_momenta[0])-2
 if all_legs == 'False':    
     NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True)
 else:
-    NN = Model((nlegs + 2)*4, test_momenta, test_nj_all, all_legs=True)
+    NN = Model((nlegs+2)*4, test_momenta, test_nj_all, all_legs=True)
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []
