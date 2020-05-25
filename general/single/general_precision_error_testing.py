@@ -83,6 +83,7 @@ test_nj_file = args.test_nj_file
 model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
+all_legs = args.all_legs
 
 def file_exists(file_path):
     if os.path.exists(file_path) == True:

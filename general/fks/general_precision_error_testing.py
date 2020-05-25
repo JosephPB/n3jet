@@ -76,6 +76,14 @@ parser.add_argument(
     default=1,
 )
 
+parser.add_argument(
+    '--all_legs',
+    dest='all_legs',
+    help='train on data from all legs, not just all jets, default: False',
+    type=str,
+    default='False',
+)
+
 args = parser.parse_args()
 test_mom_file = args.test_mom_file
 test_nj_file = args.test_nj_file
@@ -83,6 +91,7 @@ delta_near = args.delta_near
 model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
+all_legs = args.all_legs
 
 def file_exists(file_path):
     if os.path.exists(file_path) == True:
@@ -115,7 +124,10 @@ test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(
 
 pairs, test_near_nj_split = weighting(test_near_momenta, nlegs+1-2-2, test_near_nj)
 
-NN = Model((nlegs+1-2)*4,test_near_momenta,test_near_nj_split[0],all_jets=True)
+if all_legs == 'False':
+    NN = Model((nlegs)*4,test_near_momenta,test_near_nj_split[0],all_jets=True)
+else:
+    NN = Model((nlegs+2)*4,test_near_momenta,test_near_nj_split[0],all_legs=True)
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []

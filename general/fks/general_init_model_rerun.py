@@ -85,6 +85,7 @@ delta_near = args.delta_near
 model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
+all_legs = args.all_legs
 
 lr=0.01
 
@@ -122,7 +123,7 @@ nlegs = len(momenta[0])-2
 
 cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near)
 
-pairs, near_nj_split = weighting(near_momenta, nlegs+1-2-2, near_nj)
+pairs, near_nj_split = weighting(near_momenta, nlegs-2, near_nj)
 
 if all_legs == 'False':
     NN = Model((nlegs)*4,near_momenta,near_nj_split[0],all_jets=True)
