@@ -165,4 +165,4 @@ for i in range(training_reruns):
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general((nlegs+2)*4, cut_momenta, cut_nj, delta_near, model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr)
             
         
-print ('############### Finished ##
+print ('############### Finished ###############')

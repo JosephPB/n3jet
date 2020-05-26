@@ -84,6 +84,14 @@ parser.add_argument(
     default='False',
 )
 
+parser.add_argument(
+    '--all_pairs',
+    dest='all_pairs',
+    help='train on data from all pairs (except for initial state particles), not just all jets, default: False',
+    type=str,
+    default='False',
+)
+
 args = parser.parse_args()
 test_mom_file = args.test_mom_file
 test_nj_file = args.test_nj_file
@@ -92,6 +100,7 @@ model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
 all_legs = args.all_legs
+all_pairs = args.all_pairs
 
 def file_exists(file_path):
     if os.path.exists(file_path) == True:
@@ -120,9 +129,15 @@ print ('############### Inferring on models ###############')
 
 nlegs = len(test_momenta[0])-2
 
-test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, delta_cut=0.01, delta_near=delta_near)
-
-pairs, test_near_nj_split = weighting(test_near_momenta, nlegs+1-2-2, test_near_nj)
+if all_legs == 'False':
+    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, delta_cut=0.01, delta_near=delta_near, all_legs=False)
+else:
+    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, delta_cut=0.01, delta_near=delta_near, all_legs=True)
+    
+if all_pairs == 'False':
+    pairs, test_near_nj_split = weighting(test_near_momenta, nlegs-2, test_near_nj)
+else:
+    pairs, test_near_nj_split = weighting_all(test_near_momenta, test_near_nj)
 
 if all_legs == 'False':
     NN = Model((nlegs)*4,test_near_momenta,test_near_nj_split[0],all_jets=True)
@@ -158,9 +173,12 @@ for i in range(training_reruns):
     else:
         print ('Directory already exists')
 
-
-    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_near, model_dir_new)
+    if all_legs == 'False':
+        model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new, all_jets=True, all_legs=False)
+        model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_near, model_dir_new, all_jets=True, all_legs=False)
+    else:
+        model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new, all_jets=False, all_legs=True)
+        model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_near, model_dir_new, all_jets=False, all_legs=True)
 
     model_nears.append(model_near)
     model_cuts.append(model_cut)
