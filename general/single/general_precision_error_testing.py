@@ -112,9 +112,20 @@ print ('############### Inferring on models ###############')
 
 nlegs = len(test_momenta[0])-2
 
+test_mom_len = len(test_momenta)
+
 if all_legs == 'False':    
     NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True)
 else:
+    print ('Recutting for all legs')
+    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, 0.01, 0.02, all_legs=True)
+    test_momenta = np.concatenate((test_cut_momenta, test_near_momenta))
+    test_nj = np.concatenate((test_cut_nj, test_near_nj))
+    indices = np.arange(len(test_nj))
+    np.random.shuffle(indices)
+    test_momenta = test_momenta[indices]
+    test_nj = test_nj[indices]
+    test_momenta = test_momenta.tolist()
     NN = Model((nlegs+2)*4, test_momenta, test_nj, all_legs=True)
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
@@ -153,10 +164,13 @@ for i in range(training_reruns):
     test = i
     print ('Predicting on model {}'.format(i))
     model_dir_new = model_base_dir + model_dir + '_{}/'.format(test)
+    if test == 0 and all_legs == 'True':
+        print ('Saving out indices for later plotting')
+        np.save(model_dir_new + 'indices.npy', indices)
     x_standard = NN.process_testing_data(moms=test_momenta,x_mean=x_means[test],x_std=x_stds[test],y_mean=y_means[test],y_std=y_stds[test])
     pred = models[test].predict(x_standard)
     y_pred = NN.destandardise_data(pred.reshape(-1),x_mean=x_means[test],x_std=x_stds[test],y_mean=y_means[test],y_std=y_stds[test])
     #y_preds.append(y_pred)
-    np.save(model_dir_new + '/pred_{}'.format(len(test_momenta)), y_pred)
+    np.save(model_dir_new + '/pred_{}'.format(test_mom_len), y_pred)
 
 print ('############### Finished ###############')

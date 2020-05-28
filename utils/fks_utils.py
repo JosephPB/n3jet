@@ -37,9 +37,9 @@ def cut_near_split(test_momenta, NJ_test, delta_cut, delta_near, all_legs=False)
     NJ_cut_test_treevals = []
     for idx, i in tqdm(enumerate(test_momenta), total = len(test_momenta)):
         if all_legs:
-            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_jets=True)
+            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_legs=True)
         else:
-            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_jets=False)
+            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_legs=False)
         if close == False:
             if min_distance < delta_near:
                 test_near_momenta.append(i)

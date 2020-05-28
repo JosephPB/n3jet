@@ -21,6 +21,7 @@ from model import Model
 from rambo_while import *
 from utils import *
 from uniform_utils import *
+from fks_utils import *
 
 parser = argparse.ArgumentParser(description='Training multiple models on the same dataset for error analysis. Here we assume that the momenta and njet files already exist and will be passed to the script by the user')
 
@@ -113,9 +114,19 @@ else:
 nlegs = len(momenta[0])-2
 
 if all_legs == 'False':    
-    NN = Model(nlegs*4,momenta,nj,all_jets=True)
+    NN = Model(nlegs*4,momenta,nj,all_jets=True, all_legs=False)
 else:
-    NN = Model((nlegs + 2)*4, momenta, nj, all_legs=True)
+    print ('Recutting for all legs')
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, 0.01, 0.02, all_legs=True)
+    momenta = np.concatenate((cut_momenta, near_momenta))
+    nj = np.concatenate((cut_nj, near_nj))
+    indices = np.arange(len(nj))
+    np.random.shuffle(indices)
+    momenta = momenta[indices]
+    nj = nj[indices]
+    momenta = momenta.tolist()
+    
+    NN = Model((nlegs + 2)*4, momenta, nj, all_jets=False, all_legs=True)
 
 for i in range(training_reruns):
     print ('Working on model {}'.format(i))
