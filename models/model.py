@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Activation
+import tensorflow as tf
+from tensorflow.keras import activations
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import train_test_split
 from keras import metrics
@@ -84,9 +86,12 @@ class Model:
         # create model
         # at some point can use new Keras tuning feature for optimising this model
         model = Sequential()
-        model.add(Dense(layers[0], input_dim=(self.input_size), activation='tanh'))
-        model.add(Dense(layers[1], activation='tanh'))
-        model.add(Dense(layers[2], activation='tanh'))
+        model.add(Dense(layers[0], input_dim=(self.input_size)))
+        model.add(Activation(activations.tanh))
+        model.add(Dense(layers[1]))
+        model.add(Activation(activations.tanh))
+        model.add(Dense(layers[2]))
+        model.add(Activation(activations.tanh))
         model.add(Dense(1))
         # Compile model
         model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
