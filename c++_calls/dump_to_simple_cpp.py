@@ -1,6 +1,7 @@
 import numpy as np
 np.random.seed(1337)
 from keras.models import Sequential, model_from_json
+from keras.optimizers import Adam
 import json
 import argparse
 
@@ -20,7 +21,8 @@ print 'Writing to', args.output
 arch = open(args.architecture).read()
 model = model_from_json(arch)
 model.load_weights(args.weights)
-model.compile(loss='categorical_crossentropy', optimizer='adadelta')
+model.compile(optimizer = Adam(lr=0.01, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
+#model.compile(loss='categorical_crossentropy', optimizer='adadelta')
 arch = json.loads(arch)
 
 with open(args.output, 'w') as fout:
