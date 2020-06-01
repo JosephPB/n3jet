@@ -6,9 +6,14 @@
 #include <fstream>
 #include <iostream>
 
+//using namespace std;
+
+
+
 namespace keras
 {
 	std::vector<float> read_1d_array(std::ifstream &fin, int cols);
+        std::vector<float> read_input_from_file(const std::string &fname);  
 	void missing_activation_impl(const std::string &act);
 	std::vector< std::vector<float> > conv_single_depth_valid(std::vector< std::vector<float> > const & im, std::vector< std::vector<float> > const & k);
 	std::vector< std::vector<float> > conv_single_depth_same(std::vector< std::vector<float> > const & im, std::vector< std::vector<float> > const & k);

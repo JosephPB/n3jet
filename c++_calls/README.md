@@ -1,7 +1,10 @@
+# Converting and calling models in C++
 
 Converting a keras trained model into a format callable by C++ operations including data loading.
 This code is based on and adapted from: [keras2cpp](https://github.com/pplonski/keras2cpp)
 
+
+## Single model test
 
 Current procedure:
 
@@ -19,10 +22,4 @@ python dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scratch/jbullock
 
 Compile:
 ```
-g++ -std=c++11 keras_model.cc single_main.cc
-```
-
-Run:
-```
-./a.out
-```
+g++ -std=

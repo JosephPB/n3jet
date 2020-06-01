@@ -20,6 +20,19 @@ std::vector<float> keras::read_1d_array(std::ifstream &fin, int cols) {
   return arr;
 }
 
+vector<float> read_input_from_file(const string &fname) {
+  ifstream fin(fname.c_str());
+  int m_depth;
+  int m_rows;
+  int m_cols;
+  fin >> m_depth >> m_rows >> m_cols;
+
+  cout << "Found " << m_depth << "samples and with rowsxcolums: " << m_rows << " x " << m_cols << endl;
+
+  vector<float> tmp_row = keras::read_1d_array(fin, m_cols);
+  return tmp_row;
+}
+
 void keras::DataChunk2D::read_from_file(const std::string &fname) {
   ifstream fin(fname.c_str());
   fin >> m_depth >> m_rows >> m_cols;
