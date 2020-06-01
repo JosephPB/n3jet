@@ -22,7 +22,7 @@ python dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scratch/jbullock
 
 Compile:
 ```
-g++ -std=c++11 model_fns.cpp single_main.cpp
+g++ -std=c++11 model_fns.cpp single_test.cpp -o single_test.o
 ```
 
 Run:
