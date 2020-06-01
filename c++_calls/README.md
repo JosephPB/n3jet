@@ -15,7 +15,7 @@ This test will train a simple model and save the output in an architecture `.jso
 Run model training:
 ```
 cd tests/
-python single_test_train.py -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/single_test_weights.h
+python single_test_train.py -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/single_test_weights.h5
 ```
 
 Dump network:
@@ -31,4 +31,5 @@ g++ -std=c++11 model_fns.cpp single_test.cpp -o single_test.o
 
 Run:
 ```
-./single_te
+./single_test.out
+```

@@ -30,6 +30,11 @@ from uniform_utils import *
 import rambo_piecewise_balance as rpb
 from rambo_piecewise_balance import *
 
+parser = argparse.ArgumentParser(description='Script for training a network and saving out the data in a .dat file')
+
+parser.add_argument('-w', '--weights', help="Model weights in HDF5 format", required=True)
+args = parser.parse_args()
+
 mom_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/momenta_events_100k.npy'
 nj_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/events_100k_loop.npy'
 
@@ -72,7 +77,7 @@ print (pred)
 
 with open ('./single_test_arch.json', 'w') as fout:
     fout.write(model.to_json())
-model.save_weights(mod_dir + 'single_test_weights.h5')
+model.save_weights(args.weights)
 
 print ('Model JSON and weights save')
 
