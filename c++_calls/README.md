@@ -21,4 +21,14 @@ python single_test_train.py -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/
 Dump network:
 ```
 cd ..
-python dump_to_simple_cpp.py -a tests/single_test_arch.json -w /sc
+python dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/single_test_weights.h5 -o tests/single_test_dumped.nnet
+```
+
+Compile:
+```
+g++ -std=c++11 model_fns.cpp single_test.cpp -o single_test.o
+```
+
+Run:
+```
+./single_te
