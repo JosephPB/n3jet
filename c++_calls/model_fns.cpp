@@ -106,6 +106,30 @@ vector<vector<double> > read_scalers_from_file(const string &fname){
 	}
 	return scaler_properties;
 }
+
+double standardise(double value, double mean, double std){
+       double new_value;
+       new_value = (value-mean)/std;
+       return new_value;
+}
+
+double destandardise(double value, double mean, double std){
+       double new_value;
+       new_value = new_value*std + mean;
+       return new_value;
+}
+
+double standardise_array(double *array, double *new_array, int legs, double *means, double *stds){
+  
+       for (int i = 0; i < legs; i++){
+	 for (int j = 0; j < 4; j++){
+	   double new_val = standardise(array[i], means[j], stds[j]);
+	   new_array[i+j] = new_val;
+	 }
+       }
+}
+
+
 /*
 
 // Apply a StandardScaler

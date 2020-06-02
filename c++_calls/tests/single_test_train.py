@@ -48,7 +48,7 @@ test_momenta = test_momenta.tolist()
 
 nlegs = len(test_momenta[0])-2
 
-NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True, all_legs=False)
+NN = Model((nlegs+2)*4,test_momenta,test_nj,all_jets=False, all_legs=True)
 X_train,X_test,y_train,y_test,_,_,_,_ = NN.process_training_data()
 
 lr=0.01

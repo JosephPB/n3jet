@@ -14,6 +14,9 @@ double read_response_from_file(const string &f_name);
 vector<vector<double> > read_multi_input_from_file(const string &f_name);
 vector<double> read_multi_response_from_file(const string &f_name);
 vector<vector<double> > read_scalers_from_file(const string &f_name);
+double standardise(double value, double mean, double std);
+double destandardise(double value, double mean, double std);
+double standardise_array(double *array, double *new_array, int legs, double *means, double *stds);
 //double untransform(double value, double mean, double scale);
 //double transform(double value, double mean, double scale);
 
