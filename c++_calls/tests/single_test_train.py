@@ -35,8 +35,11 @@ parser = argparse.ArgumentParser(description='Script for training a network and 
 parser.add_argument('-w', '--weights', help="Model weights in HDF5 format", required=True)
 args = parser.parse_args()
 
-mom_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/momenta_events_100k.npy'
-nj_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/events_100k_loop.npy'
+#mom_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/momenta_events_100k.npy'
+#nj_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/events_100k_loop.npy'
+
+mom_file = './data/3g2A_test_momenta.npy'
+nj_file = './data/3g2A_test_nj.npy'
 
 test_momenta = np.load(mom_file, allow_pickle=True)
 test_nj = np.load(nj_file, allow_pickle=True)
@@ -52,7 +55,7 @@ lr=0.01
 
 model, x_mean, x_std, y_mean, y_std = NN.fit(layers=[20,40,20], lr=lr, epochs=1)
 
-mod_dir = '/scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/'
+#mod_dir = '/scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/'
 
 #model = load_model(mod_dir + 'model')
 
@@ -69,11 +72,7 @@ x_standard = NN.process_testing_data(moms=test_momenta,x_mean=x_mean,x_std=x_std
 
 testing_X = x_standard[:2]
 
-print (np.array(testing_X).shape)
-
 pred = model.predict(testing_X)
-
-print (pred)
 
 with open ('./single_test_arch.json', 'w') as fout:
     fout.write(model.to_json())

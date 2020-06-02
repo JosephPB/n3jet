@@ -13,7 +13,8 @@ and the second line consistsing of space separated variables
 
 int main() {
   cout << "This is simple example with Keras neural network model loading into C++.\n"
-           << "Keras model will be used in C++ for prediction only on one point." << endl;
+       << "Keras model will be used in C++ for prediction only on one point.\n"
+       << "Note: this example will take in already processed data."<< endl;
 
   string datafile = "./tests/data/single_test_sample.dat";
   string dumpednn = "./tests/single_test_dumped.nnet";
