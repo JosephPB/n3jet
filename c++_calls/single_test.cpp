@@ -15,11 +15,11 @@ int main() {
   cout << "This is simple example with Keras neural network model loading into C++.\n"
            << "Keras model will be used in C++ for prediction only on one point." << endl;
 
-  string datafile = "./tests/single_test_sample.dat";
+  string datafile = "./tests/data/single_test_sample.dat";
   string dumpednn = "./tests/single_test_dumped.nnet";
   
   vector<double> sample = read_input_from_file(datafile);
-  cout << sample[0] << sample[1] << endl;
+  cout << "First two sample elements = " << sample[0] << ", " << sample[1] << endl;
 
   // load model
   KerasModel kerasModel(dumpednn);

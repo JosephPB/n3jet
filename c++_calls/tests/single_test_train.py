@@ -83,9 +83,13 @@ print ('Model JSON and weights save')
 
 print ('Saving out sample data')
 
-with open('./single_test_sample.dat', 'w') as fin:
-    fin.write("1 1 {}\n".format(len(testing_X[0])))
-    fin.write(str(testing_X[0])+'\n')
+with open('./data/single_test_sample.dat', 'w') as fin:
+    fin.write("{}\n".format(len(testing_X[0])))
+    for idx, i in enumerate(testing_X[0]):
+        if idx == len(testing_X[0]) - 1:
+            fin.write(str(i) + "\n")
+        else:
+            fin.write(str(i) + " ")
     
 
 
