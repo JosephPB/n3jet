@@ -91,6 +91,21 @@ with open('./data/single_test_sample.dat', 'w') as fin:
             fin.write(str(i) + "\n")
         else:
             fin.write(str(i) + " ")
-    
+
+
+print ('Saving out metadata')
+with open('./data/single_test_dataset_metadata.dat', 'w') as fin:
+    for idx, i in enumerate(x_mean):
+        if idx == len(x_mean)-1:
+            fin.write(str(i) + "\n")
+        else:
+            fin.write(str(i) + " ")
+    for idx, i in enumerate(x_std):
+        if idx == len(x_std)-1:
+            fin.write(str(i) + "\n")
+        else:
+            fin.write(str(i) + " ")
+    fin.write(str(y_mean) + "\n")
+    fin.write(str(y_std) + "\n")
 
 
