@@ -26,7 +26,7 @@ python dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scratch/jbullock
 
 Compile:
 ```
-g++ -std=c++11 model_fns.cpp single_test.cpp -o single_test.o
+make single_test.o
 ```
 
 Run:
@@ -46,9 +46,9 @@ This example will infer on a model once trained to predict the loop squared of a
 **Note:** There needs to be an already trained network to do this saved in `tests/single_test_dumped.nnet`. To get this you can either use the `.nnet` file provided or run the example above which will generate one.
 
 Compile:
-``
-g++ -std=c++11 model_fns.cpp ex_3g2A.cpp -o ex_3g2A_test.o
-``
+```
+make ex_3g2A.o
+```
 
 Run:
 ```
