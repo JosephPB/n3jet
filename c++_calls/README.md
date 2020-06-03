@@ -4,9 +4,9 @@ Converting a keras trained model into a format callable by C++ operations includ
 This code is based on and adapted from: [keras2cpp](https://github.com/pplonski/keras2cpp)
 
 
-## Single model test
+## End to end single model example
 
-This test will train a simple model and save the output in an architecture `.json` file and `.h5` weights file. These files will be used to convert the model into a `.nnet ` file which can be read in by the functions in `model_fns.cpp`.
+This example will train a simple model and save the output in an architecture `.json` file and `.h5` weights file. These files will be used to convert the model into a `.nnet ` file which can be read in by the functions in `model_fns.cpp`.
 
 **Note:**
 - Here we assume the input data is already processed as required for the model (i.e. mean subtracted and normalised to the standard deviation as performed by the `process_training_data()` function in `n3jet/models/model.py`)
@@ -32,4 +32,25 @@ g++ -std=c++11 model_fns.cpp single_test.cpp -o single_test.o
 Run:
 ```
 ./single_test.out
+```
+
+## 3g2A example
+
+This example will infer on a model once trained to predict the loop squared of a $gg /to g /gamma /gamma$ process. Here we read in some momenta stored in the normal `double` array format `double Momenta[pspoints][legs][4]` and go through the following procedure for each phase-space point:
+
+1. Flatten the array
+2. Standardise each element in the array based on the mean and standard deviations over the whole dataset (see the `NN.process_training_data()` in the `tests/single_test_train.py` script)
+3. Infer on the loaded neural network
+4. Destandardise the output and print
+
+**Note:** There needs to be an already trained network to do this saved in `tests/single_test_dumped.nnet`. To get this you can either use the `.nnet` file provided or run the example above which will generate one.
+
+Compile:
+``
+g++ -std=c++11 model_fns.cpp ex_3g2A.cpp -o ex_3g2A_test.o
+``
+
+Run:
+```
+./ex_3g2A.o
 ```

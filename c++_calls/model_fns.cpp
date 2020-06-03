@@ -132,36 +132,6 @@ double standardise_array(double array[][4], int legs, double means[4], double st
 }
 */
 
-/*
-
-// Apply a StandardScaler
-double transform(double value, double mean, double scale){
-	double new_value;
-	new_value = (value-mean)/scale;
-	return new_value;
-}
-
-// Undo a StandardScaler
-double untransform(double value, double mean, double scale){
-	double new_value;
-	new_value = value*scale + mean;
-	return new_value;
-}
-
-
-// Apply NN to one (s,t) point.
-// Must scale and log first to give NN input
-// and unscale final result.
-double one_point_NN(KerasModel& object, vector<vector<double> > scaler_properties, vector<double> data){
-	data[0] = transform(log(data[0]),scaler_properties[0][0],scaler_properties[0][1]);
-	data[1] = transform(log(abs(data[1])),scaler_properties[1][0],scaler_properties[1][1]);
-	double result = untransform(object.compute_output(data)[0],scaler_properties[2][0],scaler_properties[2][1]);
-	return result;
-}
-
-*/
-
-
 
 // KerasModel constructor
 KerasModel::KerasModel(string &input_fname) {
