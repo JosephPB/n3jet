@@ -60,9 +60,34 @@ int main()
   string dumpednn = "./tests/single_test_dumped.nnet";
 
   KerasModel kerasModel(dumpednn);
+
+  int proc_len = legs*4;
   
   for (int i = 0; i < pspoints; i++){
     // create iterator pointing to beginning and end of array
 
-    double network_input[legs*4];
-    standardise_array(&Momenta[i], network_input, legs, &x_means, &x_stds)
+    //double network_input[proc_len] = {};
+    double mom[legs*4];
+
+    // standardise
+    for (int p = 0; p < legs; p++){
+      for (int mu = 0; mu < 4; mu++){
+	mom[p*4+mu] = (Momenta[i][p][mu]-x_means[p])/x_stds[p];
+      }
+    }
+    
+    
+    //double network_input = standardise_array(Momenta[i], legs, x_means, x_stds);
+    
+    vector<double> input_vec(begin(mom), end(mom));
+    
+    vector<double> result = kerasModel.compute_output(input_vec);
+    
+    //double* out = &result[0];
+
+    cout << "Loop( 0) = " << result[0] << endl;
+    
+  }
+  
+}
+
