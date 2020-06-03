@@ -6,10 +6,6 @@
 
 using namespace std;
 
-//using std::cout;
-//using std::endl;
-//using std::ios_base;
-
 int main()
 {
   cout.setf(ios_base::scientific, ios_base::floatfield);
@@ -21,16 +17,6 @@ int main()
 
   const int legs = 5;
   const int pspoints = 2;
-
-  /*
-  
-  //processed input - need to add scaling functions
-  double network_input[pspoints][legs*4] = {
-				 {0.8247694549404301, -2.4141666949495767e-17, -6.656779815797403e-17, 1.414627037889425, 0.8247694549404301, -2.4141666949495767e-17, -6.656779815797403e-17, -1.414627037889425, -1.207592812304212, -1.2719356679503657, 0.5589352631452073, -0.13966452671732135, -0.21505946958578623, 0.03947463359954325, -2.6866411241389296, 0.5413086837446464, -0.22688662799086254, 1.2324610343508227, 2.1277058609937223, -0.40164415702732503},
-				 {0.8247694549404301, -2.4141666949495767e-17, -6.656779815797403e-17, 1.414627037889425, 0.8247694549404301, -2.4141666949495767e-17, -6.656779815797403e-17, -1.414627037889425, -1.207592812304212, -1.2719356679503657, 0.5589352631452073, -0.13966452671732135, -0.21505946958578623, 0.03947463359954325, -2.6866411241389296, 0.5413086837446464, -0.22688662799086254, 1.2324610343508227, 2.1277058609937223, -0.40164415702732503},
-  };
-
-  */
 
   //raw momenta input
 
@@ -64,24 +50,25 @@ int main()
   int proc_len = legs*4;
   
   for (int i = 0; i < pspoints; i++){
-    // create iterator pointing to beginning and end of array
-
-    //double network_input[proc_len] = {};
+    cout << "==================== Test point " << i+1 << " ====================" << endl;
     double mom[legs*4];
 
-    // standardise
+    // flatten momenta
     for (int p = 0; p < legs; p++){
       for (int mu = 0; mu < 4; mu++){
+	// standardise input
+	cout << Momenta[i][p][mu] << " ";
 	mom[p*4+mu] = standardise(Momenta[i][p][mu], x_means[p], x_stds[p]);
       }
+      cout << endl;
     }
-    
-    //double network_input = standardise_array(Momenta[i], legs, x_means, x_stds);
+    cout << endl;
     
     vector<double> input_vec(begin(mom), end(mom));
     
     vector<double> result = kerasModel.compute_output(input_vec);
 
+    // destandardise output
     double output = destandardise(result[0], y_mean, y_std);
 
     cout << "Loop( 0) = " << output << endl;
@@ -89,16 +76,3 @@ int main()
   }
   
 }
-/*
-double standardise(double value, double mean, double std){
-  double new_value;
-  new_value = (value-mean)/std;
-  return new_value;
-}
-
-double destandardise(double value, double mean, double std){
-  double new_value;
-  new_value = new_value*std + mean;
-  return new_value;
-}
-*/
