@@ -59,14 +59,16 @@ model, x_mean, x_std, y_mean, y_std = NN.fit(layers=[20,40,20], lr=lr, epochs=1)
 
 #model = load_model(mod_dir + 'model')
 
-#pickle_out = open(mod_dir + "/dataset_metadata.pickle","rb")
-#metadata = pickle.load(pickle_out)
-#pickle_out.close()
-    
-#x_mean = metadata['x_mean']
-#y_mean = metadata['y_mean']
-#x_std = metadata['x_std']
-#y_std = metadata['y_std']
+metadata = {}
+metadata['x_mean'] = x_mean
+metadata['y_mean'] = y_mean
+metadata['x_std'] = x_std
+metadata['y_std'] = y_std
+
+pickle_out = open("./data/single_test_dataset_metadata.pickle","wb")
+metadata = pickle.dump(metadata, pickle_out)
+pickle_out.close()
+
 
 x_standard = NN.process_testing_data(moms=test_momenta,x_mean=x_mean,x_std=x_std,y_mean=y_mean,y_std=y_std)
 
