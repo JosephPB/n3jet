@@ -72,22 +72,33 @@ int main()
     // standardise
     for (int p = 0; p < legs; p++){
       for (int mu = 0; mu < 4; mu++){
-	mom[p*4+mu] = (Momenta[i][p][mu]-x_means[p])/x_stds[p];
+	mom[p*4+mu] = standardise(Momenta[i][p][mu], x_means[p], x_stds[p]);
       }
     }
-    
     
     //double network_input = standardise_array(Momenta[i], legs, x_means, x_stds);
     
     vector<double> input_vec(begin(mom), end(mom));
     
     vector<double> result = kerasModel.compute_output(input_vec);
-    
-    //double* out = &result[0];
 
-    cout << "Loop( 0) = " << result[0] << endl;
+    double output = destandardise(result[0], y_mean, y_std);
+
+    cout << "Loop( 0) = " << output << endl;
     
   }
   
 }
+/*
+double standardise(double value, double mean, double std){
+  double new_value;
+  new_value = (value-mean)/std;
+  return new_value;
+}
 
+double destandardise(double value, double mean, double std){
+  double new_value;
+  new_value = new_value*std + mean;
+  return new_value;
+}
+*/
