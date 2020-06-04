@@ -1,0 +1,15 @@
+# OLE_order for e+e- -> qqg production
+
+AmplitudeType           loop
+CorrectionType          QCD
+IRregularisation        FDH
+AlphaPower               2
+AlphasPower              2
+
+Extra NJetVectorClass    yes
+Extra MCSymmetrizeFinal  no
+Extra HelAvgInitial      no
+Extra NJetOmit16PiSq     yes
+
+# process list
+-11 11 -> -1 1 21 21

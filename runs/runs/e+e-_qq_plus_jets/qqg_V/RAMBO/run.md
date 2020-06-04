@@ -1,0 +1,16 @@
+python interface.py \
+--order /mt/home/jbullock/n3jet_runs/runs/e+e-_qq_plus_jets/qqg_V/RAMBO/OLE_order.lh \
+--contract /mt/home/jbullock/n3jet_runs/runs/e+e-_qq_plus_jets/qqg_V/RAMBO/OLE_contract.lh \
+--proc_order True \
+--nlegs 5 \
+--nps 100000 \
+--mom_file /mt/batch/jbullock/Sherpa_NJet/runs/e+e-_qq_plus_jets/qqg_V/RAMBO/momenta_events_100k.npy \
+--generate_mom False \
+--nj_file /mt/batch/jbullock/Sherpa_NJet/runs/e+e-_qq_plus_jets/qqg_V/RAMBO/events_100k.npy \
+--generate_nj True \
+--amp_type loop \
+--mur 91.188 \
+--alpha 1. \
+--alphas 0.07957747155 \
+--blha 1 \
+--debug False

@@ -1,0 +1,17 @@
+python interface.py \
+--order /mt/home/jbullock/n3jet_runs/runs/diphoton/4g2A/RAMBO/OLE_order.lh \
+--contract /mt/home/jbullock/n3jet_runs/runs/diphoton/4g2A/RAMBO/OLE_contract.lh \
+--proc_order False \
+--com 13000. \
+--nlegs 6 \
+--nps 5000 \
+--mom_file /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/4g2A/RAMBO/momenta_events_5k_19.npy \
+--generate_mom True \
+--nj_file /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/4g2A/RAMBO/events_5k_19.npy \
+--generate_nj True \
+--amp_type loopsq \
+--mur 91.188 \
+--alpha 0.007297352569 \
+--alphas 0.118 \
+--blha 2 \
+--debug False &
