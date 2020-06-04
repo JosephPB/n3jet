@@ -30,25 +30,7 @@ vector<double> read_input_from_file(const string &fname) {
 	return input_data;
 }
 
-double read_response_from_file(const string &fname) {
-	/* cout << "Reading response..." << endl; */
-	ifstream fin(fname.c_str());
-	int n_features;
-	fin >> n_features;
-	/* cout << "n_features: " << n_features << endl; */
-	double tmp_double;
-	for (unsigned i = 0; i < n_features; i++) {
-		fin >> tmp_double;
-		/* cout << "...ignoring: " << tmp_double << endl; */
-	}
-	double response;
-	fin >> response;
-	/* cout << "...and finally recording the response: " << response << endl; */
-	return response;
-}
 
-
-// Save s and t vals from file
 vector<vector<double> > read_multi_input_from_file(const string &fname) {
 	cout << "Reading input..." << endl;
 	ifstream fin(fname.c_str());
@@ -65,46 +47,6 @@ vector<vector<double> > read_multi_input_from_file(const string &fname) {
 		}
 	}
 	return input_data;
-}
-
-// Save actual values is present
-vector<double> read_multi_response_from_file(const string &fname) {
-	cout << "Reading response..." << endl;
-	ifstream fin(fname.c_str());
-	int n_features;
-	int N_samples;
-	fin >> N_samples;
-	fin >> n_features;
-	/* cout << "n_features: " << n_features << endl; */
-	double tmp_double;
-	for (unsigned i = 0; i < N_samples; i++){
-		for (unsigned j = 0; j < n_features; j++) {
-			fin >> tmp_double;
-		}
-	}
-	vector<double> response(N_samples);
-	for (unsigned i = 0; i < N_samples; i++){
-		fin >> response[i];
-		/* cout << "...and finally recording the response: " << response << endl; */
-	}
-	return response;
-}
-
-
-// Save scaling details from dat file
-vector<vector<double> > read_scalers_from_file(const string &fname){
-	cout << "Reading scalers..." << endl;
-	ifstream fin(fname.c_str());
-	int n_features;
-	fin >> n_features;
-	/* cout << "N_samples: " << N_samples << endl; */
-	/* cout << "n_features: " << n_features << endl; */
-	vector<vector<double> > scaler_properties(n_features+1,vector<double>(2));
-	for (unsigned i = 0; i < n_features+1; i++){
-		fin >> scaler_properties[i][0];
-		fin >> scaler_properties[i][1];
-	}
-	return scaler_properties;
 }
 
 

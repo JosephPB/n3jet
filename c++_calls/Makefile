@@ -9,4 +9,4 @@ OUTPUT_OPTION = -o $@
 	$(COMPILE.cpp) $< $(OUTPUT_OPTION)
 
 clean:
-	rm -f *.0 __pycache__
+	rm -f *.o __pycache__
