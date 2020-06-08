@@ -247,6 +247,9 @@ def train_near_networks_general(input_size, pairs, near_momenta, NJ_split, delta
                 os.mkdir(pair_dir)
             
             model.save(pair_dir + '/model')
+            with open (pair_dir + '/model_arch.json', 'w') as fout:
+                fout.write(model.to_json())
+            model.save_weights(pair_dir + '/model_weights.h5')
             metadata = {'x_mean': x_mean, 'x_std': x_std, 'y_mean': y_mean, 'y_std': y_std}
             pickle_out = open(pair_dir + "/dataset_metadata.pickle","wb")
             pickle.dump(metadata, pickle_out)
@@ -391,6 +394,9 @@ def train_cut_network_general(input_size, cut_momenta, NJ_cut, delta_near, model
             os.mkdir(cut_dir)
         
         model_cut.save(cut_dir + '/model')
+        with open (cut_dir + '/model_arch.json', 'w') as fout:
+            fout.write(model.to_json())
+        model.save_weights(cut_dir + '/model_weights.h5')
         metadata = {'x_mean': x_mean_cut, 'x_std': x_std_cut, 'y_mean': y_mean_cut, 'y_std': y_std_cut}
         
         pickle_out = open(cut_dir + '/dataset_metadata.pickle',"wb")

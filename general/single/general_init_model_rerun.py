@@ -141,6 +141,9 @@ for i in range(training_reruns):
     
     if model_dir != '':
         model.save(model_dir_new + '/model')
+        with open (model_dir_new + '/model_arch.json', 'w') as fout:
+            fout.write(model.to_json())
+        model.save_weights(model_new_dir + '/model_weights.h5')
         metadata = {'x_mean': x_mean, 'x_std': x_std, 'y_mean': y_mean, 'y_std': y_std}
         pickle_out = open(model_dir_new + "/dataset_metadata.pickle","wb")
         pickle.dump(metadata, pickle_out)
