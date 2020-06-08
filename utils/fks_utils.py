@@ -395,8 +395,8 @@ def train_cut_network_general(input_size, cut_momenta, NJ_cut, delta_near, model
         
         model_cut.save(cut_dir + '/model')
         with open (cut_dir + '/model_arch.json', 'w') as fout:
-            fout.write(model.to_json())
-        model.save_weights(cut_dir + '/model_weights.h5')
+            fout.write(model_cut.to_json())
+        model_cut.save_weights(cut_dir + '/model_weights.h5')
         metadata = {'x_mean': x_mean_cut, 'x_std': x_std_cut, 'y_mean': y_mean_cut, 'y_std': y_std_cut}
         
         pickle_out = open(cut_dir + '/dataset_metadata.pickle',"wb")
