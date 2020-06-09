@@ -44,6 +44,7 @@ int main()
 
 
   string dumpednn = "./tests/single_test_dumped.nnet";
+  //string dumpednn = "./models/diphoton/3g2A/RAMBO/events_100k_single_all_legs_all_save_0/model.nnet";
 
   KerasModel kerasModel(dumpednn);
 
