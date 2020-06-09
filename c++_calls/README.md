@@ -21,7 +21,7 @@ python single_test_train.py -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/
 Dump network:
 ```
 cd ..
-python dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/single_test_weights.h5 -o tests/single_test_dumped.nnet
+python conversion/dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/single_test_weights.h5 -o tests/single_test_dumped.nnet
 ```
 
 Compile:
@@ -47,10 +47,9 @@ This example will infer on a model once trained to predict the loop squared of a
 
 Compile:
 ```
-make ex_3g2A.o
+make ex_3g2A_test.o
 ```
 
 Run:
 ```
-./ex_3g2A.o
-```
+./ex_3g2A
