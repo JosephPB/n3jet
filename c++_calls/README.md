@@ -52,4 +52,5 @@ make ex_3g2A_test.o
 
 Run:
 ```
-./ex_3g2A
+./ex_3g2A_test.o
+```
