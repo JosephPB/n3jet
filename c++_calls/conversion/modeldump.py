@@ -7,14 +7,31 @@ import argparse
 
 
 class ModelDump:
+    """
+    Read in model architecture and weights and dump to .nnet format for C++ inference
+    """
 
-    def __init__(self, architecture, weights, output, verbose = False):
+    def __init__(self, architecture, weights, output, verbose=False, init=False):
+        """
+        Parameters
+        ----------
+
+        architecture: path to architecture file
+        weights: path to .h5 weights file
+        output: path to output .nnet file
+        verbose: (bool) if True print out stages
+        """
         self.architecture = architecture
         self.weights = weights
         self.output = output
         self.verbose = verbose
 
+        if init:
+            self.load_model()
+            self.write_output()
+
     def load_model(self):
+        'Load model architecture and weights and compile'
 
         arch = open(self.architecture).read()
         self.model = model_from_json(arch)
@@ -23,6 +40,7 @@ class ModelDump:
         self.arch = json.loads(arch)
 
     def write_output(self):
+        'Write out architecture and weights in format for C++ inference'
 
         with open(self.output, 'w') as fout:
             fout.write('layers ' + str(len(self.model.layers)) + '\n')
