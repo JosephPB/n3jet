@@ -4,7 +4,7 @@ from keras.models import Sequential, model_from_json
 from keras.optimizers import Adam
 import json
 import argparse
-
+np.set_printoptions(threshold=np.inf)
 
 class ModelDump:
     """
@@ -75,3 +75,6 @@ class ModelDump:
                     if self.verbose:
                         print W.shape
                     fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
+                    for w in W:
+                        fout.write(str(w) + '\n')
+                    fout.write(str(self.model.layers[ind].get_weights()[1]) + '\n')
