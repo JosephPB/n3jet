@@ -30,6 +30,30 @@ vector<double> read_input_from_file(const string &fname) {
 	return input_data;
 }
 
+vector<double> read_metadata_from_file(const string &fname){
+       ifstream fin(fname.c_str());
+       int n_x_mean = 4;
+       int n_x_std = 4;
+       int n_y_mean = 1;
+       int n_y_std = 1;
+
+       vector<double> metadata(10);
+
+       for (int i = 0; i < n_x_mean; i++){
+	 fin >> metadata[i]; 
+       }
+       for (int i = 0; i < n_x_std; i++){
+	 fin >> metadata[n_x_mean+i];
+       }
+       for (int i = 0; i < n_y_mean; i++){
+	 fin >> metadata[n_x_mean+n_x_std+i]; 
+       }
+       for (int i = 0; i < n_y_std; i++){
+	 fin >> metadata[n_x_mean+n_x_std+n_y_mean+i];
+       }
+
+       return metadata;
+}
 
 vector<vector<double> > read_multi_input_from_file(const string &fname) {
 	cout << "Reading input..." << endl;
@@ -61,6 +85,7 @@ double destandardise(double value, double mean, double std){
        new_value = new_value*std + mean;
        return new_value;
 }
+
 /*
 double standardise_array(double array[][4], int legs, double means[4], double stds[4]){
        double new_array[legs*4] = {};

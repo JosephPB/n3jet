@@ -1,6 +1,9 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 
 #include "model_fns.h"
 
@@ -42,7 +45,10 @@ int main()
   double y_mean = 1.8749375283902703e-07;
   double y_std = 3.8690694630335114e-07;
 
-
+  string metadata_file = "./tests/data/single_test_dataset_metadata.dat";
+  vector<double> metadata = read_metadata_from_file(metadata_file);
+  cout << "Metadata test = " << metadata[9] << endl;
+  
   string dumpednn = "./tests/single_test_dumped.nnet";
   //string dumpednn = "./models/diphoton/3g2A/RAMBO/events_100k_single_all_legs_all_save_0/model.nnet";
 
