@@ -40,12 +40,15 @@ int main()
 				     }
   };
 
+  /*
   double x_means[4] = {4.00000000e+02,  4.54747351e-15,  7.95807864e-15, -9.09494702e-15};
   double x_stds[4] = {121.24600323, 188.36617697, 119.5484733 , 353.45005193};
   double y_mean = 1.8749375283902703e-07;
   double y_std = 3.8690694630335114e-07;
+  */
 
   string metadata_file = "./tests/data/single_test_dataset_metadata.dat";
+  // metadata is in the format: {x_means,x_stds,y_mean,y_std}
   vector<double> metadata = read_metadata_from_file(metadata_file);
   cout << "Metadata test = " << metadata[9] << endl;
   
@@ -65,7 +68,7 @@ int main()
       for (int mu = 0; mu < 4; mu++){
 	// standardise input
 	cout << Momenta[i][p][mu] << " ";
-	mom[p*4+mu] = standardise(Momenta[i][p][mu], x_means[p], x_stds[p]);
+	mom[p*4+mu] = standardise(Momenta[i][p][mu], metadata[p], metadata[4+p]);
       }
       cout << endl;
     }
@@ -76,7 +79,7 @@ int main()
     vector<double> result = kerasModel.compute_output(input_vec);
 
     // destandardise output
-    double output = destandardise(result[0], y_mean, y_std);
+    double output = destandardise(result[0], metadata[8], metadata[9]);
 
     cout << "Loop( 0) = " << output << endl;
     
