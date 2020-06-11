@@ -99,6 +99,63 @@ int main()
   KerasModel kerasModel_17(model_dir_models[17]);
   KerasModel kerasModel_18(model_dir_models[18]);
   KerasModel kerasModel_19(model_dir_models[19]);
-  
 
+  int proc_len = legs*4;
+  
+  for (int i = 0; i < pspoints; i++){
+    cout << "==================== Test point " << i+1 << " ====================" << endl;
+    double mom[legs*4];
+
+    // flatten momenta
+    for (int p = 0; p < legs; p++){
+      for (int mu = 0; mu < 4; mu++){
+	// standardise input
+	cout << Momenta[i][p][mu] << " ";
+	mom[p*4+mu] = standardise(Momenta[i][p][mu], metadatas[0][p], metadatas[0][4+p]);
+      }
+      cout << endl;
+    }
+    cout << endl;
+    
+    vector<double> input_vec(begin(mom), end(mom));
+
+    vector<vector<double> > results(training_reruns);
+    
+    results[0] = kerasModel_0.compute_output(input_vec);
+    double test = results[0][0];
+    //cout << results[0][0] << endl;
+    results[1] = kerasModel_1.compute_output(input_vec);
+    results[2] = kerasModel_2.compute_output(input_vec);
+    results[3] = kerasModel_3.compute_output(input_vec);
+    results[4] = kerasModel_4.compute_output(input_vec);
+    results[5] = kerasModel_5.compute_output(input_vec);
+    results[6] = kerasModel_6.compute_output(input_vec);
+    results[7] = kerasModel_7.compute_output(input_vec);
+    results[8] = kerasModel_8.compute_output(input_vec);
+    results[9] = kerasModel_9.compute_output(input_vec);
+    results[10] = kerasModel_10.compute_output(input_vec);
+    results[11] = kerasModel_11.compute_output(input_vec);
+    results[12] = kerasModel_12.compute_output(input_vec);
+    results[13] = kerasModel_13.compute_output(input_vec);
+    results[14] = kerasModel_14.compute_output(input_vec);
+    results[15] = kerasModel_15.compute_output(input_vec);
+    results[16] = kerasModel_16.compute_output(input_vec);
+    results[17] = kerasModel_17.compute_output(input_vec);
+    results[18] = kerasModel_18.compute_output(input_vec);
+    results[19] = kerasModel_19.compute_output(input_vec);
+
+    //cout << results[0][0] << endl;
+    
+    /*
+    double results_sum = 0;
+    for (int l = 0; l < training_reruns; l++){
+      double output = destandardise(results[l][0], metadatas[l][8], metadatas[l][9]);
+      results_sum += output;
+    };
+
+    double average_output = results_sum/training_reruns;
+
+    cout << "Loop( 0) = " << average_output << endl;
+    */
+  };
 }
