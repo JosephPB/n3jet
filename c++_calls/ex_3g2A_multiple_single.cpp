@@ -74,6 +74,31 @@ int main()
     };
   };
 
-  cout << metadatas[3][4] << endl;
+  string model_dir_models[training_reruns];
+  for (int k = 0; k < training_reruns; k++){
+    model_dir_models[k] = model_base + model_dirs[k] + "model.dat";
+  };
+  
+  KerasModel kerasModel_0(model_dir_models[0]);
+  KerasModel kerasModel_1(model_dir_models[1]);
+  KerasModel kerasModel_2(model_dir_models[2]);
+  KerasModel kerasModel_3(model_dir_models[3]);
+  KerasModel kerasModel_4(model_dir_models[4]);
+  KerasModel kerasModel_5(model_dir_models[5]);
+  KerasModel kerasModel_6(model_dir_models[6]);
+  KerasModel kerasModel_7(model_dir_models[7]);
+  KerasModel kerasModel_8(model_dir_models[8]);
+  KerasModel kerasModel_9(model_dir_models[9]);
+  KerasModel kerasModel_10(model_dir_models[10]);
+  KerasModel kerasModel_11(model_dir_models[11]);
+  KerasModel kerasModel_12(model_dir_models[12]);
+  KerasModel kerasModel_13(model_dir_models[13]);
+  KerasModel kerasModel_14(model_dir_models[14]);
+  KerasModel kerasModel_15(model_dir_models[15]);
+  KerasModel kerasModel_16(model_dir_models[16]);
+  KerasModel kerasModel_17(model_dir_models[17]);
+  KerasModel kerasModel_18(model_dir_models[18]);
+  KerasModel kerasModel_19(model_dir_models[19]);
+  
 
 }
