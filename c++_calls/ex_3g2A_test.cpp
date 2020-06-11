@@ -83,6 +83,6 @@ int main()
 
     cout << "Loop( 0) = " << output << endl;
     
-  }
+  };
   
 }
