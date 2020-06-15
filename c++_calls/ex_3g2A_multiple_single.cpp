@@ -99,47 +99,50 @@ int main()
   
   for (int i = 0; i < pspoints; i++){
     cout << "==================== Test point " << i+1 << " ====================" << endl;
-    double mom[legs*4];
+    double moms[training_reruns][legs*4];
 
     // flatten momenta
+    
     for (int p = 0; p < legs; p++){
       for (int mu = 0; mu < 4; mu++){
 	// standardise input
 	cout << Momenta[i][p][mu] << " ";
-	mom[p*4+mu] = standardise(Momenta[i][p][mu], metadatas[0][p], metadatas[0][4+p]);
+	for (int k = 0; k < training_reruns; k++){
+	  moms[k][p*4+mu] = standardise(Momenta[i][p][mu], metadatas[k][p], metadatas[k][4+p]);
+	}
       }
       cout << endl;
     }
     cout << endl;
 
-   
+    vector<vector<double> > input_vecs(training_reruns, vector<double>(legs*4));
+    for (int l = 0; l < training_reruns; l++){
+      vector<double> input_vec(begin(moms[l]), end(moms[l]));
+      input_vecs[l] = input_vec;
+    }    
     
-    vector<double> input_vec(begin(mom), end(mom));
-
-    cout << input_vec[0] << endl;
-
     vector<vector<double> > results(training_reruns);
     
-    results[0] = kerasModel_0.compute_output(input_vec);
-    results[1] = kerasModel_1.compute_output(input_vec);
-    results[2] = kerasModel_2.compute_output(input_vec);
-    results[3] = kerasModel_3.compute_output(input_vec);
-    results[4] = kerasModel_4.compute_output(input_vec);
-    results[5] = kerasModel_5.compute_output(input_vec);
-    results[6] = kerasModel_6.compute_output(input_vec);
-    results[7] = kerasModel_7.compute_output(input_vec);
-    results[8] = kerasModel_8.compute_output(input_vec);
-    results[9] = kerasModel_9.compute_output(input_vec);
-    results[10] = kerasModel_10.compute_output(input_vec);
-    results[11] = kerasModel_11.compute_output(input_vec);
-    results[12] = kerasModel_12.compute_output(input_vec);
-    results[13] = kerasModel_13.compute_output(input_vec);
-    results[14] = kerasModel_14.compute_output(input_vec);
-    results[15] = kerasModel_15.compute_output(input_vec);
-    results[16] = kerasModel_16.compute_output(input_vec);
-    results[17] = kerasModel_17.compute_output(input_vec);
-    results[18] = kerasModel_18.compute_output(input_vec);
-    results[19] = kerasModel_19.compute_output(input_vec);
+    results[0] = kerasModel_0.compute_output(input_vecs[0]);
+    results[1] = kerasModel_1.compute_output(input_vecs[1]);
+    results[2] = kerasModel_2.compute_output(input_vecs[2]);
+    results[3] = kerasModel_3.compute_output(input_vecs[3]);
+    results[4] = kerasModel_4.compute_output(input_vecs[4]);
+    results[5] = kerasModel_5.compute_output(input_vecs[5]);
+    results[6] = kerasModel_6.compute_output(input_vecs[6]);
+    results[7] = kerasModel_7.compute_output(input_vecs[7]);
+    results[8] = kerasModel_8.compute_output(input_vecs[8]);
+    results[9] = kerasModel_9.compute_output(input_vecs[9]);
+    results[10] = kerasModel_10.compute_output(input_vecs[10]);
+    results[11] = kerasModel_11.compute_output(input_vecs[11]);
+    results[12] = kerasModel_12.compute_output(input_vecs[12]);
+    results[13] = kerasModel_13.compute_output(input_vecs[13]);
+    results[14] = kerasModel_14.compute_output(input_vecs[14]);
+    results[15] = kerasModel_15.compute_output(input_vecs[15]);
+    results[16] = kerasModel_16.compute_output(input_vecs[16]);
+    results[17] = kerasModel_17.compute_output(input_vecs[17]);
+    results[18] = kerasModel_18.compute_output(input_vecs[18]);
+    results[19] = kerasModel_19.compute_output(input_vecs[19]);
     
     double results_sum = 0;
     for (int l = 0; l < training_reruns; l++){
