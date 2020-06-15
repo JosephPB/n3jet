@@ -140,9 +140,7 @@ int main()
     results[17] = kerasModel_17.compute_output(input_vec);
     results[18] = kerasModel_18.compute_output(input_vec);
     results[19] = kerasModel_19.compute_output(input_vec);
-    cout << results[0][0] << endl;
     
-    /*
     double results_sum = 0;
     for (int l = 0; l < training_reruns; l++){
       double output = destandardise(results[l][0], metadatas[l][8], metadatas[l][9]);
@@ -152,6 +150,5 @@ int main()
     double average_output = results_sum/training_reruns;
 
     cout << "Loop( 0) = " << average_output << endl;
-    */
   };
 }
