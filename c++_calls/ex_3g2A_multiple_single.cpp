@@ -73,7 +73,7 @@ int main()
     for (int j = 0; j < 10 ; j++){
       metadatas[i][j] = metadata[j];
     };
-    model_dir_models[i] = model_base + model_dirs[i] + "model.dat";
+    model_dir_models[i] = model_base + model_dirs[i] + "model.nnet";
   };
 
   KerasModel kerasModel_0(model_dir_models[0]);
@@ -96,8 +96,6 @@ int main()
   KerasModel kerasModel_17(model_dir_models[17]);
   KerasModel kerasModel_18(model_dir_models[18]);
   KerasModel kerasModel_19(model_dir_models[19]);
-
-  int proc_len = legs*4;
   
   for (int i = 0; i < pspoints; i++){
     cout << "==================== Test point " << i+1 << " ====================" << endl;
@@ -113,14 +111,16 @@ int main()
       cout << endl;
     }
     cout << endl;
+
+   
     
     vector<double> input_vec(begin(mom), end(mom));
+
+    cout << input_vec[0] << endl;
 
     vector<vector<double> > results(training_reruns);
     
     results[0] = kerasModel_0.compute_output(input_vec);
-    double test = results[0][0];
-    //cout << results[0][0] << endl;
     results[1] = kerasModel_1.compute_output(input_vec);
     results[2] = kerasModel_2.compute_output(input_vec);
     results[3] = kerasModel_3.compute_output(input_vec);
@@ -140,8 +140,7 @@ int main()
     results[17] = kerasModel_17.compute_output(input_vec);
     results[18] = kerasModel_18.compute_output(input_vec);
     results[19] = kerasModel_19.compute_output(input_vec);
-
-    //cout << results[0][0] << endl;
+    cout << results[0][0] << endl;
     
     /*
     double results_sum = 0;
