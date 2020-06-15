@@ -7,7 +7,7 @@ DEFS=-DDEBUG
 all: ex_3g2A single_test
 
 # Example of using the NN
-ex_3g2A_multiple_single: single_3g2A_multiple_single.o model_fns.o
+ex_3g2A_multiple_single: ex_3g2A_multiple_single.o model_fns.o
 	$(CXX) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 ex_3g2A_test: ex_3g2A_test.o model_fns.o
@@ -25,7 +25,7 @@ ex_3g2A_test.o: ex_3g2A_test.cpp
 single_test.o: single_test.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS) $(DEFS)
 
-ex_3g2A_multiple_single.o: single_3g2A_multiple_single.cpp
+ex_3g2A_multiple_single.o: ex_3g2A_multiple_single.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS) $(DEFS)
 
 clean:
