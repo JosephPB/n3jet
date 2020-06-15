@@ -74,4 +74,27 @@ int main()
 				  "pair_0.02_8"
 				  
   };
+
+  std::string cut_dirs = "cut_0.02";
+
+  std::vector<std::vector<std::vector<double> > > metadatas(training_reruns, std::vector<std::vector<double> > (pairs+1, std::vector<double>(10)));
+  std::string model_dir_models[training_reruns][pairs+1];
+
+  for (int i = 0; i < training_reruns; i++){
+    for (int j = 0; j < pairs; j++){
+      std::string metadata_file = model_base + model_dirs[i] + pair_dirs[j] + "dataset_metadata.dat";
+      std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
+      for (int k = 0; k < 10 ; k++){
+	metadatas[i][j][k] = metadata[k];
+      };
+      model_dir_models[i][j] = model_base + model_dirs[i] + pair_dirs[j] + "model.nnet";
+    };
+    std::string metadata_file = model_base + model_dirs[i] + cut_dirs + "dataset_metadata.dat";
+    std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
+    for (int k = 0; k < 10 ; k++){
+      metadatas[i][pairs][k] = metadata[k];
+    };
+    model_dir_models[i][pairs] = model_base + model_dirs[i] + cut_dirs + "model.nnet";
+  };
+  
 }
