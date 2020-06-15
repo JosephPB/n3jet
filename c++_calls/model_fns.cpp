@@ -43,14 +43,14 @@ std::vector<double> nn::read_input_from_file(const std::string& fname)
     return input_data;
 }
 
-vector<double> read_metadata_from_file(const string &fname){
-       ifstream fin(fname.c_str());
+std::vector<double> read_metadata_from_file(const std::string& fname){
+       std::ifstream fin(fname.c_str());
        int n_x_mean = 4;
        int n_x_std = 4;
        int n_y_mean = 1;
        int n_y_std = 1;
 
-       vector<double> metadata(10);
+       std::vector<double> metadata(10);
 
        for (int i = 0; i < n_x_mean; i++){
 	 fin >> metadata[i]; 
