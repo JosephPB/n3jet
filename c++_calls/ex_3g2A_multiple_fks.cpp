@@ -18,6 +18,7 @@ int main()
 
   const int legs = 5;
   const int pspoints = 2;
+  const int pairs = 9;
   const int training_reruns = 20;
 
   //raw momenta input
@@ -40,25 +41,37 @@ int main()
   };
   
   std::string model_base = "./models/diphoton/3g2A/RAMBO/";
-  std::string model_dirs[training_reruns] = {"events_100k_single_all_legs_all_save_0/",
-			"events_100k_single_all_legs_all_save_1/",
-			"events_100k_single_all_legs_all_save_2/",
-			"events_100k_single_all_legs_all_save_3/",
-			"events_100k_single_all_legs_all_save_4/",
-			"events_100k_single_all_legs_all_save_5/",
-			"events_100k_single_all_legs_all_save_6/",
-			"events_100k_single_all_legs_all_save_7/",
-			"events_100k_single_all_legs_all_save_8/",
-			"events_100k_single_all_legs_all_save_9/",
-			"events_100k_single_all_legs_all_save_10/",
-			"events_100k_single_all_legs_all_save_11/",
-			"events_100k_single_all_legs_all_save_12/",
-			"events_100k_single_all_legs_all_save_13/",
-			"events_100k_single_all_legs_all_save_14/",
-			"events_100k_single_all_legs_all_save_15/",
-			"events_100k_single_all_legs_all_save_16/",
-			"events_100k_single_all_legs_all_save_17/",
-			"events_100k_single_all_legs_all_save_18/",
-			"events_100k_single_all_legs_all_save_19/"
+  std::string model_dirs[training_reruns] = {"events_100k_fks_all_legs_all_paires_all_save_0/",
+					     "events_100k_fks_all_legs_all_paires_all_save_1/",
+					     "events_100k_fks_all_legs_all_paires_all_save_2/",
+					     "events_100k_fks_all_legs_all_paires_all_save_3/",
+					     "events_100k_fks_all_legs_all_paires_all_save_4/",
+					     "events_100k_fks_all_legs_all_paires_all_save_5/",
+					     "events_100k_fks_all_legs_all_paires_all_save_6/",
+					     "events_100k_fks_all_legs_all_paires_all_save_7/",
+					     "events_100k_fks_all_legs_all_paires_all_save_8/",
+					     "events_100k_fks_all_legs_all_paires_all_save_9/",
+					     "events_100k_fks_all_legs_all_paires_all_save_10/",
+					     "events_100k_fks_all_legs_all_paires_all_save_11/",
+					     "events_100k_fks_all_legs_all_paires_all_save_12/",
+					     "events_100k_fks_all_legs_all_paires_all_save_13/",
+					     "events_100k_fks_all_legs_all_paires_all_save_14/",
+					     "events_100k_fks_all_legs_all_paires_all_save_15/",
+					     "events_100k_fks_all_legs_all_paires_all_save_16/",
+					     "events_100k_fks_all_legs_all_paires_all_save_17/",
+					     "events_100k_fks_all_legs_all_paires_all_save_18/",
+					     "events_100k_fks_all_legs_all_paires_all_save_19/"
+  };
+
+  std::string pair_dirs[pairs] = {"pair_0.02_0",
+				  "pair_0.02_1",
+				  "pair_0.02_2",
+				  "pair_0.02_3",
+				  "pair_0.02_4",
+				  "pair_0.02_5",
+				  "pair_0.02_6",
+				  "pair_0.02_7",
+				  "pair_0.02_8"
+				  
   };
 }

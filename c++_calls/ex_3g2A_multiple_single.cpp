@@ -7,8 +7,6 @@
 
 #include "model_fns.h"
 
-//using namespace std;
-
 int main()
 {
   std::cout.setf(std::ios_base::scientific, std::ios_base::floatfield);
@@ -43,25 +41,25 @@ int main()
   
   std::string model_base = "./models/diphoton/3g2A/RAMBO/";
   std::string model_dirs[training_reruns] = {"events_100k_single_all_legs_all_save_0/",
-			"events_100k_single_all_legs_all_save_1/",
-			"events_100k_single_all_legs_all_save_2/",
-			"events_100k_single_all_legs_all_save_3/",
-			"events_100k_single_all_legs_all_save_4/",
-			"events_100k_single_all_legs_all_save_5/",
-			"events_100k_single_all_legs_all_save_6/",
-			"events_100k_single_all_legs_all_save_7/",
-			"events_100k_single_all_legs_all_save_8/",
-			"events_100k_single_all_legs_all_save_9/",
-			"events_100k_single_all_legs_all_save_10/",
-			"events_100k_single_all_legs_all_save_11/",
-			"events_100k_single_all_legs_all_save_12/",
-			"events_100k_single_all_legs_all_save_13/",
-			"events_100k_single_all_legs_all_save_14/",
-			"events_100k_single_all_legs_all_save_15/",
-			"events_100k_single_all_legs_all_save_16/",
-			"events_100k_single_all_legs_all_save_17/",
-			"events_100k_single_all_legs_all_save_18/",
-			"events_100k_single_all_legs_all_save_19/"
+					     "events_100k_single_all_legs_all_save_1/",
+					     "events_100k_single_all_legs_all_save_2/",
+					     "events_100k_single_all_legs_all_save_3/",
+					     "events_100k_single_all_legs_all_save_4/",
+					     "events_100k_single_all_legs_all_save_5/",
+					     "events_100k_single_all_legs_all_save_6/",
+					     "events_100k_single_all_legs_all_save_7/",
+					     "events_100k_single_all_legs_all_save_8/",
+					     "events_100k_single_all_legs_all_save_9/",
+					     "events_100k_single_all_legs_all_save_10/",
+					     "events_100k_single_all_legs_all_save_11/",
+					     "events_100k_single_all_legs_all_save_12/",
+					     "events_100k_single_all_legs_all_save_13/",
+					     "events_100k_single_all_legs_all_save_14/",
+					     "events_100k_single_all_legs_all_save_15/",
+					     "events_100k_single_all_legs_all_save_16/",
+					     "events_100k_single_all_legs_all_save_17/",
+					     "events_100k_single_all_legs_all_save_18/",
+					     "events_100k_single_all_legs_all_save_19/"
   };
   
   std::vector<std::vector<double> > metadatas(training_reruns, std::vector<double>(10));
