@@ -102,7 +102,6 @@ int main()
     double moms[training_reruns][legs*4];
 
     // flatten momenta
-    
     for (int p = 0; p < legs; p++){
       for (int mu = 0; mu < 4; mu++){
 	// standardise input

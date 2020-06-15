@@ -1,19 +1,18 @@
 #ifndef PREDICT__H
 #define PREDICT__H
 
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 
-using namespace std;
+namespace nn {
 
-void missing_activation_impl(const string &activation);
-vector<double> read_input_from_file(const string &f_name);
-vector<vector<double> > read_multi_input_from_file(const string &f_name);
-vector<double> read_metadata_from_file(const string &fname);
-double standardise(double value, double mean, double std);
-double destandardise(double value, double mean, double std);
+void missing_activation_impl(const std::string& activation);
+std::vector<double> read_input_from_file(const std::string& f_name);
+std::vector<std::vector<double>> read_multi_input_from_file(const std::string& f_name);
+std::vector<double> read_metadata_from_file(const std::string& fname);
+double standardise(double value, double mean, double stnd);
+double destandardise(double value, double mean, double stnd);
 //double standardise_array(double array[][4], int legs, double means[4], double stds[4]);
 //double untransform(double value, double mean, double scale);
 //double transform(double value, double mean, double scale);
@@ -21,60 +20,64 @@ double destandardise(double value, double mean, double std);
 // layer class - base class for other layr classes
 class Layer {
 public:
-	unsigned int layer_id;
-	string layer_name;
+    unsigned int layer_id;
+    std::string layer_name;
 
-	//  constructor sets parameter string to member variable  i.e. -> layer_name
-	Layer(string name) : layer_name(name) {};
-	virtual ~Layer() { };
+    //  constructor sets parameter std::string to member variable  i.e. -> layer_name
+    Layer(std::string name)
+        : layer_name(name) {};
+    virtual ~Layer() {};
 
-	// virtual methods are expected to be redefined in derived class
-	// virtual methods for derived classes can to be accessed
-	// using pointer/reference to the base class
-	virtual void load_weights(ifstream &input_fname) { };
-	virtual vector<double> compute_output(vector<double> test_input) { };
+    // virtual methods are expected to be redefined in derived class
+    // virtual methods for derived classes can to be accessed
+    // using pointer/reference to the base class
+    virtual void load_weights(std::ifstream& input_fname) = 0;
+    virtual std::vector<double> compute_output(std::vector<double> test_input) = 0;
 
-	string get_layer_name() { return layer_name; }	// returns layer name
+    std::string get_layer_name() { return layer_name; } // returns layer name
 };
 
-class LayerDense: public Layer {
+class LayerDense : public Layer {
 public:
-	unsigned int input_node_count;
-	unsigned int output_weights;
-	vector<vector<double> > layer_weights;
-	vector<double> bias;
+    unsigned int input_node_count;
+    unsigned int output_weights;
+    std::vector<std::vector<double>> layer_weights;
+    std::vector<double> bias;
 
-	LayerDense() : Layer("Dense") {};
-	void load_weights(ifstream &fin);
-	vector<double> compute_output(vector<double> test_input);
-
+    LayerDense()
+        : Layer("Dense") {};
+    void load_weights(std::ifstream& fin);
+    std::vector<double> compute_output(std::vector<double> test_input);
 };
 
-class LayerActivation: public Layer {
+class LayerActivation : public Layer {
 public:
-	string activation_type;
+    std::string activation_type;
 
-	LayerActivation() : Layer("Activation") { };
-	void load_weights(ifstream &fin);
-	vector<double> compute_output(vector<double> test_input);
+    LayerActivation()
+        : Layer("Activation") {};
+    void load_weights(std::ifstream& fin);
+    std::vector<double> compute_output(std::vector<double> test_input);
 };
 
 // keras model class
 class KerasModel {
 public:
-	unsigned int input_node_count();
-	unsigned int output_node_count();
+    unsigned int input_node_count();
+    unsigned int output_node_count();
 
-	KerasModel(string &input_fname);	// constructor declaration
-	~KerasModel();		// destructor declaration
-	vector<double> compute_output(vector<double> test_input);
+    KerasModel(std::string& input_fname); // constructor declaration
+    ~KerasModel();                        // destructor declaration
+    std::vector<double> compute_output(std::vector<double> test_input);
 
 private:
-	void load_weights(string &input_fname);
-	unsigned int layers_count;
-	vector<Layer *> layers;	// container with layers
+    void load_weights(std::string& input_fname);
+    unsigned int layers_count;
+    std::vector<Layer*> layers; // container with layers
 };
 
-//double one_point_NN(KerasModel& object, vector<vector<double> > scaler_properties, vector<double> data);
+//double one_point_NN(KerasModel& object, std::vector<std::vector<double> > scaler_properties, std::vector<double> data);
 
-#endif
+} // namespace nn
+
+#endif // PREDICT__H

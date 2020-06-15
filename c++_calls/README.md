@@ -26,12 +26,12 @@ python conversion/dump_to_simple_cpp.py -a tests/single_test_arch.json -w /scrat
 
 Compile:
 ```
-make single_test.o
+make single_test
 ```
 
 Run:
 ```
-./single_test.out
+./single_test
 ```
 
 ## 3g2A example
@@ -47,10 +47,10 @@ This example will infer on a model once trained to predict the loop squared of a
 
 Compile:
 ```
-make ex_3g2A_test.o
+make ex_3g2A
 ```
 
 Run:
 ```
-./ex_3g2A_test.o
+./ex_3g2A
 ```
