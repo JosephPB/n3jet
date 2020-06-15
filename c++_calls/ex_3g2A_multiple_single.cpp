@@ -63,8 +63,9 @@ int main()
 			"events_100k_single_all_legs_all_save_18/",
 			"events_100k_single_all_legs_all_save_19/"
   };
-
+  
   vector<vector<double> > metadatas(training_reruns, vector<double>(10));
+  string model_dir_models[training_reruns];
 
   for (int i = 0; i < training_reruns; i++){
     string metadata_file = model_base + model_dirs[i] + "dataset_metadata.dat";
@@ -72,13 +73,9 @@ int main()
     for (int j = 0; j < 10 ; j++){
       metadatas[i][j] = metadata[j];
     };
+    model_dir_models[i] = model_base + model_dirs[i] + "model.dat";
   };
 
-  string model_dir_models[training_reruns];
-  for (int k = 0; k < training_reruns; k++){
-    model_dir_models[k] = model_base + model_dirs[k] + "model.dat";
-  };
-  
   KerasModel kerasModel_0(model_dir_models[0]);
   KerasModel kerasModel_1(model_dir_models[1]);
   KerasModel kerasModel_2(model_dir_models[2]);
