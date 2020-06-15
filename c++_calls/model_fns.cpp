@@ -82,7 +82,7 @@ double standardise(double value, double mean, double std){
 
 double destandardise(double value, double mean, double std){
        double new_value;
-       new_value = new_value*std + mean;
+       new_value = value*std + mean;
        return new_value;
 }
 
