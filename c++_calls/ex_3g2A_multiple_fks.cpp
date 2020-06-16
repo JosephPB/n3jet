@@ -96,5 +96,5 @@ int main()
     };
     model_dir_models[i][pairs] = model_base + model_dirs[i] + cut_dirs + "model.nnet";
   };
-  
+
 }
