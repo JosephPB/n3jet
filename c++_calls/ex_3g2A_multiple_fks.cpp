@@ -7,6 +7,8 @@
 
 #include "model_fns.h"
 
+int pair_check(double p1[], double p2[], int delta, float s_com);
+
 int main()
 {
   std::cout.setf(std::ios_base::scientific, std::ios_base::floatfield);
@@ -20,6 +22,8 @@ int main()
   const int pspoints = 2;
   const int pairs = 9;
   const int training_reruns = 20;
+  const int delta = 0.02;
+  const float s_com = 1000.;
 
   //raw momenta input
 
@@ -108,8 +112,62 @@ int main()
     std::cout << "Loading from: " << model_dir_models[i][pairs] << std::endl;
 #endif
     kerasModels[i][pairs].load_weights(model_dir_models[i][pairs]);
-  };
+  }
 
-  
-  
+  for (int i = 0; i < pspoints; i++){
+    std::cout << "==================== Test point " << i+1 << " ====================" << std::endl;
+
+
+    // standardise momenta
+    double moms[training_reruns][pairs+1][legs*4];
+
+    // flatten momenta
+    for (int p = 0; p < legs; p++){
+      for (int mu = 0; mu < 4; mu++){
+	// standardise input
+	std::cout << Momenta[i][p][mu] << " ";
+	for (int k = 0; k < training_reruns; k++){
+	  for (int j = 0; j < pairs; j++){
+	    moms[k][j][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][j][p], metadatas[k][j][4+p]);
+	  }
+	  moms[k][pairs][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][pairs][p], metadatas[k][pairs][4+p]);
+	}
+      }
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
+
+    //cut/near check
+    int cut_near = 0;
+    for (int j; j < legs-1; j++){
+      for (int k = j+1; k < legs; k++){
+	int check = pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
+	  cut_near += check;
+      }
+    }
+
+    std::cout << "Cut/near check is: " << cut_near <<std::endl;
+
+
+    /*
+    // inference
+    for (int j = 0; j < training_reruns; j++){
+	for (int k = 0; k < pairs; k++){
+	}
+    }
+
+    */
+  }
+}
+
+int pair_check(double p1[], double p2[], int delta, float s_com){
+  double prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3]);
+  double distance = prod/s_com;
+
+  if (distance <= delta){
+    return 1;
+  }
+  else{
+    return 0;
+  }
 }
