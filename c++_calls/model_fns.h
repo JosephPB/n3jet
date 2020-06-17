@@ -73,7 +73,6 @@ public:
     std::vector<double> compute_output(std::vector<double> test_input);
 
 private:
-    // void load_weights(std::string& input_fname);
     unsigned int layers_count;
     std::vector<Layer*> layers; // container with layers
 };

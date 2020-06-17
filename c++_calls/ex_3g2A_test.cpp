@@ -42,16 +42,17 @@ int main()
 
     std::string dumpednn { "./tests/single_test_dumped.nnet" };
 
-    //nn::KerasModel kerasModel(dumpednn);
-    //nn::KerasModel kerasModel;
-    //kerasModel.load_weights(dumpednn);
+    nn::KerasModel kerasModel;
+    kerasModel.load_weights(dumpednn);
 
+    /*
     std::vector<nn::KerasModel> kerasModels(2);
 
     for (int j { 0 }; j < 2; ++j){
       kerasModels[j].load_weights(dumpednn);
     }
-        
+    */
+  
     for (int i { 0 }; i < pspoints; ++i) {
         std::cout << "==================== Test point " << i + 1 << " ====================" << '\n';
 
@@ -74,7 +75,7 @@ int main()
         std::cout << '\n';
 #endif
 
-        std::vector<double> result { kerasModels[0].compute_output(mom) };
+        std::vector<double> result { kerasModel.compute_output(mom) };
 
         // destandardise output
         double output { nn::destandardise(result[0], y_mean, y_std) };

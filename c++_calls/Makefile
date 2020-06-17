@@ -10,7 +10,7 @@ all: ex_3g2A_test single_test ex_3g2A_multiple_fks ex_3g2A_multiple_single
 ex_3g2A_multiple_fks: ex_3g2A_multiple_fks.o model_fns.o
 	$(CXX) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-ex_3g2A_multiple_single: ex_3g2A_multiple_single.o model_fns.o
+ex_3g2A_multiple_single: ex_3g2A_multiple_single.o model_fns_no_debug.o
 	$(CXX) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 ex_3g2A_test: ex_3g2A_test.o model_fns.o
@@ -21,6 +21,9 @@ single_test: single_test.o model_fns.o
 
 model_fns.o: model_fns.cpp model_fns.h
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS) $(DEFS)
+
+model_fns_no_debug.o: model_fns.cpp model_fns.h
+	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS)
 
 ex_3g2A_test.o: ex_3g2A_test.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS) $(DEFS)

@@ -64,6 +64,7 @@ int main()
   
   std::vector<std::vector<double> > metadatas(training_reruns, std::vector<double>(10));
   std::string model_dir_models[training_reruns];
+  std::vector<nn::KerasModel> kerasModels(training_reruns);
 
   for (int i = 0; i < training_reruns; i++){
     std::string metadata_file = model_base + model_dirs[i] + "dataset_metadata.dat";
@@ -72,29 +73,9 @@ int main()
       metadatas[i][j] = metadata[j];
     };
     model_dir_models[i] = model_base + model_dirs[i] + "model.nnet";
+    kerasModels[i].load_weights(model_dir_models[i]);
   };
 
-  nn::KerasModel kerasModel_0(model_dir_models[0]);
-  nn::KerasModel kerasModel_1(model_dir_models[1]);
-  nn::KerasModel kerasModel_2(model_dir_models[2]);
-  nn::KerasModel kerasModel_3(model_dir_models[3]);
-  nn::KerasModel kerasModel_4(model_dir_models[4]);
-  nn::KerasModel kerasModel_5(model_dir_models[5]);
-  nn::KerasModel kerasModel_6(model_dir_models[6]);
-  nn::KerasModel kerasModel_7(model_dir_models[7]);
-  nn::KerasModel kerasModel_8(model_dir_models[8]);
-  nn::KerasModel kerasModel_9(model_dir_models[9]);
-  nn::KerasModel kerasModel_10(model_dir_models[10]);
-  nn::KerasModel kerasModel_11(model_dir_models[11]);
-  nn::KerasModel kerasModel_12(model_dir_models[12]);
-  nn::KerasModel kerasModel_13(model_dir_models[13]);
-  nn::KerasModel kerasModel_14(model_dir_models[14]);
-  nn::KerasModel kerasModel_15(model_dir_models[15]);
-  nn::KerasModel kerasModel_16(model_dir_models[16]);
-  nn::KerasModel kerasModel_17(model_dir_models[17]);
-  nn::KerasModel kerasModel_18(model_dir_models[18]);
-  nn::KerasModel kerasModel_19(model_dir_models[19]);
-  
   for (int i = 0; i < pspoints; i++){
     std::cout << "==================== Test point " << i+1 << " ====================" << std::endl;
     double moms[training_reruns][legs*4];
@@ -112,40 +93,13 @@ int main()
     }
     std::cout << std::endl;
 
-    std::vector<std::vector<double> > input_vecs(training_reruns, std::vector<double>(legs*4));
-    for (int l = 0; l < training_reruns; l++){
-      std::vector<double> input_vec(std::begin(moms[l]), std::end(moms[l]));
-      input_vecs[l] = input_vec;
-    }    
-    
-    std::vector<std::vector<double> > results(training_reruns);
-    
-    results[0] = kerasModel_0.compute_output(input_vecs[0]);
-    results[1] = kerasModel_1.compute_output(input_vecs[1]);
-    results[2] = kerasModel_2.compute_output(input_vecs[2]);
-    results[3] = kerasModel_3.compute_output(input_vecs[3]);
-    results[4] = kerasModel_4.compute_output(input_vecs[4]);
-    results[5] = kerasModel_5.compute_output(input_vecs[5]);
-    results[6] = kerasModel_6.compute_output(input_vecs[6]);
-    results[7] = kerasModel_7.compute_output(input_vecs[7]);
-    results[8] = kerasModel_8.compute_output(input_vecs[8]);
-    results[9] = kerasModel_9.compute_output(input_vecs[9]);
-    results[10] = kerasModel_10.compute_output(input_vecs[10]);
-    results[11] = kerasModel_11.compute_output(input_vecs[11]);
-    results[12] = kerasModel_12.compute_output(input_vecs[12]);
-    results[13] = kerasModel_13.compute_output(input_vecs[13]);
-    results[14] = kerasModel_14.compute_output(input_vecs[14]);
-    results[15] = kerasModel_15.compute_output(input_vecs[15]);
-    results[16] = kerasModel_16.compute_output(input_vecs[16]);
-    results[17] = kerasModel_17.compute_output(input_vecs[17]);
-    results[18] = kerasModel_18.compute_output(input_vecs[18]);
-    results[19] = kerasModel_19.compute_output(input_vecs[19]);
-    
     double results_sum = 0;
     for (int l = 0; l < training_reruns; l++){
-      double output = nn::destandardise(results[l][0], metadatas[l][8], metadatas[l][9]);
+      std::vector<double> input_vec(std::begin(moms[l]), std::end(moms[l]));
+      std::vector<double> result = kerasModels[l].compute_output(input_vec);
+      double output = nn::destandardise(result[0], metadatas[l][8], metadatas[l][9]);
       results_sum += output;
-    };
+    }
 
     double average_output = results_sum/training_reruns;
 
