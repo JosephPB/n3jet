@@ -2,9 +2,9 @@
 #define PREDICT__H
 
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream> 
 
 namespace nn {
 
@@ -67,13 +67,13 @@ public:
     unsigned int input_node_count();
     unsigned int output_node_count();
 
-    KerasModel(std::string& input_fname); // constructor declaration
-    ~KerasModel();                        // destructor declaration
-  //void load_weights(std::string& input_fname);
+    KerasModel() {}; // constructor declaration
+    ~KerasModel();   // destructor declaration
+    void load_weights(std::string& input_fname);
     std::vector<double> compute_output(std::vector<double> test_input);
 
 private:
-    void load_weights(std::string& input_fname);
+    // void load_weights(std::string& input_fname);
     unsigned int layers_count;
     std::vector<Layer*> layers; // container with layers
 };

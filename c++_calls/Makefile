@@ -4,7 +4,7 @@ DEFS=-DDEBUG
 
 .PHONY: clean all
 
-all: ex_3g2A single_test
+all: ex_3g2A_test single_test ex_3g2A_multiple_fks ex_3g2A_multiple_single
 
 # Example of using the NN
 ex_3g2A_multiple_fks: ex_3g2A_multiple_fks.o model_fns.o

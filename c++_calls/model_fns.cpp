@@ -121,14 +121,6 @@ double standardise_array(double array[][4], int legs, double means[4], double st
 }
 */
 
-
-
-// KerasModel constructor
-nn::KerasModel::KerasModel(std::string& input_fname)
-{
-    load_weights(input_fname);
-}
-
 // KerasModel destructor
 nn::KerasModel::~KerasModel()
 {
