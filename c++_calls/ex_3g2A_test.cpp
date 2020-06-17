@@ -46,10 +46,10 @@ int main()
     //nn::KerasModel kerasModel;
     //kerasModel.load_weights(dumpednn);
 
-    std::vector<nn::KerasModel> kerasModels;
+    std::vector<nn::KerasModel> kerasModels(2);
 
     for (int j { 0 }; j < 2; ++j){
-      kerasModels.push_back(nn::KerasModel(dumpednn));
+      kerasModels[j].load_weights(dumpednn);
     }
         
     for (int i { 0 }; i < pspoints; ++i) {
