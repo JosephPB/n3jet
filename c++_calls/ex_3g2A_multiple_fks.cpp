@@ -41,44 +41,45 @@ int main()
   };
   
   std::string model_base = "./models/diphoton/3g2A/RAMBO/";
-  std::string model_dirs[training_reruns] = {"events_100k_fks_all_legs_all_paires_all_save_0/",
-					     "events_100k_fks_all_legs_all_paires_all_save_1/",
-					     "events_100k_fks_all_legs_all_paires_all_save_2/",
-					     "events_100k_fks_all_legs_all_paires_all_save_3/",
-					     "events_100k_fks_all_legs_all_paires_all_save_4/",
-					     "events_100k_fks_all_legs_all_paires_all_save_5/",
-					     "events_100k_fks_all_legs_all_paires_all_save_6/",
-					     "events_100k_fks_all_legs_all_paires_all_save_7/",
-					     "events_100k_fks_all_legs_all_paires_all_save_8/",
-					     "events_100k_fks_all_legs_all_paires_all_save_9/",
-					     "events_100k_fks_all_legs_all_paires_all_save_10/",
-					     "events_100k_fks_all_legs_all_paires_all_save_11/",
-					     "events_100k_fks_all_legs_all_paires_all_save_12/",
-					     "events_100k_fks_all_legs_all_paires_all_save_13/",
-					     "events_100k_fks_all_legs_all_paires_all_save_14/",
-					     "events_100k_fks_all_legs_all_paires_all_save_15/",
-					     "events_100k_fks_all_legs_all_paires_all_save_16/",
-					     "events_100k_fks_all_legs_all_paires_all_save_17/",
-					     "events_100k_fks_all_legs_all_paires_all_save_18/",
-					     "events_100k_fks_all_legs_all_paires_all_save_19/"
+  std::string model_dirs[training_reruns] = {"events_100k_fks_all_legs_all_pairs_all_save_0/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_1/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_2/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_3/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_4/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_5/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_6/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_7/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_8/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_9/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_10/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_11/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_12/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_13/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_14/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_15/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_16/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_17/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_18/",
+					     "events_100k_fks_all_legs_all_pairs_all_save_19/"
   };
 
-  std::string pair_dirs[pairs] = {"pair_0.02_0",
-				  "pair_0.02_1",
-				  "pair_0.02_2",
-				  "pair_0.02_3",
-				  "pair_0.02_4",
-				  "pair_0.02_5",
-				  "pair_0.02_6",
-				  "pair_0.02_7",
-				  "pair_0.02_8"
+  std::string pair_dirs[pairs] = {"pair_0.02_0/",
+				  "pair_0.02_1/",
+				  "pair_0.02_2/",
+				  "pair_0.02_3/",
+				  "pair_0.02_4/",
+				  "pair_0.02_5/",
+				  "pair_0.02_6/",
+				  "pair_0.02_7/",
+				  "pair_0.02_8/"
 				  
   };
 
-  std::string cut_dirs = "cut_0.02";
+  std::string cut_dirs = "cut_0.02/";
 
   std::vector<std::vector<std::vector<double> > > metadatas(training_reruns, std::vector<std::vector<double> > (pairs+1, std::vector<double>(10)));
   std::string model_dir_models[training_reruns][pairs+1];
+  std::vector<std::vector<nn::KerasModel> > kerasModels(training_reruns, std::vector<nn::KerasModel>(training_reruns));
 
   for (int i = 0; i < training_reruns; i++){
     for (int j = 0; j < pairs; j++){
@@ -88,13 +89,22 @@ int main()
 	metadatas[i][j][k] = metadata[k];
       };
       model_dir_models[i][j] = model_base + model_dirs[i] + pair_dirs[j] + "model.nnet";
+#ifdef DEBUG
+      std::cout << "Loading from: " << model_dir_models[i][j] << std::endl;
+#endif
+      kerasModels[i][j].load_weights(model_dir_models[i][j]);
     };
+    
     std::string metadata_file = model_base + model_dirs[i] + cut_dirs + "dataset_metadata.dat";
     std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
     for (int k = 0; k < 10 ; k++){
       metadatas[i][pairs][k] = metadata[k];
     };
     model_dir_models[i][pairs] = model_base + model_dirs[i] + cut_dirs + "model.nnet";
+#ifdef DEBUG
+    std::cout << "Loading from: " << model_dir_models[i][pairs] << std::endl;
+#endif
+    kerasModels[i][pairs].load_weights(model_dir_models[i][pairs]);
   };
 
 }
