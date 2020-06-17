@@ -82,6 +82,8 @@ int main()
   std::vector<std::vector<nn::KerasModel> > kerasModels(training_reruns, std::vector<nn::KerasModel>(training_reruns));
 
   for (int i = 0; i < training_reruns; i++){
+
+    // Near networks
     for (int j = 0; j < pairs; j++){
       std::string metadata_file = model_base + model_dirs[i] + pair_dirs[j] + "dataset_metadata.dat";
       std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
@@ -94,7 +96,8 @@ int main()
 #endif
       kerasModels[i][j].load_weights(model_dir_models[i][j]);
     };
-    
+
+    // Cut networks
     std::string metadata_file = model_base + model_dirs[i] + cut_dirs + "dataset_metadata.dat";
     std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
     for (int k = 0; k < 10 ; k++){
@@ -107,4 +110,6 @@ int main()
     kerasModels[i][pairs].load_weights(model_dir_models[i][pairs]);
   };
 
+  
+  
 }
