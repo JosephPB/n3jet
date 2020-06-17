@@ -42,8 +42,17 @@ int main()
 
     std::string dumpednn { "./tests/single_test_dumped.nnet" };
 
-    nn::KerasModel kerasModel(dumpednn);
+    //nn::KerasModel kerasModel(dumpednn);
+    //nn::KerasModel kerasModel;
+    //kerasModel.load_weights(dumpednn);
 
+
+    std::vector<nn::KerasModel> kerasModels[2];
+    kerasModels[0] = KerasModel(dumpednn);
+    kerasModels[1] = KerasModel(dumpednn);
+    
+
+    
     for (int i { 0 }; i < pspoints; ++i) {
         std::cout << "==================== Test point " << i + 1 << " ====================" << '\n';
 
