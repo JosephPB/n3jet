@@ -83,7 +83,7 @@ int main()
 
   std::vector<std::vector<std::vector<double> > > metadatas(training_reruns, std::vector<std::vector<double> > (pairs+1, std::vector<double>(10)));
   std::string model_dir_models[training_reruns][pairs+1];
-  std::vector<std::vector<nn::KerasModel> > kerasModels(training_reruns, std::vector<nn::KerasModel>(training_reruns));
+  std::vector<std::vector<nn::KerasModel> > kerasModels(training_reruns, std::vector<nn::KerasModel>(pairs+1));
 
   for (int i = 0; i < training_reruns; i++){
 
@@ -141,33 +141,41 @@ int main()
     int cut_near = 0;
     for (int j; j < legs-1; j++){
       for (int k = j+1; k < legs; k++){
-	int check = pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
+	int check = nn::pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
 	  cut_near += check;
       }
     }
 
+#ifdef DEBUG
     std::cout << "Cut/near check is: " << cut_near <<std::endl;
+#endif
 
-
-    /*
     // inference
+
+    double results_sum = 0;
     for (int j = 0; j < training_reruns; j++){
+      if (cut_near == 1){
+	// infer over all pairs
+	double results_pairs = 0;
 	for (int k = 0; k < pairs; k++){
+	  std::vector<double> input_vec(std::begin(moms[j][k]), std::end(moms[j][k]));
+	  std::vector<double> result = kerasModels[j][k].compute_output(input_vec);
+	  double output = nn::destandardise(result[0], metadatas[j][k][8], metadatas[j][k][9]);
+	  results_pairs += output;
 	}
+	results_sum += results_pairs;
+      }
+      else{
+	std::vector<double> input_vec(std::begin(moms[j][pairs]), std::end(moms[j][pairs]));
+	std::vector<double> result = kerasModels[j][pairs].compute_output(input_vec);
+	double output = nn::destandardise(result[0], metadatas[j][pairs][8], metadatas[j][pairs][9]);
+	results_sum += output;
+      }
     }
 
-    */
-  }
-}
+    double average_output = results_sum/training_reruns;
 
-int pair_check(double p1[], double p2[], int delta, float s_com){
-  double prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3]);
-  double distance = prod/s_com;
-
-  if (distance <= delta){
-    return 1;
-  }
-  else{
-    return 0;
+    std::cout << "Loop( 0) = " << average_output << std::endl;
+    
   }
 }

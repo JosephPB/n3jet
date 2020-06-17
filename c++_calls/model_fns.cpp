@@ -108,18 +108,18 @@ double nn::destandardise(double value, double mean, double stnd)
     return new_value;
 }
 
-/*
-double standardise_array(double array[][4], int legs, double means[4], double stds[4]){
-       double new_array[legs*4] = {};
-       for (int i { 0 }; i < legs; ++i){
-	 for (int j { 0 }; j < 4; ++j){
-	   double new_val = standardise(array[i][j], means[j], stds[j]);
-	   new_array[i+j] = new_val;
-	 }
-       }
-       return new_array;
+int nn::pair_check(double p1[], double p2[], int delta, float s_com){
+  double prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3]);
+  double distance = prod/s_com;
+
+  if (distance <= delta){
+    return 1;
+  }
+  else{
+    return 0;
+  }
 }
-*/
+
 
 // KerasModel destructor
 nn::KerasModel::~KerasModel()
