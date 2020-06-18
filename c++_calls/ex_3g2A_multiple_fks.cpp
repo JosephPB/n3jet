@@ -19,11 +19,11 @@ int main()
   std::cout << std::endl;
 
   const int legs = 5;
-  const int pspoints = 2;
+  const int pspoints = 3;
   const int pairs = 9;
   const int training_reruns = 20;
   const int delta = 0.02;
-  const float s_com = 1000.;
+  const double s_com = 500000.;
 
   //raw momenta input
 
@@ -36,11 +36,18 @@ int main()
 				       {372.49090317,  232.1539733 ,  254.36398731, -141.96114816}
 				     },
 				     {
+				       {500.,   0,    0.,  500.},
+				       {500.,   0.,   0., -500.},
+				       {321.1019131 , -182.9787274 ,  221.11364808, -143.99298091},
+				       {455.48592484,  374.65360893, -256.6834756 ,   34.86680937},
+				       {223.41216206, -191.67488153,   35.56982752,  109.12617155}
+				     },
+				     {
 				       {500.,   0.,   0., 500.},
 				       {500.,   0.,   0., -500.},
-				       {253.58419798, -239.58965912, 66.81985738, -49.36443422},
-				       {373.92489886,    7.43568582, -321.18384469,  191.32558238},
-				       {372.49090317,  232.1539733 ,  254.36398731, -141.96114816}
+				       {338.61056176,  151.79987351,  207.5173929 ,  220.34164968},
+				       {395.73401055, -121.45600038,    5.1691446 , -376.59942514},
+				       {265.65542769,  -30.34387312, -212.6865375 ,  156.25777546}
 				     }
   };
   
@@ -136,13 +143,23 @@ int main()
       std::cout << std::endl;
     }
     std::cout << std::endl;
-
+#ifdef DEBUG
+    std::cout << "Checking how near we are" << std::endl;
+#endif
     //cut/near check
     int cut_near = 0;
-    for (int j; j < legs-1; j++){
+    for (int j = 0; j < legs-1; j++){
       for (int k = j+1; k < legs; k++){
-	int check = nn::pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
-	  cut_near += check;
+#ifdef DEBUG
+	std::cout << "Working on pair " << j << ", " << k << std::endl;
+#endif	
+	double distance = nn::pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
+#ifdef DEBUG
+	std::cout << "Distance is: " << distance << std::endl;
+#endif
+	if (distance < delta){
+	  cut_near += 1; 
+	}
       }
     }
 
@@ -154,10 +171,11 @@ int main()
 
     double results_sum = 0;
     for (int j = 0; j < training_reruns; j++){
-      if (cut_near == 1){
+      if (cut_near >= 1){
 	// infer over all pairs
 	double results_pairs = 0;
 	for (int k = 0; k < pairs; k++){
+	  std::cout << "Working on pair " << j << ", " << k << std::endl;
 	  std::vector<double> input_vec(std::begin(moms[j][k]), std::end(moms[j][k]));
 	  std::vector<double> result = kerasModels[j][k].compute_output(input_vec);
 	  double output = nn::destandardise(result[0], metadatas[j][k][8], metadatas[j][k][9]);
