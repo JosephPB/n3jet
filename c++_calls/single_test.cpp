@@ -23,12 +23,19 @@ int main()
     std::cout << "First two sample elements = " << sample[0] << ", " << sample[1] << '\n';
 
     // load model
-    nn::KerasModel kerasModel(dumpednn);
+    nn::KerasModel kerasModel;
+    kerasModel.load_weights(dumpednn);
 
     // infer on model
     std::vector<double> result { kerasModel.compute_output(sample) };
 
-    std::cout << result[0] << '\n';
+    std::cout << "Standardised C++ Model output is: " << result[0] << std::endl;
 
+    double NN_output_de = -0.21683742;
+    
+    std::cout << "Standardised NN  Model output is: " << NN_output << std::endl;
+
+    std::cout << "This NN number needs updating each time a new python model is trained" << std::endl; 
+    
     return 0;
 }

@@ -109,3 +109,6 @@ with open('./data/single_test_dataset_metadata.dat', 'w') as fin:
     fin.write(str(y_std) + "\n")
 
 
+print ('Model output for C++ testing is: {}'.format(pred[0][0]))
+
+
