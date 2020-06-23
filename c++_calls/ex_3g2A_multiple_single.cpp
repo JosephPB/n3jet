@@ -86,7 +86,7 @@ int main()
 	// standardise input
 	std::cout << Momenta[i][p][mu] << " ";
 	for (int k = 0; k < training_reruns; k++){
-	  moms[k][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][p], metadatas[k][4+p]);
+	  moms[k][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][mu], metadatas[k][4+mu]);
 	}
       }
       std::cout << std::endl;

@@ -7,8 +7,6 @@
 
 #include "model_fns.h"
 
-int pair_check(double p1[], double p2[], int delta, float s_com);
-
 int main()
 {
   std::cout.setf(std::ios_base::scientific, std::ios_base::floatfield);
@@ -135,9 +133,9 @@ int main()
 	std::cout << Momenta[i][p][mu] << " ";
 	for (int k = 0; k < training_reruns; k++){
 	  for (int j = 0; j < pairs; j++){
-	    moms[k][j][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][j][p], metadatas[k][j][4+p]);
+	    moms[k][j][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][j][mu], metadatas[k][j][4+mu]);
 	  }
-	  moms[k][pairs][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][pairs][p], metadatas[k][pairs][4+p]);
+	  moms[k][pairs][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][pairs][mu], metadatas[k][pairs][4+mu]);
 	}
       }
       std::cout << std::endl;
