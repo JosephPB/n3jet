@@ -34,6 +34,8 @@ Run:
 ./single_test
 ```
 
+This script will print out the Python and C++ converted model results before and after standardisation for comparison. For this test to pass, these results should be in agreement. 
+
 ## 3g2A example
 
 This example will infer on a model once trained to predict the loop squared of a $gg /to g /gamma /gamma$ process. Here we read in some momenta stored in the normal `double` array format `double Momenta[pspoints][legs][4]` and go through the following procedure for each phase-space point:
@@ -54,3 +56,5 @@ Run:
 ```
 ./ex_3g2A
 ```
+
+Since this test uses the same model as trained in the first test, this script will print out the Python and C++ converted model results before and after standardisation for comparison. For this test to pass, these results should be in agreement. 
