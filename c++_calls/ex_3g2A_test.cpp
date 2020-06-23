@@ -35,13 +35,6 @@ int main()
             { 372.49090317, 232.1539733, 254.36398731, -141.96114816 } }
     };
 
-    /*
-    double x_means[4] = { 4.00000000e+02, 4.54747351e-15, 7.95807864e-15, -9.09494702e-15 };
-    double x_stds[4] = { 121.24600323, 188.36617697, 119.5484733, 353.45005193 };
-    double y_mean = 1.8749375283902703e-07;
-    double y_std = 3.8690694630335114e-07;
-    */
-
     std::string metadata_file { "./tests/data/single_test_dataset_metadata.dat" };
     std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
 
@@ -49,14 +42,6 @@ int main()
 
     nn::KerasModel kerasModel;
     kerasModel.load_weights(dumpednn);
-
-    /*
-    std::vector<nn::KerasModel> kerasModels(2);
-
-    for (int j { 0 }; j < 2; ++j){
-      kerasModels[j].load_weights(dumpednn);
-    }
-    */
   
     for (int i { 0 }; i < pspoints; ++i) {
         std::cout << "==================== Test point " << i + 1 << " ====================" << '\n';
