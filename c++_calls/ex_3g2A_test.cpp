@@ -87,6 +87,9 @@ int main()
         std::vector<double> result { kerasModel.compute_output(mom) };
 
         // destandardise output
+#ifdef DEBUG
+	std::cout << "Using y_mean " << metadata[8] << std::endl;
+#endif
         double output { nn::destandardise(result[0], metadata[8], metadata[9]) };
 
         std::cout << "Loop( 0) = " << output << '\n';

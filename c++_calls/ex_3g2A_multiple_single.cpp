@@ -98,6 +98,9 @@ int main()
     for (int l = 0; l < training_reruns; l++){
       std::vector<double> input_vec(std::begin(moms[l]), std::end(moms[l]));
       std::vector<double> result = kerasModels[l].compute_output(input_vec);
+#ifdef DEBUG
+      std::cout << "Using y_mean " << metadatas[l][8] << std::endl;
+#endif
       double output = nn::destandardise(result[0], metadatas[l][8], metadatas[l][9]);
       results_sum += output;
     }

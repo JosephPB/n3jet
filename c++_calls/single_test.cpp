@@ -33,6 +33,8 @@ int main()
     std::string metadata_file { "./tests/data/single_test_dataset_metadata.dat" };
     std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
 
+    std::cout << "Using y_mean " << metadata[8] << std::endl;
+    
     double output { nn::destandardise(result[0], metadata[8], metadata[9]) };
 
     std::string python_infer { "./tests/data/single_test_infer.dat" };
