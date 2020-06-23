@@ -91,9 +91,9 @@ int main()
 
         std::cout << "Loop( 0) = " << output << '\n';
 
-	std::cout << "               " << " Python NN " << "  C++ NN  " << std::endl;
+	std::cout << "               " << "      Python NN       " << "        C++ NN       " << std::endl;
     
-	std::cout << "Standardised   " << python_outputs[0] << "   " << result[0] << std::endl;
+	std::cout << "Standardised   " << python_outputs[0] << "  " << result[0] << std::endl;
 	std::cout << "Destandardised " << python_outputs[1] << "  " << output << std::endl;
 	
     }
