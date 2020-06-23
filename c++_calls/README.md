@@ -3,6 +3,12 @@
 Converting a keras trained model into a format callable by C++ operations including data loading.
 This code is based on and adapted from: [keras2cpp](https://github.com/pplonski/keras2cpp)
 
+## Tests running
+
+- [x] Single model python + C++ matching
+- [] `ex_3g2A_test` python + C++ matching
+- [] `ex_3g2A_multiple_single` python + C++ matching
+- [] `ex_3g2A_multipls_fks` python + C++ matching
 
 ## End to end single model example
 
@@ -57,4 +63,4 @@ Run:
 ./ex_3g2A
 ```
 
-Since this test uses the same model as trained in the first test, this script will print out the Python and C++ converted model results before and after standardisation for comparison. For this test to pass, these results should be in agreement. 
+Since this example uses the same model as trained in the first example above, this script will print out the Python and C++ converted model results before and after standardisation for comparison. For this test to pass, these results should be in agreement. 
