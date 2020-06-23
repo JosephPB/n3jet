@@ -29,13 +29,19 @@ int main()
     // infer on model
     std::vector<double> result { kerasModel.compute_output(sample) };
 
-    std::cout << "Standardised C++ Model output is: " << result[0] << std::endl;
+    //destandardise model result
+    std::string metadata_file { "./tests/data/single_test_dataset_metadata.dat" };
+    std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
 
-    double NN_output_de = -0.21683742;
+    double output { nn::destandardise(result[0], metadata[8], metadata[9]) };
+
+    double NN_output_std = -0.21683742;
+    double NN_output_destd = -0.21683742;
+
+    std::cout << "               " << " Python NN " << "  C++ NN  " << std::endl;
     
-    std::cout << "Standardised NN  Model output is: " << NN_output << std::endl;
-
-    std::cout << "This NN number needs updating each time a new python model is trained" << std::endl; 
+    std::cout << "Standardised   " << NN_output_std << "  " << result[0] << std::endl;
+    std::cout << "Destandardised " << NN_output_destd << "  " << output << std::endl;
     
     return 0;
 }
