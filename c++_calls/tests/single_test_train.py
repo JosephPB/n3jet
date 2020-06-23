@@ -65,8 +65,6 @@ pickle_out.close()
 
 x_standard = NN.process_testing_data(moms=test_momenta,x_mean=x_mean,x_std=x_std,y_mean=y_mean,y_std=y_std)
 
-#testing_X = x_standard[:2]
-
 test_momenta = [[500., 0., 0., 500.],[500., 0., 0., -500.],[253.58419798, -239.58965912, 66.81985738, -49.36443422],
                 [373.92489886, 7.43568582, -321.18384469, 191.32558238], [372.49090317, 232.1539733, 254.36398731, -141.96114816]]
 
