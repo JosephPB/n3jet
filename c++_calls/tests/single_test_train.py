@@ -35,9 +35,6 @@ parser = argparse.ArgumentParser(description='Script for training a network and 
 parser.add_argument('-w', '--weights', help="Model weights in HDF5 format", required=True)
 args = parser.parse_args()
 
-#mom_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/momenta_events_100k.npy'
-#nj_file = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/events_100k_loop.npy'
-
 mom_file = './data/3g2A_test_momenta.npy'
 nj_file = './data/3g2A_test_nj.npy'
 
@@ -55,10 +52,6 @@ lr=0.01
 
 model, x_mean, x_std, y_mean, y_std = NN.fit(layers=[20,40,20], lr=lr, epochs=1)
 
-#mod_dir = '/scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/'
-
-#model = load_model(mod_dir + 'model')
-
 metadata = {}
 metadata['x_mean'] = x_mean
 metadata['y_mean'] = y_mean
@@ -72,9 +65,15 @@ pickle_out.close()
 
 x_standard = NN.process_testing_data(moms=test_momenta,x_mean=x_mean,x_std=x_std,y_mean=y_mean,y_std=y_std)
 
-testing_X = x_standard[:2]
+#testing_X = x_standard[:2]
 
-pred = model.predict(testing_X)
+test_momenta = [[500., 0., 0., 500.],[500., 0., 0., -500.],[253.58419798, -239.58965912, 66.81985738, -49.36443422],
+                [373.92489886, 7.43568582, -321.18384469, 191.32558238], [372.49090317, 232.1539733, 254.36398731, -141.96114816]]
+
+testing_X = NN.process_testing_data(test_momenta)
+
+pred_std = model.predict(testing_X)
+pred_destd = NN.destandardise_data(pred_std)
 
 with open ('./single_test_arch.json', 'w') as fout:
     fout.write(model.to_json())
@@ -83,7 +82,6 @@ model.save_weights(args.weights)
 print ('Model JSON and weights save')
 
 print ('Saving out sample data')
-
 with open('./data/single_test_sample.dat', 'w') as fin:
     fin.write("{}\n".format(len(testing_X[0])))
     for idx, i in enumerate(testing_X[0]):
@@ -108,7 +106,12 @@ with open('./data/single_test_dataset_metadata.dat', 'w') as fin:
     fin.write(str(y_mean) + "\n")
     fin.write(str(y_std) + "\n")
 
+print ('Saving out std and destd inference')
+with open('./data/single_test_infer.dat', 'w') as fin:
+    fin.write("{}\n".format(pred_std[0][0]))
+    fin.write("{}".format(pred_destd[0][0]))
 
-print ('Model output for C++ testing is: {}'.format(pred[0][0]))
+print ('Model std output for C++ testing is: {}'.format(pred_std[0][0]))
+print ('Model destd output for C++ testing is: {}'.format(pred_destd[0][0]))
 
 

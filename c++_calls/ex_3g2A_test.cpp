@@ -35,10 +35,15 @@ int main()
             { 372.49090317, 232.1539733, 254.36398731, -141.96114816 } }
     };
 
+    /*
     double x_means[4] = { 4.00000000e+02, 4.54747351e-15, 7.95807864e-15, -9.09494702e-15 };
     double x_stds[4] = { 121.24600323, 188.36617697, 119.5484733, 353.45005193 };
     double y_mean = 1.8749375283902703e-07;
     double y_std = 3.8690694630335114e-07;
+    */
+
+    std::string metadata_file { "./tests/data/single_test_dataset_metadata.dat" };
+    std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
 
     std::string dumpednn { "./tests/single_test_dumped.nnet" };
 
@@ -65,7 +70,7 @@ int main()
 #ifdef DEBUG
                 std::cout << momenta[i][p][mu] << " ";
 #endif
-                mom[p * d + mu] = nn::standardise(momenta[i][p][mu], x_means[p], x_stds[p]);
+                mom[p * d + mu] = nn::standardise(momenta[i][p][mu], metadata[p], metadata[4+p]);
             }
 #ifdef DEBUG
             std::cout << '\n';
@@ -78,7 +83,7 @@ int main()
         std::vector<double> result { kerasModel.compute_output(mom) };
 
         // destandardise output
-        double output { nn::destandardise(result[0], y_mean, y_std) };
+        double output { nn::destandardise(result[0], metadata[8], metadata[9]) };
 
         std::cout << "Loop( 0) = " << output << '\n';
     }
