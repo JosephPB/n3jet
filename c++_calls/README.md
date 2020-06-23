@@ -7,7 +7,7 @@ This code is based on and adapted from: [keras2cpp](https://github.com/pplonski/
 
 - [x] Single model python + C++ matching
 - [x] `ex_3g2A_test` python + C++ matching
-- [] `ex_3g2A_multiple_single` python + C++ matching
+- [x] `ex_3g2A_multiple_single` python + C++ matching
 - [] `ex_3g2A_multipls_fks` python + C++ matching
 
 ## End to end single model example
