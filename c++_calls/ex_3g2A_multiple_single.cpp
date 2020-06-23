@@ -16,13 +16,14 @@ int main()
   std::cout << "n3jet: simple example of calling a pretrained neural network for inference in a C++ interface" << std::endl;
   std::cout << std::endl;
 
+  const int d = 4;
   const int legs = 5;
   const int pspoints = 2;
   const int training_reruns = 20;
 
   //raw momenta input
 
-  double Momenta[pspoints][legs][4] = {
+  double Momenta[pspoints][legs][d] = {
 				     {
 				       {500.,   0.,   0., 500.},
 				       {500.,   0.,   0., -500.},
@@ -78,11 +79,11 @@ int main()
 
   for (int i = 0; i < pspoints; i++){
     std::cout << "==================== Test point " << i+1 << " ====================" << std::endl;
-    double moms[training_reruns][legs*4];
+    double moms[training_reruns][legs*d];
 
     // flatten momenta
     for (int p = 0; p < legs; p++){
-      for (int mu = 0; mu < 4; mu++){
+      for (int mu = 0; mu < d; mu++){
 	// standardise input
 	std::cout << Momenta[i][p][mu] << " ";
 	for (int k = 0; k < training_reruns; k++){
