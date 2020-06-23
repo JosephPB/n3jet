@@ -62,7 +62,7 @@ int main()
 #ifdef DEBUG
                 std::cout << momenta[i][p][mu] << " ";
 #endif
-                mom[p * d + mu] = nn::standardise(momenta[i][p][mu], metadata[p], metadata[4+p]);
+                mom[p * d + mu] = nn::standardise(momenta[i][p][mu], metadata[mu], metadata[4+mu]);
             }
 #ifdef DEBUG
             std::cout << '\n';
@@ -72,6 +72,18 @@ int main()
         std::cout << '\n';
 #endif
 
+#ifdef DEBUG
+	std::cout << "======== Standardised point ======== \n";
+	
+	for (int p { 0 }; p < legs; ++p) {
+            for (int mu { 0 }; mu < d; ++mu) {
+	      std::cout << mom[p*d+mu] << " ";
+	    }
+	    std::cout << "\n";
+	}
+	std::cout << "\n";
+#endif
+	
         std::vector<double> result { kerasModel.compute_output(mom) };
 
         // destandardise output
