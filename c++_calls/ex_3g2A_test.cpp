@@ -42,6 +42,13 @@ int main()
 
     nn::KerasModel kerasModel;
     kerasModel.load_weights(dumpednn);
+
+    std::string python_infer { "./tests/data/single_test_infer.dat" };
+    
+    std::ifstream fin(python_infer.c_str());
+    double python_outputs[2];
+    fin >> python_outputs[0];
+    fin >> python_outputs[1];
   
     for (int i { 0 }; i < pspoints; ++i) {
         std::cout << "==================== Test point " << i + 1 << " ====================" << '\n';
@@ -71,5 +78,11 @@ int main()
         double output { nn::destandardise(result[0], metadata[8], metadata[9]) };
 
         std::cout << "Loop( 0) = " << output << '\n';
+
+	std::cout << "               " << " Python NN " << "  C++ NN  " << std::endl;
+    
+	std::cout << "Standardised   " << python_outputs[0] << "   " << result[0] << std::endl;
+	std::cout << "Destandardised " << python_outputs[1] << "  " << output << std::endl;
+	
     }
 }
