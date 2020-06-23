@@ -35,13 +35,17 @@ int main()
 
     double output { nn::destandardise(result[0], metadata[8], metadata[9]) };
 
-    double NN_output_std = -0.21683742;
-    double NN_output_destd = -0.21683742;
+    std::string python_infer { "./tests/data/single_test_infer.dat" };
+    
+    std::ifstream fin(python_infer.c_str());
+    double python_outputs[2];
+    fin >> python_outputs[0];
+    fin >> python_outputs[1];
 
     std::cout << "               " << " Python NN " << "  C++ NN  " << std::endl;
     
-    std::cout << "Standardised   " << NN_output_std << "  " << result[0] << std::endl;
-    std::cout << "Destandardised " << NN_output_destd << "  " << output << std::endl;
+    std::cout << "Standardised   " << python_outputs[0] << "   " << result[0] << std::endl;
+    std::cout << "Destandardised " << python_outputs[1] << "  " << output << std::endl;
     
     return 0;
 }
