@@ -20,8 +20,8 @@ int main()
   const int pspoints = 2;
   const int pairs = 9;
   const int training_reruns = 20;
-  const int delta = 0.02;
-  const double s_com = 500000.;
+  const double delta = 0.02;
+  const double s_com = 500000.0;
 
   //raw momenta input
 
@@ -144,10 +144,9 @@ int main()
     int cut_near = 0;
     for (int j = 0; j < legs-1; j++){
       for (int k = j+1; k < legs; k++){
-#ifdef DEBUG
-	std::cout << "Working on pair " << j << ", " << k << std::endl;
-#endif	
-	double distance = nn::pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
+	double prod = Momenta[i][j][0]*Momenta[i][k][0]-(Momenta[i][j][1]*Momenta[i][k][1]+Momenta[i][j][2]*Momenta[i][k][2]+Momenta[i][j][3]*Momenta[i][k][3]);
+	double distance = prod/s_com;
+	//double distance = nn::pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
 #ifdef DEBUG
 	std::cout << "Distance is: " << distance << std::endl;
 #endif
@@ -169,7 +168,6 @@ int main()
 	// infer over all pairs
 	double results_pairs = 0;
 	for (int k = 0; k < pairs; k++){
-	  std::cout << "Working on pair " << j << ", " << k << std::endl;
 	  std::vector<double> input_vec(std::begin(moms[j][k]), std::end(moms[j][k]));
 	  std::vector<double> result = kerasModels[j][k].compute_output(input_vec);
 	  double output = nn::destandardise(result[0], metadatas[j][k][8], metadatas[j][k][9]);

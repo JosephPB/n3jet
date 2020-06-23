@@ -108,7 +108,7 @@ double nn::destandardise(double value, double mean, double stnd)
     return new_value;
 }
 
-int nn::pair_check(double p1[], double p2[], int delta, double s_com){
+int nn::pair_check(double p1[], double p2[], double delta, double s_com){
   double prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3]);
   double distance = prod/s_com;
 

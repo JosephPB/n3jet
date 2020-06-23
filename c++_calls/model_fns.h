@@ -14,7 +14,7 @@ std::vector<std::vector<double>> read_multi_input_from_file(const std::string& f
 std::vector<double> read_metadata_from_file(const std::string& fname);
 double standardise(double value, double mean, double stnd);
 double destandardise(double value, double mean, double stnd);
-int pair_check(double p1[], double p2[], int delta, double s_com);
+int pair_check(double p1[], double p2[], double delta, double s_com);
 //double standardise_array(double array[][4], int legs, double means[4], double stds[4]);
 //double untransform(double value, double mean, double scale);
 //double transform(double value, double mean, double scale);
