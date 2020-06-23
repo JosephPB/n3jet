@@ -79,6 +79,7 @@ int main()
 
   std::string cut_dirs = "cut_0.02/";
 
+  int python_cut_near[2] = {1, 0};
   double python_check[2] = {0.01885435257459624, 0.04757045055113991};
   double python_outputs[2] = {8.79497694672e-07, 1.62700327877e-08};
 
@@ -157,7 +158,10 @@ int main()
     }
 
 #ifdef DEBUG
-    std::cout << "Cut/near check is: " << cut_near <<std::endl;
+    std::cout << "Python min distance is:   " << python_check[i]  << std::endl;
+    std::cout << "Python cut/near check is: " << python_cut_near[i] << std::endl;
+    std::cout << "C++    cut/near check is: " << cut_near << std::endl;
+    std::cout << "Note: here checking if cut/near >0 or not, not the actual value" <<std::endl;
 #endif
 
     // inference

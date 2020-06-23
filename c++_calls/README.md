@@ -3,13 +3,15 @@
 Converting a keras trained model into a format callable by C++ operations including data loading.
 This code is based on and adapted from: [keras2cpp](https://github.com/pplonski/keras2cpp)
 
+We provide a series of tests to check the models are working correctlty and then extracts from these scripts can be used more generally for inference.
+
 ## Tests running
 
 - [x] Single model python + C++ matching
 - [x] `ex_3g2A_test` python + C++ matching
 - [x] `ex_3g2A_multiple_single` python + C++ matching
 - [x] `ex_3g2A_multipls_fks` cut network python + C++ matching
-- [] `ex_3g2A_multipls_fks` near networks python + C++ matching
+- [x] `ex_3g2A_multipls_fks` near networks python + C++ matching
 
 ## End to end single model example
 
@@ -64,4 +66,25 @@ Run:
 ./ex_3g2A
 ```
 
-Since this example uses the same model as trained in the first example above, this script will print out the Python and C++ converted model results before and after standardisation for comparison. For this test to pass, these results should be in agreement. 
+Since this example uses the same model as trained in the first example above, this script will print out the Python and C++ converted model results before and after standardisation for comparison. For this test to pass, these results should be in agreement.
+
+## Ensembles
+
+### Full 3g2A naive approach
+
+```
+make ex_3g2A_multiple_single
+./ex_3g2A_multiple_single
+```
+
+Script should output a comparison between the Python and C++ implementations for testing on phase-space points given
+
+### Full 3g2A partitioned approach
+
+
+```
+make ex_3g2A_multiple_fks
+./ex_3g2A_multiple_fks
+```
+
+Script should output a comparison between the Python and C++ implementations for testing on phase-space points given
