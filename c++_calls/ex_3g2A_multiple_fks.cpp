@@ -174,7 +174,13 @@ int main()
 	for (int k = 0; k < pairs; k++){
 	  std::vector<double> input_vec(std::begin(moms[j][k]), std::end(moms[j][k]));
 	  std::vector<double> result = kerasModels[j][k].compute_output(input_vec);
+#ifdef DEBUG
+	  std::cout << "Before standardisation = " << result[0] << std::endl;
+#endif
 	  double output = nn::destandardise(result[0], metadatas[j][k][8], metadatas[j][k][9]);
+#ifdef DEBUG
+	  std::cout << "After standardisation = " << output << std::endl;
+#endif
 	  results_pairs += output;
 	}
 	results_sum += results_pairs;
