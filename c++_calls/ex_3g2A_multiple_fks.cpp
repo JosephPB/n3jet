@@ -180,6 +180,9 @@ int main()
 	  double output = nn::destandardise(result[0], metadatas[j][k][8], metadatas[j][k][9]);
 #ifdef DEBUG
 	  std::cout << "After destandardisation = " << output << std::endl;
+	  if (output < 0){
+	    std::cout << "Output is less than zero" << std::endl;
+	  }
 #endif
 	  results_pairs += output;
 	}
@@ -194,6 +197,12 @@ int main()
     }
 
     double average_output = results_sum/training_reruns;
+
+#ifdef DEBUG
+    if (average_output < 0){
+      std::cout << "Average output is less than zero" << std::endl;
+    }
+#endif
 
     std::cout << "Python Loop( 0) = " << python_outputs[i] << std::endl;
     std::cout << "C++    Loop( 0) = " << average_output << std::endl;
