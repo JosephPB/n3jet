@@ -191,7 +191,15 @@ int main()
       else{
 	std::vector<double> input_vec(std::begin(moms[j][pairs]), std::end(moms[j][pairs]));
 	std::vector<double> result = kerasModels[j][pairs].compute_output(input_vec);
+#ifdef DEBUG
+	  std::cout << "Before destandardisation = " << result[0] << std::endl;
+#endif
+
 	double output = nn::destandardise(result[0], metadatas[j][pairs][8], metadatas[j][pairs][9]);
+#ifdef DEBUG
+	  std::cout << "After destandardisation = " << output << std::endl;
+#endif
+
 	results_sum += output;
       }
     }
