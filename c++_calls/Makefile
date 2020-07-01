@@ -7,6 +7,9 @@ DEFS=-DDEBUG
 all: ex_3g2A_test single_test ex_3g2A_multiple_fks ex_3g2A_multiple_single
 
 # Example of using the NN
+ex_3g2A_multiple_fks_sherpa_cuts_pdf: ex_3g2A_multiple_fks_sherpa_cuts_pdf.o model_fns_no_debug.o
+	$(CXX) -o $@ $^ $(LDFLAGS) $(LIBS)
+
 ex_3g2A_multiple_fks: ex_3g2A_multiple_fks.o model_fns_no_debug.o
 	$(CXX) -o $@ $^ $(LDFLAGS) $(LIBS)
 
