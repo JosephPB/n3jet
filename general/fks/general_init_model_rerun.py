@@ -41,6 +41,14 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    '--delta_cut',
+    dest='delta_cut',
+    help='proximity of jets according to JADE algorithm',
+    type=float,
+    default=0.01,
+)
+
+parser.add_argument(
     '--delta_near',
     dest='delta_near',
     help='proximity of jets according to JADE algorithm',
@@ -89,6 +97,7 @@ parser.add_argument(
 args = parser.parse_args()
 mom_file = args.mom_file
 nj_file = args.nj_file
+delta_cut = args.delta_cut
 delta_near = args.delta_near
 model_base_dir = args.model_base_dir
 model_dir = args.model_dir
@@ -131,9 +140,9 @@ else:
 nlegs = len(momenta[0])-2
 
 if all_legs == 'False':
-    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near, all_legs=False)
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=delta_cut, delta_near=delta_near, all_legs=False)
 else:
-    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=0.01, delta_near=delta_near, all_legs=True)
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(momenta, nj, delta_cut=delta_cut, delta_near=delta_near, all_legs=True)
 
 if all_pairs == 'False':
     pairs, near_nj_split = weighting(near_momenta, nlegs-2, near_nj)
