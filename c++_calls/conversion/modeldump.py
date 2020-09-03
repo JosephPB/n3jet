@@ -71,10 +71,26 @@ class ModelDump:
                 if l['class_name'] == 'MaxPooling2D':
                     fout.write(str(l['config']['pool_size'][0]) + ' ' + str(l['config']['pool_size'][1]) + '\n')
                 if l['class_name'] == 'Dense':
+                    # W = self.model.layers[ind].get_weights()[0]
+                    # if self.verbose:
+                    #     print W.shape
+                    # fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
+                    # for w in W:
+                    #     fout.write(str(w) + '\n')
+                    # fout.write(str(self.model.layers[ind].get_weights()[1]) + '\n')
+
                     W = self.model.layers[ind].get_weights()[0]
                     if self.verbose:
                         print W.shape
                     fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
                     for w in W:
-                        fout.write(str(w) + '\n')
-                    fout.write(str(self.model.layers[ind].get_weights()[1]) + '\n')
+                        fout.write('[ ')
+                        for i in w:
+                            fout.write(str(i) + ' ')
+                        fout.write(']' + '\n')
+
+                    W = self.model.layers[ind].get_weights()[1]
+                    fout.write('[ ')
+                    for i in W:
+                        fout.write(str(i) + ' ')
+                    fout.write(']' + '\n')

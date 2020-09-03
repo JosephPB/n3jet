@@ -63,12 +63,26 @@ with open(args.output, 'w') as fout:
         #    print l['config']['name']
         if l['class_name'] == 'Dense':
             #fout.write(str(l['config']['output_dim']) + '\n')
+            # W = model.layers[ind].get_weights()[0]
+            # if args.verbose:
+            #     print W.shape
+            # fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
+
+
+            # for w in W:
+            #     fout.write(str(w) + '\n')
+            # fout.write(str(model.layers[ind].get_weights()[1]) + '\n')
+
             W = model.layers[ind].get_weights()[0]
-            if args.verbose:
-                print W.shape
             fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
-
-
             for w in W:
-                fout.write(str(w) + '\n')
-            fout.write(str(model.layers[ind].get_weights()[1]) + '\n')
+                fout.write('[ ')
+                for i in w:
+                    fout.write(str(i) + ' ')
+                fout.write(']' + '\n')
+            
+            W = model.layers[ind].get_weights()[1]
+            fout.write('[ ')
+            for i in W:
+                fout.write(str(i) + ' ')
+            fout.write(']' + '\n')

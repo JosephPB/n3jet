@@ -14,6 +14,7 @@ import keras.backend as K
 import matplotlib.pyplot as plt
 import time
 
+K.set_floatx('float64')
 
 
 class Model:
