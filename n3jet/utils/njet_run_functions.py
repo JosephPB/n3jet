@@ -43,7 +43,7 @@ else:
 factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]  # n!
 
 
-# Create order file form scratch -> co3ntract file generated automatically   
+# Create order file form scratch -> contract file generated automatically   
 ORDER_TPL = """
 # fixed
 CorrectionType          QCD
@@ -111,7 +111,7 @@ def pretty_print_results(p, j, params, rval, mode=None, VIEW = VIEW):
     vals1_1 = out_vals("A1_1", norm, ep1, ep1_err, VIEW=VIEW)
     vals1_0 = out_vals("A1_0", norm, ep0, ep0_err, VIEW=VIEW)
     
-    # NOTE: Now we output all accuracies without requiring DEBUG
+    # NOTE: All accuracies outputted without requiring DEBUG
     
     return vals0, vals1_2, vals1_1, vals1_0
 
@@ -237,8 +237,6 @@ def run_generic_test(mom, params, data, new_mur = None, VIEW = VIEW):
                 vals0, vals1_2, vals1_1, vals1_0 = pretty_print_results(p, j, params, rval, VIEW = VIEW)
                 point_vals.append([vals0, vals1_2, vals1_1, vals1_0])
             
-            ## check meaning of canonical list for a channel in has_chan_lc
-            ## check meaning of SLCTEST
             if SLCTEST and p.get('has_lc', None):
                 print ("+++ LC+SLC +++")
                 rval_lc = get_vals(allmoms, mcn+1, alphas=alphas, alpha=alpha, mur=mur)
@@ -271,9 +269,6 @@ def run_generic_test(mom, params, data, new_mur = None, VIEW = VIEW):
     return test_vals
 
 
-## NOTE: have not implemented run_sc_test yet
-## TODO: If necessary implement these tests here
-
 def nis(i, j):
     return i+j*(j-1)/2 if i<=j else j+i*(i-1)/2
 
@@ -294,32 +289,12 @@ def run_cc_test(mom, params, data):
         print ("-------- channel %s -------- (%d points)" % (name, npoints))
         treevals = []
         for j in tqdm(range(npoints)):
-            #print "... point %d ..." % j
-            #ccvals = OLP.OLP_EvalSubProcess(mcn+1, mom[j], alphas=alphas, alpha=alpha, mur=mur, retlen=legs*(legs-1)/2)
             treeval = OLP.OLP_EvalSubProcess(mcn+2, mom[j], alphas=alphas, alpha=alpha, mur=mur)
             born = treeval[0]
             treevals.append(treeval)
-            #print ('ccvals = {}'.format(ccvals))
-            #print ('treeval = {}'.format(treeval))
-            #print ('born = {}'.format(born))
-            #if relerr(p['born'][j], born) > 1e-10:
-            #    msg = 'FAIL'
-            #else:
-            #    msg = 'OK'
             if born == 0:
                 print ("ERROR born = 0")
                 born = 1
-            #print p['born'][j]/born, msg
-            #for i in range(legs):
-            #    xsum = 0
-            #    for j in range(legs):
-            #        if i == j:
-            #            sys.stdout.write(" %10.3e" % 0.)
-            #        else:
-            #            x = ccvals[nis(i,j)]/born
-            #            sys.stdout.write(" %10.3e" % x)
-            #            xsum += x
-            #    sys.stdout.write(" | %17.10e\n" % (xsum))
     return treevals
 
 def chan_has_lc(p):
@@ -404,8 +379,6 @@ def run_batch(curorder, curtests):
         
         test_data.append([mom, params, data])
 
-    ## NOTE: Eliminated running of generis tests and leave this to user    
-        
     return test_data, ptype, order
 
 def order_global(mod):
@@ -416,7 +389,7 @@ def order_global(mod):
         order.append('Extra NJetRenormalize yes')
     else:
         order.append('Extra NJetRenormalize no')
-    #order.append('Extra SetParameter qcd(%d)' % mod.Nf)
+    
     order.append(mod.extraorder)
     order = '\n'.join(order).rstrip(' \n')
     order = re.sub(r'\n\n+', r'\n', order)
