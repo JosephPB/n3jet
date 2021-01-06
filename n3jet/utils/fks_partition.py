@@ -1,6 +1,6 @@
 import numpy as np
-from n3jet.utils.utils import dot
-from n3jet.utils.rambo_piecewise_balance import check_all
+from n3jet.utils.general_utils import dot
+from n3jet.phase.rambo_piecewise_balance import check_all
 
 class FKSPartition:
 

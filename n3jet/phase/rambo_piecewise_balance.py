@@ -2,6 +2,8 @@ import numpy as np
 from tqdm import tqdm
 import pandas as pd
 
+from n3jet.utils.general_utils import dot
+
 # set com enery
 s = 500
 
@@ -59,11 +61,6 @@ def isotropic_moms(mom):
     q_2 = q_0*np.sqrt(1-c**2)*np.sin(phi)
     q_3 = q_0*c
     return np.array([q_0,q_1,q_2,q_3])
-
-def dot(p1,p2):
-    'Minkowski metric dot product'
-    prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3])
-    return prod
     
 def boost(mom, moms, w):
     '''

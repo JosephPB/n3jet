@@ -1,14 +1,12 @@
-import sys
-sys.path.append('./../models/')
-sys.path.append('./../phase/')
 import os
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import random
 from matplotlib import rc
 import time
+from keras.models import load_model
+from tqdm import tqdm
 
 # python 2/3 compatibility
 try:
@@ -16,42 +14,8 @@ try:
 except:
     import pickle
 
-from njet_run_functions import *
-from model import Model
-from rambo_piecewise_balance import *
-from fks_partition import *
-from keras.models import load_model
-from tqdm import tqdm
-
-def cut_near_split(test_momenta, NJ_test, delta_cut, delta_near, all_legs=False):
-    '''
-    Split momenta into near and cut arrays - 
-      near is the region close to the PS cuts and the cut region is the rest of the cut PS
-    :param test_momenta: list of momenta
-    :param NJ_test: array of NJet ground truth results
-    :param delta_cut: the PS cut delta
-    :param delta_near: the secondary 'cut' defining the region 'close to' the cut boundary
-    '''
-    if type(test_momenta) != list:
-        raise AssertionError('Momentum must be in the form of a list')
-    
-    test_cut_momenta = []
-    test_near_momenta = []
-    NJ_near_test_treevals = []
-    NJ_cut_test_treevals = []
-    for idx, i in tqdm(enumerate(test_momenta), total = len(test_momenta)):
-        if all_legs:
-            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_legs=True)
-        else:
-            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_legs=False)
-        if close == False:
-            if min_distance < delta_near:
-                test_near_momenta.append(i)
-                NJ_near_test_treevals.append(NJ_test[idx])
-            else:
-                test_cut_momenta.append(i)
-                NJ_cut_test_treevals.append(NJ_test[idx])
-    return test_cut_momenta, test_near_momenta, NJ_near_test_treevals, NJ_cut_test_treevals
+from n3jet.models import Model
+from n3jet.phase.rambo_piecewise_balance import *
 
 
 def train_near_networks(
@@ -167,7 +131,7 @@ def train_near_networks_general(
         
             if os.path.exists(pair_dir) == False:
                 os.mkdir(pair_dir)
-            
+            njet
             model.save(pair_dir + '/model')
             with open (pair_dir + '/model_arch.json', 'w') as fout:
                 fout.write(model.to_json())
