@@ -167,6 +167,11 @@ def load_njet(data_dir, file, python_3 = False):
 def save_njet(data_dir, file, njet):
     np.save(data_dir + file + '.npy', njet, allow_pickle = True)
 
+def dot(p1,p2):
+    'Minkowski metric dot product'
+    prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3])
+    return prod
+
 def cs(test_momenta_array, NJ_test, y_pred):
     '''
     Calculate cross section and MC errors
@@ -198,103 +203,3 @@ def cs(test_momenta_array, NJ_test, y_pred):
         std = np.sqrt((f_2-f**2)/i)
         NN_std.append(std)
     return cs_range, NJ_cs, NJ_std, NN_cs, NN_std
-
-
-def plot_cs(test_momenta_array, cs_range, NJ_cs, NJ_std, NN_cs, NN_std, order, n_gluon, points, test_points, save_dir = ''):
-    '''
-    Plot cross section for different numbers of PS points for both the NJet output and the NN prediction and save output
-    
-    :param cs_range: array of slices of numbers of PS points
-    :param *_cs: array of cross section bin values
-    :param *_std: array of MC errors associated to each bin
-    :param order: LO or NLO
-    :param n_gluon: number of gluons in the process
-    :param save_dir: directory within which to save plot
-    '''
-    
-    std_error = [1,2,3]
-    plots = []
-    for i in std_error:
-        fig = plt.figure(1)
-        plt.errorbar(cs_range,np.array(NJ_cs)/np.array(cs_range), label = 'NJ', yerr=np.array(NJ_std)*i)
-        plt.errorbar(cs_range,np.array(NN_cs)/np.array(cs_range), label = 'NN_{}'.format(points), yerr=np.array(NN_std)*i)
-        plt.legend()
-        if order == 'NLO':
-            plt.title('{} '.format(order)+r'k-factor for $e^+e^-\rightarrow\,q\bar{q}$'+'{}'.format(n_gluon*'g')+' {}std error'.format(i))
-        else:
-            plt.title('{} '.format(order)+r'cross section for $e^+e^-\rightarrow\,q\bar{q}$'+'{}'.format(n_gluon*'g')+' {}std error'.format(i))
-        plt.ylabel('cross section')
-        plt.xlabel('number of phase space points')
-        plt.xticks(np.arange(0,(len(test_momenta_array)/1000000)*1000001,1000000))
-        plots.append(fig)
-        plt.close()
-        
-    if save_dir != '':
-        for idx, i in enumerate(plots):
-            i.savefig(save_dir + '/cs_convergence_{}_{}.png'.format(test_points,idx), dpi = 250, bbox_inches='tight')
-    return plots
-
-def plot_tran_mom(test_momenta_array, NJ_test, y_pred, order, n_gluon, delta, points, save_dir = ''):
-    '''
-    Plot histrogram of transverse momenta of the leading energy jet
-    
-    :param test_momenta_array: array of all test moments
-    :param NJ_test: numpy array of the NJet ground truth results
-    :param y_pred: NN prediction
-    :param order: LO or NLO
-    :param n_gluon: number of gluons in the process
-    :param save_dir: directory within which to save plot
-    '''
-    
-    plot = []
-    leading_energy = []
-    for i in test_momenta_array:
-        element = np.argmax(i[2:,0])
-        leading_energy.append(i[2+element])
-    
-    transverse_mom = lambda mom: np.sqrt(mom[1]**2+mom[2]**2)
-    
-    tran_momenta = []
-    for i in leading_energy:
-        tran_momenta.append(transverse_mom(i))
-    
-    tran_momenta = np.array(tran_momenta)
-    
-    bin_range = np.arange(0,np.max(tran_momenta)+10,10)
-    
-    NJ_bin_vals = []
-    NN_bin_vals = []
-    for i in range(len(bin_range)-1):
-        NJ_vals = NJ_test[np.where(np.logical_and(tran_momenta>bin_range[i], tran_momenta<=bin_range[i+1]))[0]]
-        NJ_bin_vals.append(np.sum(NJ_vals))
-        NN_vals = y_pred[np.where(np.logical_and(tran_momenta>bin_range[i], tran_momenta<=bin_range[i+1]))[0]]
-        NN_bin_vals.append(np.sum(NN_vals))
-        
-    per_diff = (np.array(NJ_bin_vals)-np.array(NN_bin_vals))*100/np.array(NJ_bin_vals)
-    
-    diff = np.array(NJ_bin_vals)-np.array(NN_bin_vals)
-    
-    
-    fig = plt.figure(1)
-    
-    ax1 = fig.add_axes((.1,.4,.8,.8))
-    if order == 'NLO':
-        plt.title('{} '.format(order)+r'differential k-factor against $p_T$ for $e^+e^-\rightarrow\,q\bar{q}$'+'{} w/ FKS'.format(n_gluon*'g'))
-    else:
-        plt.title('{} '.format(order)+r'differential cross section against $p_T$ for $e^+e^-\rightarrow\,q\bar{q}$'+'{} w/ FKS'.format(n_gluon*'g'))
-    plt.bar(bin_range[1:],NN_bin_vals,width=8, color = 'orange', label = 'NN_{}'.format(points))
-    plt.bar(bin_range[1:],NJ_bin_vals,width=8, color = 'blue', label = 'NJ', alpha = 0.5)
-    plt.legend()
-    plt.ylabel(r'$\frac{d\sigma}{dp_T}$', rotation = 0, fontsize = 10)
-    ax1.set_xticklabels([])
-    
-    ax3=fig.add_axes((.1,.1,.8,.3))
-    plt.plot(bin_range[1:],per_diff,'or')
-    plt.xlabel('transverse momentum')
-    plt.ylabel('% diff')
-    plot.append(fig)
-    plt.close()
-
-    if save_dir != '':
-        plot[0].savefig(save_dir + '/dcs_dpg.png'.format(order,n_gluon+2,delta,points), dpi = 250,bbox_inches='tight')
-    return plot

@@ -1,47 +1,106 @@
 import numpy as np
+from n3jet.utils.utils import dot
+from n3jet.utils.rambo_piecewise_balance import check_all
 
-def dot(p1,p2):
-    'Minkowski metric dot product'
-    prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3])
-    return prod
+class FKSPartition:
 
-def s(p_1,p_2):
-    'CoM energy of two massless jets'
-    return (2*dot(p_1,p_2))
+    def __init__(
+            self,
+            momenta,
+            labels,
+            all_legs = False,
+    ):
+        
+        self.momenta = momenta
+        self.labels = labels
+        self.all_legs = all_legs
 
-def d_ij(mom,i,j):
-    'CoM energy of selected massless jets'
-    return s(mom[i],mom[j])
+        if type(self.moms) != list:
+            raise AssertionError('Momentum must be in the form of a list')
+        
+    def cut_near_split(self, delta_cut, delta_near):
+        '''
+        Split momenta into near and cut arrays - 
+          near is the region close to the PS cuts and the cut region is the rest of the cut PS
 
-def D_ij(mom,n_gluon):
-    'Reciprocal of CoM energy pairwise sum'
-    ds = []
-    pairs = []
-    for i in range(2,n_gluon+2+2):
-        for j in range(i+1,n_gluon+2+2):
-            ds.append(d_ij(mom,i,j))
-            pairs.append([i,j])
-    return np.sum(1/np.array(ds)), pairs
+        :param delta_cut: the PS cut delta
+        :param delta_near: the secondary 'cut' defining the region 'close to' the cut boundary
+        '''
 
-def D_ij_all(mom):
-    "Reciprocal of CoM energy for pairwise sum except for incoming particles"
-    ds = []
-    pairs = []
-    for i in range(len(mom)):
-        for j in range(i+1, len(mom)):
-            if i == 0 and j == 1:
-                pass
-            else:
-                ds.append(d_ij(mom,i,j))
-                pairs.append([i,j])
-    return np.sum(1/np.array(ds)), pairs
+        cut_momenta = []
+        self.near_momenta = []
+        cut_labels = []
+        self.near_labels = []
 
-def S_ij(mom,n_gluon,i,j):
-    'Partition function'
-    D_1,_ = D_ij(mom,n_gluon)
-    return (1/(D_1*d_ij(mom,i,j)))
+        for idx, i in tqdm(enumerate(self.momenta), total = len(self.momenta)):
+            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_legs=all_legs)
+            if not close:
+                if min_distance < delta_near:
+                    self.near_momenta.append(i)
+                    self.near_labels.append(self.labels[idx])
+                else:
+                    cut_momenta.append(i)
+                    cut_labels.append(self.labels[idx])
 
-def S_ij_all(mom, i, j):
-    "Parition function for all jets"
-    D_1,_ = D_ij_all(mom)
-    return (1/(D_1*d_ij(mom,i,j)))
+        return cut_momenta, self.near_momenta, cut_labels, self.near_labels
+
+    def s(self, p_1,p_2):
+        'CoM energy of two massless jets'
+        return (2*dot(p_1,p_2))
+
+    def d_ij(self, mom, i,j):
+        'CoM energy of selected massless jets'
+        return self.s(mom[i],mom[j])
+
+    def D_ij(self, mom):
+        "Reciprocal of CoM energy for pairwise sum"
+        ds = []
+        pairs = []
+
+        if self.only_final:
+            for i in range(2, len(mom)):
+                for j in range(i+1, len(mom)):
+                    ds.append(self.d_ij(mom))
+                    pairs.append([i,j])
+
+        else:
+            for i in range(len(mom)):
+                for j in range(i+1, len(mom)):
+                    if i == 0 and j == 1:
+                        pass
+                    else:
+                        ds.append(self.d_ij(mom,i,j))
+                        pairs.append([i,j])
+                        
+        return np.sum(1/np.array(ds)), pairs
+
+    def S_ij(self, mom, i, j):
+        'Partition function'
+        D_1,_ = self.D_ij(mom)
+        return (1/(D_1*d_ij(mom,i,j)))
+
+    def weighting(self):
+        '''
+        Weights scattering amplitudes according to the different partition function for pairs of particle
+
+        :param moms: list of momenta
+        :param n_gluon: the number of gluon jets
+        :param labs: NJet labels
+        '''
+
+        D_1, pairs = self.D_ij(self.near_momenta[0])
+        S_near = []
+
+        for idx, i in enumerate(pairs):
+            print ('Pair {} of {}'.format(idx+1, len(pairs)))
+            S = []
+            for j in tqdm(self.near_momenta, total=len(self.near_momenta)):
+                S.append(self.S_ij(j,i[0],i[1]))
+            S_near.append(np.array(S))
+        S_near = np.array(S_near)
+
+        labs_split = []
+        for i in S_near:
+            labs_split.append(self.labels*i)
+
+        return pairs, labs_split
