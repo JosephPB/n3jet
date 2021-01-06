@@ -9,8 +9,10 @@ from matplotlib import cm
 import random
 from matplotlib import rc
 import time
-#import pickle
-import cPickle as pickle
+try:
+    import cPickle as pickle
+except:
+    import pickle
 import multiprocessing
 
 from njet_run_functions import *

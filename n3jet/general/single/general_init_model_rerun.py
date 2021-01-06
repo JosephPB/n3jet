@@ -23,7 +23,8 @@ from utils import *
 from uniform_utils import *
 from fks_utils import *
 
-parser = argparse.ArgumentParser(description='Training multiple models on the same dataset for error analysis. Here we assume that the momenta and njet files already exist and will be passed to the script by the user')
+parser = argparse.ArgumentParser(description='Training multiple models on the same dataset for error analysis. 
+Here we assume that the momenta and njet files already exist and will be passed to the script by the user')
 
 parser.add_argument(
     '--mom_file',

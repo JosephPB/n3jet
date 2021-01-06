@@ -31,7 +31,8 @@ import rambo_piecewise_balance as rpb
 from rambo_piecewise_balance import *
 
 
-parser = argparse.ArgumentParser(description='Once models have been trained using []_init_model_testing.py then this script can be used for testing, given some testing data. Note: this assumes that testing data has already been generated.')
+parser = argparse.ArgumentParser(description='Once models have been trained using []_init_model_testing.py,
+this script can be used for testing, given some testing data. Note: this assumes that testing data has already been generated.')
 
 parser.add_argument(
     '--test_mom_file',
