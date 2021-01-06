@@ -1,3 +1,12 @@
+#############################################################
+#                                                           #
+# -Functions taken and adapted from njet repository         #
+# -Functions are designed for generic use                   #
+#                                                           #
+#                                                           #
+#                                                           #
+#############################################################
+
 from __future__ import print_function
 import os
 import sys
