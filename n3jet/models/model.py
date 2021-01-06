@@ -15,10 +15,9 @@ import matplotlib.pyplot as plt
 import time
 
 
-
 class Model:
     
-    def __init__(self, input_size, momenta, labels, all_jets = False, all_legs = False):
+    def __init__(self, input_size, momenta, labels, all_jets = False, all_legs = False, model_dataset = False):
         '''
         :param input_size: the flattened input dim for the model
             e.g. 3 jets has input_dim of (3-1)*4=8
@@ -30,6 +29,7 @@ class Model:
         self.labels = labels
         self.all_jets = all_jets
         self.all_legs = all_legs
+        self.model_dataset = model_dataset
     
     def standardise(self, data):
         '''standardise data
@@ -42,7 +42,7 @@ class Model:
         return mean, std, standard
         
     def root_mean_squared_error(self, y_true, y_pred):
-        'custom loss functoin RMSE'
+        'custom loss function RMSE'
         return K.sqrt(K.mean(K.square(y_pred - y_true)))
     
     def process_training_data(self, random_state=42, **kwargs):
@@ -81,6 +81,23 @@ class Model:
         
         return X_train, X_test, y_train, y_test, self.x_mean, self.x_std, self.y_mean, self.y_std   
     
+    def baseline_model_dataset(self, layers, lr=0.001):
+        'define and compile model'
+        # create model
+        # at some point can use new Keras tuning feature for optimising this model
+        model = Sequential()
+        model.add(Dense(layers[0], input_dim=(self.input_size), kernel_initializer = glorot_uniform(seed=1337)))
+        model.add(Activation(activations.tanh))
+        model.add(Dense(layers[1], kernel_initializer = glorot_uniform(seed=1337+123)))
+        model.add(Activation(activations.tanh))
+        model.add(Dense(layers[2], kernel_initializer = glorot_uniform(seed=1337+345)))
+        model.add(Activation(activations.tanh))
+        model.add(Dense(1), kernel_initializer = glorot_uniform(seed=1337-545))
+        # Compile model
+        model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
+        
+        return model
+
     def baseline_model(self, layers, lr=0.001):
         'define and compile model'
         # create model
@@ -97,6 +114,7 @@ class Model:
         model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
         
         return model
+
     
     def fit(self, layers=[32,16,8], epochs=10000, lr=0.001, **kwargs):
         '''
@@ -106,15 +124,21 @@ class Model:
         random_state = kwargs.get('random_state', 42)
         
         if len(layers) != 3:
-            raise Exception('the number of layers to be defined is 3, you have defined len(layers) layers')
+            raise Exception('the number of layers to be defined is 3, you have defined {} layers'.format(len(layers)))
     
         X_train, X_test, y_train, y_test,_,_,_,_ = self.process_training_data(random_state = random_state)
-        print (X_train.shape)
-        
-        self.model = self.baseline_model(layers=layers, lr=lr)
+        print ('The training dataset has size {}'.format(X_train.shape))
+
+        if self.model_dataset:
+            self.model = self.baseline_model_dataset(layers=layers, lr=lr)
+        else:
+            self.model = self.baseline_model(layers=layers, lr=lr)
         ES = EarlyStopping(monitor='val_loss', min_delta=0, patience=100, verbose=0, restore_best_weights=True)
-        
-        self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test),callbacks=[ES], batch_size=512)
+
+        if self.model_dataset:
+            self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test),callbacks=[ES], batch_size=512, shuffle=False)
+        else:
+            self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test),callbacks=[ES], batch_size=512)
         
         return self.model, self.x_mean, self.x_std, self.y_mean, self.y_std
         
