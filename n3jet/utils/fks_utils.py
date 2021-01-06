@@ -16,6 +16,9 @@ except:
 
 from n3jet.models import Model
 
+###############################################################################################
+###############################      TRAINING ON NEAR NETWORKS  ###############################
+###############################################################################################
 
 def train_near_networks(
         pairs,
@@ -142,38 +145,6 @@ def train_near_networks_general(
         
     return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
 
-    
-def get_near_networks_general(NN, pairs, delta_near, model_dir):
-    '''
-    Retrieve the near networks given the assigned file structure
-    '''
-    model_near = []
-
-    x_mean_near = []
-    x_std_near = []
-    y_mean_near = []
-    y_std_near = []
-    for idx,i in enumerate(pairs):
-        
-        pair_dir = model_dir + 'pair_{}_{}'.format(delta_near,idx)
-        
-        model = load_model(
-            pair_dir + '/model',
-            custom_objects={'root_mean_squared_error':NN.root_mean_squared_error}
-        )
-        model_near.append(model)
-        pickle_out = open(pair_dir + "/dataset_metadata.pickle","rb")
-        metadata = pickle.load(pickle_out)
-        pickle_out.close()
-        
-        x_mean_near.append(metadata['x_mean'])
-        y_mean_near.append(metadata['y_mean'])
-        x_std_near.append(metadata['x_std'])
-        y_std_near.append(metadata['y_std'])
-        
-    return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
-
-
 
 def get_near_networks(NN, pairs, order, n_gluon, delta_near, points, model_dir):
     '''
@@ -212,6 +183,76 @@ def get_near_networks(NN, pairs, order, n_gluon, delta_near, points, model_dir):
         y_std_near.append(metadata['y_std'])
         
     return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
+    
+def get_near_networks_general(NN, pairs, delta_near, model_dir):
+    '''
+    Retrieve the near networks given the assigned file structure
+    '''
+    model_near = []
+
+    x_mean_near = []
+    x_std_near = []
+    y_mean_near = []
+    y_std_near = []
+    for idx,i in enumerate(pairs):
+        
+        pair_dir = model_dir + 'pair_{}_{}'.format(delta_near,idx)
+        
+        model = load_model(
+            pair_dir + '/model',
+            custom_objects={'root_mean_squared_error':NN.root_mean_squared_error}
+        )
+        model_near.append(model)
+        pickle_out = open(pair_dir + "/dataset_metadata.pickle","rb")
+        metadata = pickle.load(pickle_out)
+        pickle_out.close()
+        
+        x_mean_near.append(metadata['x_mean'])
+        y_mean_near.append(metadata['y_mean'])
+        x_std_near.append(metadata['x_std'])
+        y_std_near.append(metadata['y_std'])
+        
+    return model_near, x_mean_near, x_std_near, y_mean_near, y_std_near
+
+###############################################################################################
+###############################      TRAINING ON CUT NETWORKS  ###############################
+###############################################################################################
+
+
+def train_cut_network(
+        cut_momenta,
+        NJ_cut,order,
+        n_gluon,
+        delta_cut,
+        points,
+        model_dir = '',
+        **kwargs
+):
+    
+    lr = kwargs.get('lr', 0.001)
+    
+    NN_cut = Model((n_gluon+2-1)*4,cut_momenta,NJ_cut)
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=[16,32,16], lr=lr)
+    
+    if model_dir != '':
+        if not os.path.exists(
+                model_dir + '{}_cut_{}_{}_{}'.format(order,n_gluon+2,delta_cut,points)
+        ):
+            os.mkdir(model_dir + '{}_cut_{}_{}_{}'.format(order,n_gluon+2,delta_cut,points))
+        
+        model_cut.save(model_dir + '{}_cut_{}_{}_{}/model'.format(order,n_gluon+2,delta_cut,points))
+        metadata = {
+            'x_mean': x_mean_cut,
+            'x_std': x_std_cut,
+            'y_mean': y_mean_cut,
+            'y_std': y_std_cut
+        }
+        
+        pickle_out = open(model_dir + "{}_cut_{}_{}_{}/dataset_metadata.pickle".format(order,n_gluon+2,delta_cut,points),"wb")
+        pickle.dump(metadata, pickle_out)
+        pickle_out.close()
+    
+    return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
 
 
 def train_cut_network_general(
@@ -255,40 +296,27 @@ def train_cut_network_general(
     
     return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
 
-def train_cut_network(
-        cut_momenta,
-        NJ_cut,order,
-        n_gluon,
-        delta_cut,
-        points,
-        model_dir = '',
-        **kwargs
-):
+
+def get_cut_network(NN, order, n_gluon, delta_cut, points, model_dir):
     
-    lr = kwargs.get('lr', 0.001)
+    model_cut = load_model(
+        model_dir + '{}_cut_{}_{}_{}/model'.format(
+            order,n_gluon+2,delta_cut,points
+        ),
+        custom_objects={'root_mean_squared_error':NN.root_mean_squared_error}
+    )
     
-    NN_cut = Model((n_gluon+2-1)*4,cut_momenta,NJ_cut)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=[16,32,16], lr=lr)
+    pickle_out = open(model_dir + "{}_cut_{}_{}_{}/dataset_metadata.pickle".format(order,n_gluon+2,delta_cut,points),"rb")
+    metadata = pickle.load(pickle_out)
+    pickle_out.close()
     
-    if model_dir != '':
-        if not os.path.exists(
-                model_dir + '{}_cut_{}_{}_{}'.format(order,n_gluon+2,delta_cut,points)
-        ):
-            os.mkdir(model_dir + '{}_cut_{}_{}_{}'.format(order,n_gluon+2,delta_cut,points))
-        
-        model_cut.save(model_dir + '{}_cut_{}_{}_{}/model'.format(order,n_gluon+2,delta_cut,points))
-        metadata = {
-            'x_mean': x_mean_cut,
-            'x_std': x_std_cut,
-            'y_mean': y_mean_cut,
-            'y_std': y_std_cut
-        }
-        
-        pickle_out = open(model_dir + "{}_cut_{}_{}_{}/dataset_metadata.pickle".format(order,n_gluon+2,delta_cut,points),"wb")
-        pickle.dump(metadata, pickle_out)
-        pickle_out.close()
+    x_mean_cut = (metadata['x_mean'])
+    y_mean_cut = (metadata['y_mean'])
+    x_std_cut = (metadata['x_std'])
+    y_std_cut = (metadata['y_std'])
     
     return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
+
 
 def get_cut_network_general(NN, delta_near, model_dir):
 
@@ -311,25 +339,10 @@ def get_cut_network_general(NN, delta_near, model_dir):
     return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
 
 
-def get_cut_network(NN, order, n_gluon, delta_cut, points, model_dir):
-    
-    model_cut = load_model(
-        model_dir + '{}_cut_{}_{}_{}/model'.format(
-            order,n_gluon+2,delta_cut,points
-        ),
-        custom_objects={'root_mean_squared_error':NN.root_mean_squared_error}
-    )
-    
-    pickle_out = open(model_dir + "{}_cut_{}_{}_{}/dataset_metadata.pickle".format(order,n_gluon+2,delta_cut,points),"rb")
-    metadata = pickle.load(pickle_out)
-    pickle_out.close()
-    
-    x_mean_cut = (metadata['x_mean'])
-    y_mean_cut = (metadata['y_mean'])
-    x_std_cut = (metadata['x_std'])
-    y_std_cut = (metadata['y_std'])
-    
-    return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
+###############################################################################################
+###############################     INFERRING ON NEAR NETWORKS  ###############################
+###############################################################################################
+
 
 def infer_on_near_splits(NN, moms, models, x_mean_near, x_std_near, y_mean_near, y_std_near):
     '''
