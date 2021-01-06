@@ -17,7 +17,15 @@ import time
 
 class Model:
     
-    def __init__(self, input_size, momenta, labels, all_jets = False, all_legs = False, model_dataset = False):
+    def __init__(
+            self,
+            input_size,
+            momenta,
+            labels,
+            all_jets = False,
+            all_legs = False,
+            model_dataset = False
+    ):
         '''
         :param input_size: the flattened input dim for the model
             e.g. 3 jets has input_dim of (3-1)*4=8
@@ -76,13 +84,16 @@ class Model:
         x_standard = x_standard.reshape(-1,self.input_size) #shape for passing into network
         
         self.y_mean, self.y_std, y_standard = self.standardise(labels)
-        
-        X_train, X_test, y_train, y_test = train_test_split(x_standard, y_standard, test_size=0.2, random_state=42)
+
+        if self.model_dataset:
+            X_train, X_test, y_train, y_test = train_test_split(x_standard, y_standard, test_size=0.2)
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(x_standard, y_standard, test_size=0.2, random_state=42)
         
         return X_train, X_test, y_train, y_test, self.x_mean, self.x_std, self.y_mean, self.y_std   
     
     def baseline_model_dataset(self, layers, lr=0.001):
-        'define and compile model'
+        'define and compile model with fixing weight initialisers and a random dataset'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
         model = Sequential()
@@ -99,7 +110,7 @@ class Model:
         return model
 
     def baseline_model(self, layers, lr=0.001):
-        'define and compile model'
+        'define and compile model with a fixed dataset but random weights'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
         model = Sequential()
@@ -136,9 +147,9 @@ class Model:
         ES = EarlyStopping(monitor='val_loss', min_delta=0, patience=100, verbose=0, restore_best_weights=True)
 
         if self.model_dataset:
-            self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test),callbacks=[ES], batch_size=512, shuffle=False)
+            self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test), callbacks=[ES], batch_size=512, shuffle=False)
         else:
-            self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test),callbacks=[ES], batch_size=512)
+            self.model.fit(X_train, y_train, epochs=epochs, validation_data=(X_test, y_test), callbacks=[ES], batch_size=512)
         
         return self.model, self.x_mean, self.x_std, self.y_mean, self.y_std
         
