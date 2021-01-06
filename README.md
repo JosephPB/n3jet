@@ -30,6 +30,12 @@ ease of use and comparison.
 
 ## Usage
 
+Run:
+
+```
+pip install -e .
+```
+
 ### Requirements
 
 This package was written in Python 2 since the current NJet interface
