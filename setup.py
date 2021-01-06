@@ -7,7 +7,7 @@ from os.path import abspath, dirname, join
 from glob import glob
 
 this_dir = abspath(dirname(__file__))
-with open(join(this_dir, "LICENSE")) as f:
+with open(join(this_dir, "LICENSE.md")) as f:
     license = f.read()
     
 with open(join(this_dir, "README.md"), encoding="utf-8") as file:
@@ -25,13 +25,12 @@ setup(
         url="https://github.com/JosephPB/n3jet/",
         long_description_content_type='text/markdown',
         long_description=long_description,
-        scripts=scripts,
+        #scripts=scripts,
         author="Joseph Bullock",
         author_email='j.p.bullock@durhan.ac.uk',
         license="MIT license",
         install_requires=requirements,
         packages = find_packages(exclude=["docs"]),
-        py_modules=[splitext(basename(path))[0] for path in glob('n3jet/*.py')],
         include_package_data=True
 )
 
