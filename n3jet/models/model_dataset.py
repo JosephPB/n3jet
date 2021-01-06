@@ -15,7 +15,7 @@ import time
 
 
 
-class Model:
+class ModelDataset:
     
     def __init__(self, input_size, momenta, labels):
         '''
