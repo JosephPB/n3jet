@@ -15,7 +15,6 @@ except:
     import pickle
 
 from n3jet.models import Model
-from n3jet.phase.rambo_piecewise_balance import *
 
 
 def train_near_networks(
