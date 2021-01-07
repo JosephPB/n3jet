@@ -50,7 +50,7 @@ def check_all(mom,delta,s_com, all_legs=False):
 
 class Rambo:
     def __init__(self, num_jets, num_points, w, delta_cut, all_legs=False):
-        self.num_jets = num_jet
+        self.num_jets = num_jets
         self.num_points = num_points
         self.w = w
         self.delta_cut = delta_cut
@@ -107,7 +107,7 @@ class Rambo:
 
         pbar = tqdm(total=self.num_points)
         while len(cut_momenta) < self.num_points:
-            moms = self.random_moms(num_jets)
+            moms = self.random_moms()
 
             iso_moms = []
             for i in moms:
