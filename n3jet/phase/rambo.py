@@ -60,7 +60,7 @@ class Rambo:
     def random_moms(self):
         'Generate 4-mom components from a uniform distribution'
         moms = []
-        for i in range(self.num_points):
+        for i in range(self.num_jets):
             moms.append(np.random.uniform(0,1,4))
         return np.array(moms)
 
@@ -121,7 +121,7 @@ class Rambo:
             for i in iso_moms:
                 boost_moms.append(self.boost(i,iso_moms))
 
-            close = check_all(
+            close, _ = check_all(
                 mom=boost_moms,
                 delta=self.delta_cut,
                 s_com=dot(p_1,p_2)

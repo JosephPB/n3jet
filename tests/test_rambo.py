@@ -1,4 +1,8 @@
-from n3jet.phase import Rambo
+import numpy as np
+
+from n3jet.phase import (
+    Rambo, check_all
+)
 from n3jet.phase.rambo import (
     dot,
     pair_check
@@ -32,13 +36,13 @@ def test__rambo_generate():
 
     cut_mom = rambo.generate()
 
-    assert dot(cut_mom[0][0],cut_mom[0][0]) == 0.
-    assert dot(cut_mom[0][1],cut_mom[0][1]) == 0.
-    assert dot(cut_mom[0][2],cut_mom[0][2]) == 0.
-    assert dot(cut_mom[0][3],cut_mom[0][3]) == 0.
-    assert dot(cut_mom[0][4],cut_mom[0][4]) == 0.
+    assert np.isclose(dot(cut_mom[0][0],cut_mom[0][0]),0.)
+    assert np.isclose(dot(cut_mom[0][1],cut_mom[0][1]),0.)
+    assert np.isclose(dot(cut_mom[0][2],cut_mom[0][2]),0.)
+    assert np.isclose(dot(cut_mom[0][3],cut_mom[0][3]),0.)
+    assert np.isclose(dot(cut_mom[0][4],cut_mom[0][4]),0.)
 
-    too_close, distance = check_all(cut_mom, delta_cut, dot(cut_mom[0][0], cut_mom[0][1]))
+    too_close, distance = check_all(cut_mom[0], delta_cut, dot(cut_mom[0][0], cut_mom[0][1]))
 
     assert too_close == False
     assert distance > delta_cut
@@ -53,22 +57,22 @@ def test__rambo_generate_piecewise():
         num_points=10,
         w=500.,
         delta_cut=delta_cut,
-        all_legs=True
+        all_legs=False
     )
 
-    cut_mom, near_mom = rambo.generate(delta_near=delta_near)
+    cut_mom, near_mom = rambo.generate_piecewise(delta_near=delta_near)
 
-    assert dot(cut_mom[0][0],cut_mom[0][0]) == 0.
-    assert dot(cut_mom[0][1],cut_mom[0][1]) == 0.
-    assert dot(cut_mom[0][2],cut_mom[0][2]) == 0.
-    assert dot(cut_mom[0][3],cut_mom[0][3]) == 0.
-    assert dot(cut_mom[0][4],cut_mom[0][4]) == 0.
+    assert np.isclose(dot(cut_mom[0][0],cut_mom[0][0]),0.)
+    assert np.isclose(dot(cut_mom[0][1],cut_mom[0][1]),0.)
+    assert np.isclose(dot(cut_mom[0][2],cut_mom[0][2]),0.)
+    assert np.isclose(dot(cut_mom[0][3],cut_mom[0][3]),0.)
+    assert np.isclose(dot(cut_mom[0][4],cut_mom[0][4]),0.)
 
-    assert dot(near_mom[0][0],near_mom[0][0]) == 0.
-    assert dot(near_mom[0][1],near_mom[0][1]) == 0.
-    assert dot(near_mom[0][2],near_mom[0][2]) == 0.
-    assert dot(near_mom[0][3],near_mom[0][3]) == 0.
-    assert dot(near_mom[0][4],near_mom[0][4]) == 0.
+    assert np.isclose(dot(near_mom[0][0],near_mom[0][0]),0.)
+    assert np.isclose(dot(near_mom[0][1],near_mom[0][1]),0.)
+    assert np.isclose(dot(near_mom[0][2],near_mom[0][2]),0.)
+    assert np.isclose(dot(near_mom[0][3],near_mom[0][3]),0.)
+    assert np.isclose(dot(near_mom[0][4],near_mom[0][4]),0.)
 
     too_close, distance = check_all(cut_mom[0], delta_cut, dot(cut_mom[0][0], cut_mom[0][1]))
 
