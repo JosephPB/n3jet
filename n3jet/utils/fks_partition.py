@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+
 from n3jet.utils.general_utils import dot
 from n3jet.phase import check_all
 
@@ -15,7 +17,7 @@ class FKSPartition:
         self.labels = labels
         self.all_legs = all_legs
 
-        if type(self.moms) != list:
+        if type(self.momenta) != list:
             raise AssertionError('Momentum must be in the form of a list')
         
     def cut_near_split(self, delta_cut, delta_near):
@@ -62,10 +64,10 @@ class FKSPartition:
         ds = []
         pairs = []
 
-        if self.all_legs:
+        if not self.all_legs:
             for i in range(2, len(mom)):
                 for j in range(i+1, len(mom)):
-                    ds.append(self.d_ij(mom))
+                    ds.append(self.d_ij(mom,i,j))
                     pairs.append([i,j])
 
         else:
@@ -82,7 +84,7 @@ class FKSPartition:
     def S_ij(self, mom, i, j):
         'Partition function'
         D_1,_ = self.D_ij(mom)
-        return (1/(D_1*d_ij(mom,i,j)))
+        return (1/(D_1*self.d_ij(mom,i,j)))
 
     def weighting(self):
         '''
