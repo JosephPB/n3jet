@@ -2,13 +2,16 @@ import numpy as np
 from tqdm import tqdm
 import pandas as pd
 
-from n3jet.utils.general_utils import dot
-
 # set com enery
 s = 500
 
 # set ps variable product
 delta_vars = 0.2
+
+def dot(p1,p2):
+    'Minkowski metric dot product'
+    prod = p1[0]*p2[0]-(p1[1]*p2[1]+p1[2]*p2[2]+p1[3]*p2[3])
+    return prod
 
 def pair_check(p1,p2,delta,s_com):
     '''Check proximity of pair of momenta

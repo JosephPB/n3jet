@@ -10,7 +10,7 @@ delta_angle = np.cos(0.4)
 # set ps variable product
 delta_vars = 0.2
 
-def pair_check(p1,p2,delta=delta_angle):
+def pair_check_phase(p1,p2,delta=delta_angle):
     '''Check proximity of pair of momenta
     :param p1, p2: 4-momenta
     :param delta: proximity measure - e.g. np.cos(0.4)
@@ -29,14 +29,14 @@ def pair_check(p1,p2,delta=delta_angle):
     
     return close
 
-def check_all(p_array):
+def check_all_phase(p_array):
     'Given an array of 4-momenta, check proximity of all pairs'
     too_close = False
     
     for idx, p in enumerate(p_array):
         to_check = p_array[idx+1:]
         for j in to_check:
-            proximity = pair_check(p,j)
+            proximity = pair_check_phase(p,j)
             if proximity == True:
                 too_close = True
                 
@@ -75,7 +75,7 @@ def ps_2_2(num_points):
         
     close = []
     for i in tqdm(momenta):
-        close.append(check_all(i))
+        close.append(check_all_phase(i))
         
     data = {'momenta':list(momenta), 'theta':list(theta_range), 'too close':list(close)}
     
@@ -206,7 +206,7 @@ def ps_2_3(num_points, vary, fix):
         
     close = []
     for i in tqdm(momenta):
-        close.append(check_all(i))
+        close.append(check_all_phase(i))
             
     data = {
         'momenta':list(momenta),
