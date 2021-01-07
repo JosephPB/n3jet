@@ -37,7 +37,7 @@ class FKSPartition:
                 mom=i,
                 delta=delta_cut,
                 s_com=dot(i[0],i[1]),
-                all_legs=all_legs
+                all_legs=self.all_legs
             )
             if not close:
                 if min_distance < delta_near:
@@ -62,7 +62,7 @@ class FKSPartition:
         ds = []
         pairs = []
 
-        if self.only_final:
+        if self.all_legs:
             for i in range(2, len(mom)):
                 for j in range(i+1, len(mom)):
                     ds.append(self.d_ij(mom))
@@ -87,10 +87,6 @@ class FKSPartition:
     def weighting(self):
         '''
         Weights scattering amplitudes according to the different partition function for pairs of particle
-
-        :param moms: list of momenta
-        :param n_gluon: the number of gluon jets
-        :param labs: NJet labels
         '''
 
         D_1, pairs = self.D_ij(self.near_momenta[0])
