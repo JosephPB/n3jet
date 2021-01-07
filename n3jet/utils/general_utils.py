@@ -5,7 +5,6 @@ import random
 from matplotlib import rc
 import time
 import pickle
-from njet_run_functions import *
 
 def load_momenta(data_dir, file, python_3 = False):
     if python_3 == True:

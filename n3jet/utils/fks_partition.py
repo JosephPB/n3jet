@@ -1,6 +1,6 @@
 import numpy as np
 from n3jet.utils.general_utils import dot
-from n3jet.phase.rambo_piecewise_balance import check_all
+from n3jet.phase import check_all
 
 class FKSPartition:
 
@@ -33,7 +33,12 @@ class FKSPartition:
         self.near_labels = []
 
         for idx, i in tqdm(enumerate(self.momenta), total = len(self.momenta)):
-            close, min_distance = check_all(i, delta=delta_cut,s_com=dot(i[0],i[1]),all_legs=all_legs)
+            close, min_distance = check_all(
+                mom=i,
+                delta=delta_cut,
+                s_com=dot(i[0],i[1]),
+                all_legs=all_legs
+            )
             if not close:
                 if min_distance < delta_near:
                     self.near_momenta.append(i)

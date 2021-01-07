@@ -21,7 +21,6 @@ from n3jet.utils.njet_run_functions import (
     action_run,
     run_tests,
     run_batch,
-    
     run_cc_test,
     run_generic_test
 )

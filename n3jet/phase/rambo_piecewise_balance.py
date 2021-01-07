@@ -146,7 +146,7 @@ class Rambo:
 
         pbar = tqdm(total=self.num_points)
         distance = []
-        while (count_near + count_cut) < (1*self.num_points)/2+(1*self.num_points)/2:
+        while (count_near + count_cut) < self.num_points:
             moms = self.random_moms()
 
             iso_moms = []
