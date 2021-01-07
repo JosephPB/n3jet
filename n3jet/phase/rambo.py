@@ -125,7 +125,8 @@ class Rambo:
             close, _ = check_all(
                 mom=boost_moms,
                 delta=self.delta_cut,
-                s_com=dot(p_1,p_2)
+                s_com=dot(p_1,p_2),
+                all_legs=self.all_legs
             )
 
             if close == False:
