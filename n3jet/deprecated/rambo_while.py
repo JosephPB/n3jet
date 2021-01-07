@@ -2,6 +2,8 @@ import numpy as np
 from tqdm import tqdm
 import pandas as pd
 
+from n3jet.utils.general_utils import dot
+
 # set com energy
 s = 500
 
@@ -26,7 +28,7 @@ def pair_check(p1,p2,delta,s_com):
     return close
 
 def check_all(p_array,delta,s_com):
-    'Given an array of 4-momenta, check proximity of all paira'
+    'Given an array of 4-momenta, check proximity of all pairs'
     too_close = False
     
     p_array = p_array[2:]
