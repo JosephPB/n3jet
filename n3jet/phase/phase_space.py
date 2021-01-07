@@ -2,7 +2,7 @@ import numpy as np
 from tqdm import tqdm
 import pandas as pd
 
-# set com enery
+# set com energy
 s = 1000**2
 
 # set 4-momentum proximity by angle
@@ -30,7 +30,7 @@ def pair_check(p1,p2,delta=delta_angle):
     return close
 
 def check_all(p_array):
-    'Given an array of 4-momenta, check proximity of all paira'
+    'Given an array of 4-momenta, check proximity of all pairs'
     too_close = False
     
     for idx, p in enumerate(p_array):
@@ -92,9 +92,19 @@ def out_particles_2_3(theta,alpha,x_1,x_2, phi = 0):
     
     root = np.sqrt(((x_1-1)*(x_2-1)*(x_1+x_2-1))/((x_1**2)*(x_2**2)))
 
-    p_4 = x_2*(np.sqrt(s)/2)*np.array([1.,(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)*np.cos(phi)+(x_1*(x_2-2)-2*x_2+2)*np.sin(theta)*np.cos(phi)-2*x_1*x_2*root*np.sin(alpha)*np.sin(phi))/(x_1*x_2),-(2*x_1*x_2*root*np.cos(phi)*np.sin(alpha)+(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)+(x_1*(x_2-2)-2*x_2+2)*np.sin(theta))*np.sin(phi))/(x_1*x_2),((x_1*(x_2-2)-2*x_2+2)*np.cos(theta)-2*x_1*x_2*root*np.cos(alpha)*np.sin(theta))/(x_1*x_2)])
+    p_4 = x_2*(np.sqrt(s)/2)*np.array([
+        1.,
+        (2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)*np.cos(phi)+(x_1*(x_2-2)-2*x_2+2)*np.sin(theta)*np.cos(phi)-2*x_1*x_2*root*np.sin(alpha)*np.sin(phi))/(x_1*x_2),
+        -(2*x_1*x_2*root*np.cos(phi)*np.sin(alpha)+(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)+(x_1*(x_2-2)-2*x_2+2)*np.sin(theta))*np.sin(phi))/(x_1*x_2),
+        ((x_1*(x_2-2)-2*x_2+2)*np.cos(theta)-2*x_1*x_2*root*np.cos(alpha)*np.sin(theta))/(x_1*x_2)
+    ])
     
-    p_5 = np.array([(2-x_1-x_2)*(np.sqrt(s)/2),-np.sqrt(s)*(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)*np.cos(phi)+(x_1**2+(x_2-2)*x_1-2*x_2+2)*np.sin(theta)*np.cos(phi)-2*x_1*x_2*root*np.sin(alpha)*np.sin(phi))/(2*x_1),np.sqrt(s)*(2*x_1*x_2*root*np.cos(phi)*np.sin(alpha)+(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)+(x_1**2+(x_2-2)*x_1-2*x_2+2)*np.sin(theta))*np.sin(phi))/(2*x_1),np.sqrt(s)*(2*x_1*x_2*root*np.cos(alpha)*np.sin(theta)-(x_1**2+(x_2-2)*x_1-2*x_2+2)*np.cos(theta))/(2*x_1)])
+    p_5 = np.array([
+        (2-x_1-x_2)*(np.sqrt(s)/2),
+        -np.sqrt(s)*(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)*np.cos(phi)+(x_1**2+(x_2-2)*x_1-2*x_2+2)*np.sin(theta)*np.cos(phi)-2*x_1*x_2*root*np.sin(alpha)*np.sin(phi))/(2*x_1),
+        np.sqrt(s)*(2*x_1*x_2*root*np.cos(phi)*np.sin(alpha)+(2*x_1*x_2*root*np.cos(alpha)*np.cos(theta)+(x_1**2+(x_2-2)*x_1-2*x_2+2)*np.sin(theta))*np.sin(phi))/(2*x_1),
+        np.sqrt(s)*(2*x_1*x_2*root*np.cos(alpha)*np.sin(theta)-(x_1**2+(x_2-2)*x_1-2*x_2+2)*np.cos(theta))/(2*x_1)
+    ])
     
     return p_3.astype(np.float64).tolist(), p_4.astype(np.float64).tolist(), p_5.astype(np.float64).flatten().tolist()
     
@@ -198,7 +208,16 @@ def ps_2_3(num_points, vary, fix):
     for i in tqdm(momenta):
         close.append(check_all(i))
             
-    data = {'momenta':list(momenta), 'theta':list(theta_range), 'alpha':list(alpha_range), 'x1':list(x_1_range), 'x2':list(x_2_range), 'x3':list(x_3_range), 'too close':list(close), 'is soft':list(soft)}
+    data = {
+        'momenta':list(momenta),
+        'theta':list(theta_range),
+        'alpha':list(alpha_range),
+        'x1':list(x_1_range),
+        'x2':list(x_2_range),
+        'x3':list(x_3_range),
+        'too close':list(close),
+        'is soft':list(soft)
+    }
     
     df_2_3 = pd.DataFrame(data)
     cut_2_3 = df_2_3[df_2_3['too close'] == False].reset_index()
