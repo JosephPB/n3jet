@@ -26,7 +26,6 @@ def pair_check(p1,p2,delta,s_com):
     close = False
     if distance <= delta:
         close = True
-        #print ('True: Distance is: {} and the delta is {}'.format(distance,delta))
         
     return close, distance
 
@@ -36,7 +35,9 @@ def check_all(mom,delta,s_com, all_legs=False):
 
     if not all_legs:
         p_array = mom[2:]
-    #print ('Checking {}'.format(p_array))
+    else:
+        p_array = mom
+
     distances = []
     for idx, p in enumerate(p_array):
         to_check = p_array[idx+1:]
