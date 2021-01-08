@@ -65,9 +65,6 @@ def test__cut_near_split():
     assert check_list(near_momenta[0][2], near_mom[2])
     assert cut_labels[0] == cut_label
     assert near_labels[0] == near_label
-    # assert near_momenta == near_mom
-    # assert cut_labels == cut_label
-    # assert near_labels == near_label
 
 def test__cut_near_split_all_legs():
 
@@ -79,10 +76,10 @@ def test__cut_near_split_all_legs():
 
     cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
 
-    # assert cut_momenta == cut_mom
-    # assert near_momenta == near_mom
-    # assert cut_labels == cut_label
-    # assert near_labels == near_label
+    assert check_list(cut_momenta[0][2],cut_mom[2])
+    assert check_list(near_momenta[0][2], near_mom_all_legs[2])
+    assert cut_labels[0] == cut_label
+    assert near_labels[0] == near_label
 
 def test__weighting():
     
