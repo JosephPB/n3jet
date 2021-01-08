@@ -93,7 +93,9 @@ def test__weighting():
     pairs, labs_split = fks.weighting()
 
     assert len(pairs) == 3
-    # assert labs_split[0] == ?
+    assert len(labs_split) == 3
+    assert np.isclose(np.sum(np.array(labs_split)[:,0]),cut_label)
+    assert np.isclose(np.sum(np.array(labs_split)[:,1]),near_label)
 
 def test__weighting_all_legs():
     
@@ -107,4 +109,6 @@ def test__weighting_all_legs():
     pairs, labs_split = fks.weighting()
 
     assert len(pairs) == 9
-    # assert labs_split[0] == ?
+    assert len(labs_split) == 9
+    assert np.isclose(np.sum(np.array(labs_split)[:,0]),cut_label)
+    assert np.isclose(np.sum(np.array(labs_split)[:,1]),near_label)
