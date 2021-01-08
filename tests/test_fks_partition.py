@@ -45,6 +45,12 @@ labels = []
 labels.append(cut_label)
 labels.append(near_label)
 
+def check_list(l1, l2):
+    for idx, i in enumerate(l1):
+        if l2[idx] != i:
+            return False
+    return True
+
 def test__cut_near_split():
 
     fks = FKSPartition(
@@ -55,7 +61,10 @@ def test__cut_near_split():
 
     cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
 
-    # assert cut_momenta == cut_mom
+    assert check_list(cut_momenta[0][2],cut_mom[2])
+    assert check_list(near_momenta[0][2], near_mom[2])
+    assert cut_labels[0] == cut_label
+    assert near_labels[0] == near_label
     # assert near_momenta == near_mom
     # assert cut_labels == cut_label
     # assert near_labels == near_label
