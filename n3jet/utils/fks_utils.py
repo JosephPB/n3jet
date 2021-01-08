@@ -94,6 +94,7 @@ def train_near_networks_general(
         model_dir = '',
         all_jets=False,
         all_legs=False,
+        model_dataset=False,
         **kwargs
 ):
     '''
@@ -116,7 +117,7 @@ def train_near_networks_general(
     y_mean_near = []
     y_std_near = []
     for idx,i in enumerate(pairs):
-        NN = Model(input_size,near_momenta, NJ_split[idx], all_jets, all_legs)
+        NN = Model(input_size,near_momenta, NJ_split[idx], all_jets, all_legs, model_dataset)
         
         model, x_mean, x_std, y_mean, y_std = NN.fit(layers=layers, lr=lr, epochs=epochs)
         
