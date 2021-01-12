@@ -10,6 +10,8 @@ from n3jet.utils.fks_utils import(
     infer_on_cut
 )
 
+from n3jet.models import Model
+
 def test__train_near_networks(dummy_data_training):
 
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training 
@@ -110,4 +112,44 @@ def test__train_cut_network_general(dummy_data_all_legs_training):
         all_jets = True,
         all_legs = True,
         epochs = 1
+    )
+
+def test__infer_on_near_splits(dummy_data_training):
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training 
+    
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = labels,
+        all_legs = False
+    )
+
+    cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
+    pairs, labs_split = fks.weighting()    
+
+    n_gluon = 1
+    
+    NN = Model((n_gluon+2-1)*4,near_momenta,labs_split[0],all_jets=False,all_legs=False)
+    _,_,_,_,_,_,_,_ = NN.process_training_data()
+    
+    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks(
+        pairs = pairs,
+        near_momenta = near_momenta,
+        NJ_split = labs_split,
+        order = 'LO',
+        n_gluon = 1,
+        delta_near = delta_near,
+        points = len(near_momenta)*2,
+        model_dir = '',
+        epochs = 1
+    )
+    
+    y_pred_nears = infer_on_near_splits(
+        NN = NN,
+        moms = near_momenta,
+        models = model_near,
+        x_mean_near = x_mean_near,
+        x_std_near = x_std_near,
+        y_mean_near = y_mean_near,
+        y_std_near = y_std_near
     )

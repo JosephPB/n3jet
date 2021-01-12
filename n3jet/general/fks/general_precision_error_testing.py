@@ -150,9 +150,9 @@ else:
     pairs, test_near_nj_split = weighting_all(test_near_momenta, test_near_nj)
 
 if all_legs == 'False':
-    NN = Model((nlegs)*4,test_near_momenta,test_near_nj_split[0],all_jets=True)
+    NN = Model((nlegs)*4,test_near_momenta,test_near_nj_split[0],all_jets=True,all_legs=False)
 else:
-    NN = Model((nlegs+2)*4,test_near_momenta,test_near_nj_split[0],all_legs=True)
+    NN = Model((nlegs+2)*4,test_near_momenta,test_near_nj_split[0],all_jets=False,all_legs=True)
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []

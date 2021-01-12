@@ -352,7 +352,15 @@ def get_cut_network_general(NN, delta_near, model_dir):
 ###############################################################################################
 
 
-def infer_on_near_splits(NN, moms, models, x_mean_near, x_std_near, y_mean_near, y_std_near):
+def infer_on_near_splits(
+        NN,
+        moms,
+        models,
+        x_mean_near,
+        x_std_near,
+        y_mean_near,
+        y_std_near
+):
     '''
     Infer on near networks
     
