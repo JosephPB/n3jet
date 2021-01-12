@@ -6,14 +6,12 @@ with open('./global_dict.pkl', 'rb') as f:
 import os
 import sys
 sys.path.append(global_dict['NJET_BLHA'])
-sys.path.append(global_dict['N3JET_BASE'] + '/phase/')
-sys.path.append(global_dict['N3JET_BASE'] + '/utils/')
 
 import numpy as np
 import argparse
 from tqdm import tqdm
 
-from rambo_while import generate
+from n3jet.phase import Rambo
 import njet
 
 parser = argparse.ArgumentParser(description='NJet Python interface for single process BLHA files')
@@ -252,7 +250,14 @@ else:
 if os.path.exists(mom_file) == False or generate_mom == True:
     print ('Gennerating momenta')
     # Currently this is fixing the com at 10000 and the JADE delta at 0.01
-    momenta = generate(nlegs-2,nps,com,0.01)
+    rambo = Rambo(
+        num_jets = nlegs-2,
+        num_points = nps,
+        w = com,
+        delta_cut = 0.01,
+        all_legs = True
+    )
+    momenta = rambo.generate()
     np.save(mom_file, momenta, allow_pickle = True)
 elif os.path.exists(mom_file) == True and generate_mom == False:
     print ('Loading momenta')
