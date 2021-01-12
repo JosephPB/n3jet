@@ -86,3 +86,28 @@ def test__train_cut_network(dummy_data_training):
         model_dir = '',
         epochs = 1
     )
+
+def test__train_cut_network_general(dummy_data_all_legs_training):
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
+
+    nlegs = len(momenta[0])-2
+    
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = labels,
+        all_legs = True
+    )
+
+    cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
+
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = train_cut_network_general(
+        input_size = (nlegs+2)*4,
+        cut_momenta = cut_momenta,
+        NJ_cut = cut_labels,
+        delta_cut = delta_cut,
+        model_dir = '',
+        all_jets = True,
+        all_legs = True,
+        epochs = 1
+    )

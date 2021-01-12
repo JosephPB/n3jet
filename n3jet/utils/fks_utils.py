@@ -264,7 +264,7 @@ def train_cut_network_general(
         input_size,
         cut_momenta,
         NJ_cut,
-        delta_near,
+        delta_cut,
         model_dir = '',
         all_jets = False,
         all_legs=False,
@@ -280,7 +280,7 @@ def train_cut_network_general(
     model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=layers, lr=lr, epochs=epochs)
     
     if model_dir != '':
-        cut_dir = model_dir + 'cut_{}'.format(delta_near)
+        cut_dir = model_dir + 'cut_{}'.format(delta_cut)
         
         if not os.path.exists(cut_dir):
             os.mkdir(cut_dir)
