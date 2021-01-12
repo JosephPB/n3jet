@@ -177,7 +177,7 @@ for i in range(training_reruns):
                 model_dir=model_dir_new, all_jets=True, all_legs=False, lr=lr
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
-                (nlegs)*4, cut_momenta, cut_nj, delta_near,
+                (nlegs)*4, cut_momenta, cut_nj, delta_cut,
                 model_dir=model_dir_new, all_jets=True, all_legs=False, lr=lr
             )
         else:
@@ -186,7 +186,7 @@ for i in range(training_reruns):
                 model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
-                (nlegs+2)*4, cut_momenta, cut_nj, delta_near,
+                (nlegs+2)*4, cut_momenta, cut_nj, delta_cut,
                 model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr
             )
             

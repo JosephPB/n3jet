@@ -326,9 +326,9 @@ def get_cut_network(NN, order, n_gluon, delta_cut, points, model_dir):
     return model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut
 
 
-def get_cut_network_general(NN, delta_near, model_dir):
+def get_cut_network_general(NN, delta_cut, model_dir):
 
-    cut_dir = model_dir + 'cut_{}'.format(delta_near)
+    cut_dir = model_dir + 'cut_{}'.format(delta_cut)
     
     model_cut = load_model(
         cut_dir + '/model',

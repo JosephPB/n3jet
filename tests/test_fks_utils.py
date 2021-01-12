@@ -196,6 +196,40 @@ def test__infer_on_near_splits_separate(dummy_data_training):
         y_std_near = y_std_near
     )
 
-def test__infer_on_cut():
-
+def test__infer_on_cut(dummy_data_training):
     
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training 
+    
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = labels,
+        all_legs = False
+    )
+
+    cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
+
+    n_gluon = 1
+
+    NN = Model((n_gluon+2-1)*4,cut_momenta,cut_labels,all_jets=False,all_legs=False)
+    _,_,_,_,_,_,_,_ = NN.process_training_data()
+
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = train_cut_network(
+        cut_momenta = cut_momenta,
+        NJ_cut = cut_labels,
+        order = 'LO',
+        n_gluon = 1,
+        delta_cut = delta_cut,
+        points = len(cut_momenta)*2,
+        model_dir = '',
+        epochs = 1
+    )
+
+    y_pred_cuts = infer_on_cut(
+        NN = NN,
+        moms = cut_momenta,
+        model = model_cut,
+        x_mean_cut = x_mean_cut,
+        x_std_cut = x_std_cut,
+        y_mean_cut = y_mean_cut,
+        y_std_cut = y_std_cut
+    )

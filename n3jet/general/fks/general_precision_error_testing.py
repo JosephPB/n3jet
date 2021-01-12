@@ -185,7 +185,7 @@ for i in range(training_reruns):
 
     #if all_legs == 'False':
     model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_near, model_dir_new)
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_cut, model_dir_new)
     #else:
     #    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new, all_jets=False, all_legs=True)
     #    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_near, model_dir_new, all_jets=False, all_legs=True)
