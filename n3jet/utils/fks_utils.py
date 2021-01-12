@@ -117,7 +117,7 @@ def train_near_networks_general(
     y_mean_near = []
     y_std_near = []
     for idx,i in enumerate(pairs):
-        NN = Model(input_size,near_momenta, NJ_split[idx], all_jets, all_legs, model_dataset)
+        NN = Model(input_size, near_momenta, NJ_split[idx], all_jets, all_legs, model_dataset)
         
         model, x_mean, x_std, y_mean, y_std = NN.fit(layers=layers, lr=lr, epochs=epochs)
         
@@ -222,7 +222,8 @@ def get_near_networks_general(NN, pairs, delta_near, model_dir):
 
 def train_cut_network(
         cut_momenta,
-        NJ_cut,order,
+        NJ_cut,
+        order,
         n_gluon,
         delta_cut,
         points,
