@@ -58,8 +58,7 @@ def test__weighting(dummy_data):
 
     assert len(pairs) == 3
     assert len(labs_split) == 3
-    assert np.isclose(np.sum(np.array(labs_split)[:,0]),cut_label)
-    assert np.isclose(np.sum(np.array(labs_split)[:,1]),near_label)
+    assert np.isclose(np.sum(labs_split),near_label)
 
 def test__weighting_all_legs(dummy_data_all_legs):
 
@@ -76,5 +75,4 @@ def test__weighting_all_legs(dummy_data_all_legs):
 
     assert len(pairs) == 9
     assert len(labs_split) == 9
-    assert np.isclose(np.sum(np.array(labs_split)[:,0]),cut_label)
-    assert np.isclose(np.sum(np.array(labs_split)[:,1]),near_label)
+    assert np.isclose(np.sum(labs_split),near_label)

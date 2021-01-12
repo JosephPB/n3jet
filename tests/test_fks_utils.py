@@ -10,9 +10,9 @@ from n3jet.utils.fks_utils import(
     infer_on_cut
 )
 
-def test__train_near_network(dummy_data):
+def test__train_near_network(dummy_data_training):
 
-    momenta, cut_mom, near_mom, labels, cut_label, near_label, delta_cut, delta_near = dummy_data
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training 
     
     fks = FKSPartition(
         momenta = momenta,

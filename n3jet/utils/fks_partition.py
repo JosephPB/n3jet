@@ -104,6 +104,6 @@ class FKSPartition:
 
         labs_split = []
         for i in S_near:
-            labs_split.append(self.labels*i)
+            labs_split.append(self.near_labels*i)
 
         return pairs, labs_split
