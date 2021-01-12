@@ -232,9 +232,12 @@ def train_cut_network(
 ):
     
     lr = kwargs.get('lr', 0.001)
+    layers = kwargs.get('layers', [20,40,20])
+    print ('Using learning rate {}'.format(lr))
+    epochs = kwargs.get('epochs', 1000000)
     
     NN_cut = Model((n_gluon+2-1)*4,cut_momenta,NJ_cut)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=[16,32,16], lr=lr)
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=layers, lr=lr, epochs=epochs)
     
     if model_dir != '':
         if not os.path.exists(
@@ -267,11 +270,14 @@ def train_cut_network_general(
         all_legs=False,
         **kwargs
 ):
-    
+
     lr = kwargs.get('lr', 0.001)
+    layers = kwargs.get('layers', [20,40,20])
+    print ('Using learning rate {}'.format(lr))
+    epochs = kwargs.get('epochs', 1000000)
     
     NN_cut = Model(input_size,cut_momenta,NJ_cut, all_jets, all_legs)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=[16,32,16], lr=lr)
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=layers, lr=lr, epochs=epochs)
     
     if model_dir != '':
         cut_dir = model_dir + 'cut_{}'.format(delta_near)

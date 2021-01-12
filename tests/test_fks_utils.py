@@ -83,5 +83,6 @@ def test__train_cut_network(dummy_data_training):
         n_gluon = 1,
         delta_cut = delta_cut,
         points = len(cut_momenta)*2,
-        model_dir = ''
+        model_dir = '',
+        epochs = 1
     )
