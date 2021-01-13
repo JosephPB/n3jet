@@ -114,7 +114,7 @@ def test__fit(model, model_all_legs, model_all_legs_dataset):
 
     model, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
     
-    model, x_mean, x_std, y_mean, y_std = model_all_legs.fit(layers=[10,20,30], epochs=2)
+    model, x_mean, x_std, y_mean, y_std = model_all_legs.fit(layers=[10,20,30,40], epochs=2)
     
     model, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.fit(epochs=2, lr = 0.01)
 
