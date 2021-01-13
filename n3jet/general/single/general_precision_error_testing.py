@@ -1,10 +1,4 @@
-import sys
-sys.path.append('./../')
-sys.path.append('./../../utils/')
-sys.path.append('./../../phase/')
-sys.path.append('./../../models/')
 import os
-
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -17,22 +11,14 @@ import cPickle as pickle
 import multiprocessing
 import argparse
 
-import rambo_while
-from njet_run_functions import *
-from model import Model
-from fks_partition import *
-from keras.models import load_model
-from tqdm import tqdm
-from fks_utils import *
-#from piecewise_utils import *
-from utils import *
-from uniform_utils import *
-import rambo_piecewise_balance as rpb
-from rambo_piecewise_balance import *
+from n3jet.utils import FKSPartition
+from n3jet.models import Model
 
-
-parser = argparse.ArgumentParser(description='Once models have been trained using []_init_model_testing.py,
- this script can be used for testing, given some testing data. Note: this assumes that testing data has already been generated.')
+parser = argparse.ArgumentParser(description=
+                                 'Once models have been trained using []_init_model_testing.py,
+                                 this script can be used for testing, given some testing data. 
+                                 Note: this assumes that testing data has already been generated.'
+)
 
 parser.add_argument(
     '--test_mom_file',
@@ -116,10 +102,22 @@ nlegs = len(test_momenta[0])-2
 test_mom_len = len(test_momenta)
 
 if all_legs == 'False':    
-    NN = Model(nlegs*4,test_momenta,test_nj,all_jets=True)
+    NN = Model(
+        intput_size = nlegs*4,
+        momenta = test_momenta,
+        labels = test_nj,
+        all_jets = True,
+        all_legs = False
+    )
+    
 else:
     print ('Recutting for all legs')
-    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, 0.01, 0.02, all_legs=True)
+    fks = FKSPartition(
+        momenta = test_momenta,
+        labels = test_nj,
+        all_legs = True
+    )
+    test_cut_momenta, test_near_momenta, test_cut_nj, test_near_nj = fks.cut_near_split(delta_cut=0.01, delta_near=0.02)
     test_momenta = np.concatenate((test_cut_momenta, test_near_momenta))
     test_nj = np.concatenate((test_cut_nj, test_near_nj))
     indices = np.arange(len(test_nj))
@@ -127,7 +125,14 @@ else:
     test_momenta = test_momenta[indices]
     test_nj = test_nj[indices]
     test_momenta = test_momenta.tolist()
-    NN = Model((nlegs+2)*4, test_momenta, test_nj, all_legs=True)
+    NN = Model(
+        input_size = (nlegs+2)*4,
+        momenta = test_momenta,
+        labels = test_nj,
+        all_jets = False,
+        all_legs=True
+    )
+    
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []
@@ -160,7 +165,6 @@ for i in range(training_reruns):
     
 print ('############### All models loaded ###############')
 
-#y_preds = []
 for i in range(training_reruns):
     test = i
     print ('Predicting on model {}'.format(i))
@@ -168,10 +172,22 @@ for i in range(training_reruns):
     if test == 0 and all_legs == 'True':
         print ('Saving out indices for later plotting')
         np.save(model_dir_new + 'indices.npy', indices)
-    x_standard = NN.process_testing_data(moms=test_momenta,x_mean=x_means[test],x_std=x_stds[test],y_mean=y_means[test],y_std=y_stds[test])
+    x_standard = NN.process_testing_data(
+        moms = test_momenta,
+        x_mean = x_means[test],
+        x_std = x_stds[test],
+        y_mean = y_means[test],
+        y_std = y_stds[test]
+    )
     pred = models[test].predict(x_standard)
-    y_pred = NN.destandardise_data(pred.reshape(-1),x_mean=x_means[test],x_std=x_stds[test],y_mean=y_means[test],y_std=y_stds[test])
-    #y_preds.append(y_pred)
+    y_pred = NN.destandardise_data(
+        y_pred = pred.reshape(-1),
+        x_mean = x_means[test],
+        x_std = x_stds[test],
+        y_mean = y_means[test],
+        y_std = y_stds[test]
+    )
+
     np.save(model_dir_new + '/pred_{}'.format(test_mom_len), y_pred)
 
 print ('############### Finished ###############')
