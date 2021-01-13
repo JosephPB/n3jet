@@ -1,19 +1,22 @@
 import numpy as np
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense, Activation
-import tensorflow as tf
-from tensorflow.keras import activations
-from keras.wrappers.scikit_learn import KerasRegressor
-from sklearn.model_selection import train_test_split
-from keras import metrics
-from keras.callbacks import EarlyStopping
-from keras.optimizers import Adam
-from sklearn.preprocessing import normalize, MinMaxScaler
-import keras.backend as K
 import matplotlib.pyplot as plt
 import time
 
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import normalize, MinMaxScaler
+
+import tensorflow as tf
+from tensorflow.keras import activations
+
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+from keras.wrappers.scikit_learn import KerasRegressor
+from keras import metrics
+from keras.initializers import glorot_uniform
+from keras.callbacks import EarlyStopping
+from keras.optimizers import Adam
+import keras.backend as K
 
 class Model:
     
@@ -103,7 +106,7 @@ class Model:
         model.add(Activation(activations.tanh))
         model.add(Dense(layers[2], kernel_initializer = glorot_uniform(seed=1337+345)))
         model.add(Activation(activations.tanh))
-        model.add(Dense(1), kernel_initializer = glorot_uniform(seed=1337-545))
+        model.add(Dense(1, kernel_initializer = glorot_uniform(seed=1337-545)))
         # Compile model
         model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
         
