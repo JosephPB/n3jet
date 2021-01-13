@@ -9,13 +9,12 @@ import pickle
 import argparse
 from tqdm import tqdm
 
-from njet_run_functions import *
-from model import Model
-from rambo_while import *
-from utils import *
-from uniform_utils import *
-from fks_utils import *
-from fks_partition import *
+from n3jet.utils import FKSPartition
+from n3jet.utils.fks_utils import (
+    train_near_networks_general,
+    train_cut_network
+)
+from n3jet.models import Model
 
 parser = argparse.ArgumentParser(description=
                                  'Training multiple models on the same dataset for error analysis. 
@@ -187,21 +186,48 @@ for i in range(training_reruns):
     if model_dir != '':
         if all_legs == 'False':
             model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general(
-                (nlegs)*4, pairs, near_momenta, near_nj_split, delta_near,
-                model_dir=model_dir_new, all_jets=True, all_legs=False, lr=lr
+                input_size = (nlegs)*4,
+                pairs = pairs,
+                near_momenta = near_momenta,
+                NJ_split = near_nj_split,
+                delta_near = delta_near,
+                model_dir = model_dir_new,
+                all_jets=True,
+                all_legs=False,
+                lr=lr
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
-                (nlegs)*4, cut_momenta, cut_nj, delta_cut,
-                model_dir=model_dir_new, all_jets=True, all_legs=False, lr=lr
+                input_size = (nlegs)*4,
+                cut_momenta = cut_momenta,
+                NJ_cut = cut_nj,
+                delta_cut = delta_cut,
+                model_dir = model_dir_new,
+                all_jets=True,
+                all_legs=False,
+                lr=lr
             )
+            
         else:
             model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general(
-                (nlegs+2)*4, pairs, near_momenta, near_nj_split, delta_near,
-                model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr
+                input_size = (nlegs+2)*4,
+                pairs = pairs,
+                near_momenta = near_momenta,
+                NJ_split = near_nj_split,
+                delta_near = delta_near,
+                model_dir = model_dir_new,
+                all_jets=False,
+                all_legs=True,
+                lr=lr
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
-                (nlegs+2)*4, cut_momenta, cut_nj, delta_cut,
-                model_dir=model_dir_new, all_jets=False, all_legs=True, lr=lr
+                input_size = (nlegs+2)*4,
+                cut_momenta = cut_momenta,
+                NJ_cut = cut_nj,
+                delta_cut = delta_cut,
+                model_dir = model_dir_new,
+                all_jets=False,
+                all_legs=True,
+                lr=lr
             )
             
         

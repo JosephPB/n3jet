@@ -1,10 +1,4 @@
-import sys
-sys.path.append('./../')
-sys.path.append('./../../utils/')
-sys.path.append('./../../phase/')
-sys.path.append('./../../models/')
 import os
-
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -14,25 +8,22 @@ import random
 from matplotlib import rc
 import time
 import cPickle as pickle
-import multiprocessing
 import argparse
 
-import rambo_while
-from njet_run_functions import *
-from model import Model
-from fks_partition import *
-from keras.models import load_model
-from tqdm import tqdm
-from fks_utils import *
-#from piecewise_utils import *
-from utils import *
-from uniform_utils import *
-import rambo_piecewise_balance as rpb
-from rambo_piecewise_balance import *
+from n3jet.utils import FKSPartition
+from n3jet.utils.fks_utils import (
+    get_near_networks_general,
+    get_cut_nerwork,
+    infer_on_near_splits,
+    infer_on_cut
+)
+from n3jet.models import Model
 
-
-parser = argparse.ArgumentParser(description='Once models have been trained using []_init_model_testing.py,
-this script can be used for testing, given some testing data. Note: this assumes that testing data has already been generated.')
+parser = argparse.ArgumentParser(description=
+                                 'Once models have been trained using []_init_model_testing.py,
+                                 this script can be used for testing, given some testing data. 
+                                 Note: this assumes that testing data has already been generated.'
+)
 
 parser.add_argument(
     '--test_mom_file',
@@ -140,19 +131,49 @@ print ('############### Inferring on models ###############')
 nlegs = len(test_momenta[0])-2
 
 if all_legs == 'False':
-    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, delta_cut=delta_cut, delta_near=delta_near, all_legs=False)
+    fks = FKSPartition(
+        momenta = test_momenta,
+        labels = test_nj,
+        all_legs = False
+    )
+
+    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = fks.cut_near_split(
+        delta_cut = delta_cut,
+        delta_near = delta_near
+    )
 else:
-    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = cut_near_split(test_momenta, test_nj, delta_cut=delta_cut, delta_near=delta_near, all_legs=True)
+    fks = FKSPartition(
+        momenta = test_momenta,
+        labels = test_nj,
+        all_legs = True
+    )
+
+    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = fks.cut_near_split(
+        delta_cut = delta_cut,
+        delta_near = delta_near
+    )
+
+pairs, test_near_nj_split = fks.weighting()
     
-if all_pairs == 'False':
-    pairs, test_near_nj_split = weighting(test_near_momenta, nlegs-2, test_near_nj)
-else:
-    pairs, test_near_nj_split = weighting_all(test_near_momenta, test_near_nj)
 
 if all_legs == 'False':
-    NN = Model((nlegs)*4,test_near_momenta,test_near_nj_split[0],all_jets=True,all_legs=False)
+    NN = Model(
+        input_size = (nlegs)*4,
+        momenta = test_near_momenta,
+        labels = test_near_nj_split[0],
+        all_jets=True,
+        all_legs=False
+    )
+    
 else:
-    NN = Model((nlegs+2)*4,test_near_momenta,test_near_nj_split[0],all_jets=False,all_legs=True)
+    NN = Model(
+        input_size = (nlegs+2)*4,
+        momenta = test_near_momenta,
+        labels = test_near_nj_split[0],
+        all_jets=False,
+        all_legs=True
+    )
+
 _,_,_,_,_,_,_,_ = NN.process_training_data()
 
 models = []
@@ -183,12 +204,17 @@ for i in range(training_reruns):
     else:
         print ('Directory already exists')
 
-    #if all_legs == 'False':
-    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_cut, model_dir_new)
-    #else:
-    #    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(NN, pairs, delta_near, model_dir_new, all_jets=False, all_legs=True)
-    #    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(NN, delta_near, model_dir_new, all_jets=False, all_legs=True)
+    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(
+        NN = NN,
+        pairs = pairs,
+        delta_near = delta_near,
+        model_dir = model_dir_new
+    )
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(
+        NN = NN,
+        delta_cut = delta_cut,
+        model_dir = model_dir_new
+    )
 
     model_nears.append(model_near)
     model_cuts.append(model_cut)
@@ -205,20 +231,32 @@ for i in range(training_reruns):
     
 print ('############### All models loaded ###############')
     
-#y_pred_nears = []
 for i in range(training_reruns):
     print ('Predicting on model {}'.format(i))
     model_dir_new = model_base_dir + model_dir + '_{}/'.format(i)
-    y_pred_near = infer_on_near_splits(NN, test_near_momenta, model_nears[i], x_mean_nears[i], x_std_nears[i], y_mean_nears[i], y_std_nears[i])
-    #y_pred_nears.append(y_pred_near)
+    y_pred_near = infer_on_near_splits(
+        NN = NN,
+        moms = test_near_momenta,
+        models = model_nears[i],
+        x_mean_near = x_mean_nears[i],
+        x_std_near = x_std_nears[i],
+        y_mean_near = y_mean_nears[i],
+        y_std_near = y_std_nears[i]
+    )
     np.save(model_dir_new + '/pred_near_{}'.format(len(test_momenta)), y_pred_near)
     
-#y_pred_cuts = []
 for i in range(training_reruns):
     print ('Predicting on model {}'.format(i))
     model_dir_new = model_base_dir + model_dir + '_{}/'.format(i)
-    y_pred_cut = infer_on_cut(NN, test_cut_momenta, model_cuts[i], x_mean_cuts[i], x_std_cuts[i], y_mean_cuts[i], y_std_cuts[i])
-    #y_pred_cuts.append(y_pred_cut)
+    y_pred_cut = infer_on_cut(
+        NN = NN,
+        moms = test_cut_momenta,
+        model = model_cuts[i],
+        x_mean_cut = x_mean_cuts[i],
+        x_std_cut = x_std_cuts[i],
+        y_mean_cut = y_mean_cuts[i],
+        y_std_cut = y_std_cuts[i]
+    )
     np.save(model_dir_new + '/pred_cut_{}'.format(len(test_momenta)), y_pred_cut)
 
 print ('############### Finished ###############')

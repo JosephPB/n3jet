@@ -430,7 +430,15 @@ def infer_on_near_splits_separate(
     return y_preds_nears, y_pred_nears
 
 
-def infer_on_cut(NN, moms, model, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut):
+def infer_on_cut(
+        NN,
+        moms,
+        model,
+        x_mean_cut,
+        x_std_cut,
+        y_mean_cut,
+        y_std_cut
+):
     
     x_standard_cut = NN.process_testing_data(
         moms=moms,
