@@ -165,9 +165,6 @@ class Model:
         '''
         random_state = kwargs.get('random_state', 42)
         
-        #if len(layers) != 3:
-        #    raise Exception('the number of layers to be defined is 3, you have defined {} layers'.format(len(layers)))
-    
         X_train, X_test, y_train, y_test,_,_,_,_ = self.process_training_data(random_state = random_state)
         print ('The training dataset has size {}'.format(X_train.shape))
 
