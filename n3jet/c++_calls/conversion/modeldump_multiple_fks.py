@@ -15,7 +15,10 @@ def parse():
     Parse arguments
     """
     
-    parser = argparse.ArgumentParser(description='This is a simple script to dump Keras model into simple format suitable for porting into pure C++ model')
+    parser = argparse.ArgumentParser(description=
+                                     'This is a simple script to dump Keras model
+                                     into simple format suitable for porting into pure C++ model'
+    )
 
     parser.add_argument('-t', '--training_reruns', help="Number of training reruns", type=int, required=True)
     parser.add_argument('-p', '--pairs', help="Number of pairs of particles", type=int, required=True)
@@ -48,7 +51,13 @@ if __name__ == "__main__":
             print ('Reading data from {}'.format(pair_dir))
             print ('Saving data to {}'.format(pair_out_dir))
 
-            model_dump = ModelDump(pair_dir + '/model_arch.json', pair_dir + '/model_weights.h5', pair_out_dir + '/model.nnet', init=True)
+            model_dump = ModelDump(
+                architecture = pair_dir + '/model_arch.json',
+                weights = pair_dir + '/model_weights.h5',
+                output = pair_out_dir + '/model.nnet',
+                verbose = False,
+                init = True
+            )
         
             print ('################# Converting metadata #################')
             pickle_out = open(pair_dir+ "/dataset_metadata.pickle","rb")
@@ -77,7 +86,13 @@ if __name__ == "__main__":
         print ('Reading data from {}'.format(cut_dir))
         print ('Saving data to {}'.format(cut_out_dir))
 
-        model_dump = ModelDump(cut_dir + '/model_arch.json', cut_dir + '/model_weights.h5', cut_out_dir + '/model.nnet', init=True)
+        model_dump = ModelDump(
+            architecture = cut_dir + '/model_arch.json',
+            weights = cut_dir + '/model_weights.h5',
+            output = cut_out_dir + '/model.nnet',
+            verbose = False
+            init = True
+        )
         
         print ('################# Converting metadata #################')
         pickle_out = open(cut_dir+ "/dataset_metadata.pickle","rb")

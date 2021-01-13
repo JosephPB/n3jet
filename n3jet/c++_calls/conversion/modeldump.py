@@ -36,7 +36,10 @@ class ModelDump:
         arch = open(self.architecture).read()
         self.model = model_from_json(arch)
         self.model.load_weights(self.weights)
-        self.model.compile(optimizer = Adam(lr=0.01, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
+        self.model.compile(
+            optimizer = Adam(lr=0.01, beta_1=0.9, beta_2=0.999, amsgrad=False),
+            loss = 'mean_squared_error'
+        )
         self.arch = json.loads(arch)
 
     def write_output(self):
@@ -58,7 +61,13 @@ class ModelDump:
                     W = self.model.layers[ind].get_weights()[0]
                     if self.verbose:
                         print W.shape
-                    fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + ' ' + str(W.shape[2]) + ' ' + str(W.shape[3]) + ' ' + l['config']['border_mode'] + '\n')
+                    fout.write(
+                        str(W.shape[0]) + ' ' +
+                        str(W.shape[1]) + ' ' +
+                        str(W.shape[2]) + ' ' +
+                        str(W.shape[3]) + ' ' +
+                        l['config']['border_mode'] + '\n'
+                    )
 
                     for i in range(W.shape[0]):
                         for j in range(W.shape[1]):

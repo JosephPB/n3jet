@@ -6,7 +6,10 @@ import json
 import argparse
 
 np.set_printoptions(threshold=np.inf)
-parser = argparse.ArgumentParser(description='This is a simple script to dump Keras model into simple format suitable for porting into pure C++ model')
+parser = argparse.ArgumentParser(description=
+                                 'This is a simple script to dump Keras model
+                                   into simple format suitable for porting into pure C++ model'
+)
 
 parser.add_argument('-a', '--architecture', help="JSON with model architecture", required=True)
 parser.add_argument('-w', '--weights', help="Model weights in HDF5 format", required=True)
@@ -22,7 +25,6 @@ arch = open(args.architecture).read()
 model = model_from_json(arch)
 model.load_weights(args.weights)
 model.compile(optimizer = Adam(lr=0.01, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
-#model.compile(loss='categorical_crossentropy', optimizer='adadelta')
 arch = json.loads(arch)
 
 with open(args.output, 'w') as fout:
@@ -38,12 +40,6 @@ with open(args.output, 'w') as fout:
             print str(ind), l['class_name']
         layers += [l['class_name']]
         if l['class_name'] == 'Convolution2D':
-            #fout.write(str(l['config']['nb_filter']) + ' ' + str(l['config']['nb_col']) + ' ' + str(l['config']['nb_row']) + ' ')
-
-            #if 'batch_input_shape' in l['config']:
-            #    fout.write(str(l['config']['batch_input_shape'][1]) + ' ' + str(l['config']['batch_input_shape'][2]) + ' ' + str(l['config']['batch_input_shape'][3]))
-            #fout.write('\n')
-
             W = model.layers[ind].get_weights()[0]
             if args.verbose:
                 print W.shape
@@ -59,15 +55,12 @@ with open(args.output, 'w') as fout:
             fout.write(l['config']['activation'] + '\n')
         if l['class_name'] == 'MaxPooling2D':
             fout.write(str(l['config']['pool_size'][0]) + ' ' + str(l['config']['pool_size'][1]) + '\n')
-        #if l['class_name'] == 'Flatten':
-        #    print l['config']['name']
         if l['class_name'] == 'Dense':
-            #fout.write(str(l['config']['output_dim']) + '\n')
             W = model.layers[ind].get_weights()[0]
+
             if args.verbose:
                 print W.shape
             fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
-
 
             for w in W:
                 fout.write(str(w) + '\n')

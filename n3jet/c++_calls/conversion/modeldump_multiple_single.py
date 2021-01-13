@@ -15,7 +15,10 @@ def parse():
     Parse arguments
     """
     
-    parser = argparse.ArgumentParser(description='This is a simple script to dump Keras model into simple format suitable for porting into pure C++ model')
+    parser = argparse.ArgumentParser(description=
+                                     'This is a simple script to dump Keras model into 
+                                     simple format suitable for porting into pure C++ model'
+    )
 
     parser.add_argument('-t', '--training_reruns', help="Number of training reruns", type=int, required=True)
     parser.add_argument('-b', '--model_base_dir', help="Model base directory", type=str, required=True)
@@ -42,7 +45,13 @@ if __name__ == "__main__":
         print ('Saving data to {}'.format(output))
             
         print ('################# Dumping model #################')
-        model_dump = ModelDump(mod_dir + '/model_arch.json', mod_dir + '/model_weights.h5', output + '/model.nnet', init=True)
+        model_dump = ModelDump(
+            architecture = mod_dir + '/model_arch.json',
+            weights = mod_dir + '/model_weights.h5',
+            output = output + '/model.nnet',
+            verbose = False,
+            init = True
+        )
         
         print ('################# Converting metadata #################')
         pickle_out = open(mod_dir+ "/dataset_metadata.pickle","rb")

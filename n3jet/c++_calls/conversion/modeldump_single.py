@@ -12,7 +12,10 @@ def parse():
     Parse arguments
     """
     
-    parser = argparse.ArgumentParser(description='This is a simple script to dump Keras model into simple format suitable for porting into pure C++ model')
+    parser = argparse.ArgumentParser(description=
+                                     'This is a simple script to dump Keras model into 
+                                     simple format suitable for porting into pure C++ model'
+    )
 
     parser.add_argument('-a', '--architecture', help="JSON with model architecture", required=True)
     parser.add_argument('-w', '--weights', help="Model weights in HDF5 format", required=True)
@@ -31,4 +34,10 @@ if __name__ == "__main__":
     print 'Read weights from', args.weights
     print 'Writing to', args.output
     
-    model_dump = ModelDump(args.architecture, args.weights, args.output, args.verbose, init=True)
+    model_dump = ModelDump(
+        architecture = args.architecture,
+        weights = args.weights,
+        output = args.output,
+        verbose = args.verbose,
+        init = True
+    )
