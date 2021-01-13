@@ -1,11 +1,4 @@
-import sys
-sys.path.append('./../../')
-sys.path.append('./../../utils/')
-sys.path.append('./../../models/')
-sys.path.append('./../../phase/')
-
 import os
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -24,8 +17,11 @@ from uniform_utils import *
 from fks_utils import *
 from fks_partition import *
 
-parser = argparse.ArgumentParser(description='Training multiple models on the same dataset for error analysis. 
-Here we assume that the momenta and njet files already exist and will be passed to the script by the user')
+parser = argparse.ArgumentParser(description=
+                                 'Training multiple models on the same dataset for error analysis. 
+                                 Here we assume that the momenta and njet files already exist and 
+                                 will be passed to the script by the user'
+)
 
 parser.add_argument(
     '--mom_file',
@@ -140,25 +136,43 @@ else:
 
 nlegs = len(momenta[0])-2
 
-if all_legs == 'False':
-    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(
-        momenta, nj, delta_cut=delta_cut, delta_near=delta_near, all_legs=False
-    )
-else:
-    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(
-        momenta, nj, delta_cut=delta_cut, delta_near=delta_near, all_legs=True
-    )
 
-if all_pairs == 'False':
-    pairs, near_nj_split = weighting(near_momenta, nlegs-2, near_nj)
-else:
-    pairs, near_nj_split = weighting_all(near_momenta, near_nj)
 
 if all_legs == 'False':
-    NN = Model((nlegs)*4,near_momenta,near_nj_split[0],all_jets=True,all_legs=False)
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = nj,
+        all_legs = False
+    )
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(delta_cut=delta_cut, delta_near=delta_near)
+
 else:
-    NN = Model((nlegs+2)*4,near_momenta,near_nj_split[0],all_jets=False,all_legs=True)
-# input to Model is [no. all legs = nlegs + 1] - [incoming legs = 2] * [len 4- momentum = 4]
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = nj,
+        all_legs = True
+    )
+    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(delta_cut=delta_cut, delta_near=delta_near)
+
+pairs, near_nj_split = fks.weighting()
+    
+if all_legs == 'False':
+    NN = Model(
+        input_size = (nlegs)*4,
+        momenta = near_momenta,
+        labels = near_nj_split[0],
+        all_jets=True,
+        all_legs=False
+    )
+    
+else:
+    NN = Model(
+        input_size = (nlegs+2)*4,
+        momenta = near_momenta,
+        labels = near_nj_split[0],
+        all_jets=False,
+        all_legs=True
+    )
 
 
 for i in range(training_reruns):
