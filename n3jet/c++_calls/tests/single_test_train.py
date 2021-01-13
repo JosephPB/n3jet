@@ -6,7 +6,10 @@ import matplotlib.pyplot as plt
 from matplotlib import cm, rc
 import random
 import time
-import cPickle as pickle
+try:
+    import cPickle as pickle
+except:
+    import pickle
 import argparse
 from tqdm import tqdm
 from keras.models import load_model
@@ -21,8 +24,13 @@ args = parser.parse_args()
 mom_file = './data/3g2A_test_momenta.npy'
 nj_file = './data/3g2A_test_nj.npy'
 
-test_momenta = np.load(mom_file, allow_pickle=True)
-test_nj = np.load(nj_file, allow_pickle=True)
+try:
+    test_momenta = np.load(mom_file, allow_pickle=True)
+    test_nj = np.load(nj_file, allow_pickle=True)
+except:
+    test_momenta = np.load(mom_file, allow_pickle=True, encoding='latin1')
+    test_nj = np.load(nj_file, allow_pickle=True, encoding='latin1')
+
 
 test_momenta = test_momenta.tolist()
 

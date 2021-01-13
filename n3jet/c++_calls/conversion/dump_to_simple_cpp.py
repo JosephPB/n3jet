@@ -7,8 +7,11 @@ import argparse
 
 np.set_printoptions(threshold=np.inf)
 parser = argparse.ArgumentParser(description=
-                                 'This is a simple script to dump Keras model
-                                   into simple format suitable for porting into pure C++ model'
+                                 """
+                                 This is a simple script to dump Keras model
+                                 into simple format suitable for porting into pure C++ model
+                                 """
+                                   
 )
 
 parser.add_argument('-a', '--architecture', help="JSON with model architecture", required=True)
@@ -17,9 +20,9 @@ parser.add_argument('-o', '--output', help="Ouput file name", required=True)
 parser.add_argument('-v', '--verbose', help="Verbose", required=False)
 args = parser.parse_args()
 
-print 'Read architecture from', args.architecture
-print 'Read weights from', args.weights
-print 'Writing to', args.output
+print ('Read architecture from {}'.format(args.architecture))
+print ('Read weights from {}'.format(args.weights))
+print ('Writing to {}'.format(args.output))
 
 arch = open(args.architecture).read()
 model = model_from_json(arch)
@@ -33,16 +36,16 @@ with open(args.output, 'w') as fout:
     layers = []
     for ind, l in enumerate(arch["config"]["layers"]):
         if args.verbose:
-            print ind, l['class_name']
+            print (ind, l['class_name'])
         fout.write('layer ' + str(ind) + ' ' + l['class_name'] + '\n')
 
         if args.verbose:
-            print str(ind), l['class_name']
+            print (str(ind), l['class_name'])
         layers += [l['class_name']]
         if l['class_name'] == 'Convolution2D':
             W = model.layers[ind].get_weights()[0]
             if args.verbose:
-                print W.shape
+                print (W.shape)
             fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + ' ' + str(W.shape[2]) + ' ' + str(W.shape[3]) + ' ' + l['config']['border_mode'] + '\n')
 
             for i in range(W.shape[0]):
@@ -59,7 +62,7 @@ with open(args.output, 'w') as fout:
             W = model.layers[ind].get_weights()[0]
 
             if args.verbose:
-                print W.shape
+                print (W.shape)
             fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
 
             for w in W:
