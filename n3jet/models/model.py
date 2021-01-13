@@ -99,14 +99,41 @@ class Model:
         'define and compile model with fixing weight initialisers and a random dataset'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
+
+        seeds = [
+            1337,
+            1337+123,
+            1337+345,
+            1337+545,
+            1337-123,
+            1337-345,
+            1337+567,
+            1337-567,
+            1337-189,
+            1337+189,
+            1337+194,
+            1337-194,
+            1337-347,
+            1337+347,
+            1337-545
+        ]
+
+        if len(layers) > len(seeds)-1:
+            raise Exception(
+                'the number of layers cannot be more than {}, you have defined {} layers'.format(
+                    len(seeds)-1, len(layers)
+                )
+            )
+        
         model = Sequential()
-        model.add(Dense(layers[0], input_dim=(self.input_size), kernel_initializer = glorot_uniform(seed=1337)))
+        model.add(Dense(layers[0], input_dim=(self.input_size), kernel_initializer = glorot_uniform(seed=seeds[0])))
         model.add(Activation(activations.tanh))
-        model.add(Dense(layers[1], kernel_initializer = glorot_uniform(seed=1337+123)))
-        model.add(Activation(activations.tanh))
-        model.add(Dense(layers[2], kernel_initializer = glorot_uniform(seed=1337+345)))
-        model.add(Activation(activations.tanh))
-        model.add(Dense(1, kernel_initializer = glorot_uniform(seed=1337-545)))
+
+        for i in range(1,len(layers)):
+            model.add(Dense(layers[i], kernel_initializer = glorot_uniform(seed=seeds[i])))
+            model.add(Activation(activations.tanh))
+
+        model.add(Dense(1, kernel_initializer = glorot_uniform(seed=seeds[-1])))
         # Compile model
         model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
         
@@ -119,10 +146,11 @@ class Model:
         model = Sequential()
         model.add(Dense(layers[0], input_dim=(self.input_size)))
         model.add(Activation(activations.tanh))
-        model.add(Dense(layers[1]))
-        model.add(Activation(activations.tanh))
-        model.add(Dense(layers[2]))
-        model.add(Activation(activations.tanh))
+        
+        for i in range(1, len(layers)):
+            model.add(Dense(layers[i]))
+            model.add(Activation(activations.tanh))
+
         model.add(Dense(1))
         # Compile model
         model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
@@ -137,8 +165,8 @@ class Model:
         '''
         random_state = kwargs.get('random_state', 42)
         
-        if len(layers) != 3:
-            raise Exception('the number of layers to be defined is 3, you have defined {} layers'.format(len(layers)))
+        #if len(layers) != 3:
+        #    raise Exception('the number of layers to be defined is 3, you have defined {} layers'.format(len(layers)))
     
         X_train, X_test, y_train, y_test,_,_,_,_ = self.process_training_data(random_state = random_state)
         print ('The training dataset has size {}'.format(X_train.shape))
