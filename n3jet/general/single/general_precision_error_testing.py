@@ -15,9 +15,11 @@ from n3jet.utils import FKSPartition
 from n3jet.models import Model
 
 parser = argparse.ArgumentParser(description=
-                                 'Once models have been trained using []_init_model_testing.py,
+                                 """
+                                 Once models have been trained using []_init_model_testing.py,
                                  this script can be used for testing, given some testing data. 
-                                 Note: this assumes that testing data has already been generated.'
+                                 Note: this assumes that testing data has already been generated.
+                                 """
 )
 
 parser.add_argument(

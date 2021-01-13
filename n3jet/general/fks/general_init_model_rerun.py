@@ -12,14 +12,16 @@ from tqdm import tqdm
 from n3jet.utils import FKSPartition
 from n3jet.utils.fks_utils import (
     train_near_networks_general,
-    train_cut_network
+    train_cut_network_general
 )
 from n3jet.models import Model
 
 parser = argparse.ArgumentParser(description=
-                                 'Training multiple models on the same dataset for error analysis. 
+                                 """
+                                 Training multiple models on the same dataset for error analysis. 
                                  Here we assume that the momenta and njet files already exist and 
-                                 will be passed to the script by the user'
+                                 will be passed to the script by the user
+                                 """
 )
 
 parser.add_argument(
@@ -143,7 +145,7 @@ if all_legs == 'False':
         labels = nj,
         all_legs = False
     )
-    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(delta_cut=delta_cut, delta_near=delta_near)
+    cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=delta_cut, delta_near=delta_near)
 
 else:
     fks = FKSPartition(
@@ -151,7 +153,7 @@ else:
         labels = nj,
         all_legs = True
     )
-    cut_momenta, near_momenta, near_nj, cut_nj = cut_near_split(delta_cut=delta_cut, delta_near=delta_near)
+    cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=delta_cut, delta_near=delta_near)
 
 pairs, near_nj_split = fks.weighting()
     

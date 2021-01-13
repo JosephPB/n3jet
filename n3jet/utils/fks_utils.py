@@ -134,7 +134,7 @@ def train_near_networks_general(
         
             if os.path.exists(pair_dir) == False:
                 os.mkdir(pair_dir)
-            njet
+
             model.save(pair_dir + '/model')
             with open (pair_dir + '/model_arch.json', 'w') as fout:
                 fout.write(model.to_json())
@@ -267,7 +267,7 @@ def train_cut_network_general(
         delta_cut,
         model_dir = '',
         all_jets = False,
-        all_legs=False,
+        all_legs = False,
         **kwargs
 ):
 
@@ -276,7 +276,7 @@ def train_cut_network_general(
     print ('Using learning rate {}'.format(lr))
     epochs = kwargs.get('epochs', 1000000)
     
-    NN_cut = Model(input_size,cut_momenta,NJ_cut, all_jets, all_legs)
+    NN_cut = Model(input_size, cut_momenta, NJ_cut, all_jets, all_legs)
     model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=layers, lr=lr, epochs=epochs)
     
     if model_dir != '':

@@ -13,9 +13,11 @@ from n3jet.utils import FKSPartition
 from n3jet.models import Model
 
 parser = argparse.ArgumentParser(description=
-                                 'Training multiple models on the same dataset for error analysis. 
+                                 """
+                                 Training multiple models on the same dataset for error analysis. 
                                  Here we assume that the momenta and njet files already exist and 
-                                 will be passed to the script by the user'
+                                 will be passed to the script by the user
+                                 """
 )
 
 parser.add_argument(

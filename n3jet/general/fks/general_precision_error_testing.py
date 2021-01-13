@@ -20,9 +20,11 @@ from n3jet.utils.fks_utils import (
 from n3jet.models import Model
 
 parser = argparse.ArgumentParser(description=
-                                 'Once models have been trained using []_init_model_testing.py,
+                                 """
+                                 Once models have been trained using []_init_model_testing.py,
                                  this script can be used for testing, given some testing data. 
-                                 Note: this assumes that testing data has already been generated.'
+                                 Note: this assumes that testing data has already been generated.
+                                 """
 )
 
 parser.add_argument(
@@ -137,7 +139,7 @@ if all_legs == 'False':
         all_legs = False
     )
 
-    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = fks.cut_near_split(
+    test_cut_momenta, test_near_momenta, test_cut_nj, test_near_nj = fks.cut_near_split(
         delta_cut = delta_cut,
         delta_near = delta_near
     )
@@ -148,7 +150,7 @@ else:
         all_legs = True
     )
 
-    test_cut_momenta, test_near_momenta, test_near_nj, test_cut_nj = fks.cut_near_split(
+    test_cut_momenta, test_near_momenta, test_cut_nj, test_near_nj = fks.cut_near_split(
         delta_cut = delta_cut,
         delta_near = delta_near
     )
