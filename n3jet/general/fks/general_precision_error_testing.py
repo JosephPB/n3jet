@@ -13,7 +13,7 @@ import argparse
 from n3jet.utils import FKSPartition
 from n3jet.utils.fks_utils import (
     get_near_networks_general,
-    get_cut_nerwork,
+    get_cut_network_general,
     infer_on_near_splits,
     infer_on_cut
 )

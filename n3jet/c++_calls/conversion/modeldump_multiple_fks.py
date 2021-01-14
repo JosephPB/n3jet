@@ -16,12 +16,16 @@ def parse():
     """
     
     parser = argparse.ArgumentParser(description=
-                                     'This is a simple script to dump Keras model
-                                     into simple format suitable for porting into pure C++ model'
+                                     """
+                                     This is a simple script to dump Keras model
+                                     into simple format suitable for porting into pure C++ model
+                                     """
     )
 
     parser.add_argument('-t', '--training_reruns', help="Number of training reruns", type=int, required=True)
     parser.add_argument('-p', '--pairs', help="Number of pairs of particles", type=int, required=True)
+    parser.add_argument('-dc', '--delta_cut', help="Delta cut value", type=float, required=True)
+    parser.add_argument('-dn', '--delta_near', help="Delta_near_value", type=float, required=True)
     parser.add_argument('-b', '--model_base_dir', help="Model base directory", type=str, required=True)
     parser.add_argument('-m', '--model_dir', help="Model directory", type=str,required=True)
     parser.add_argument('-o', '--out_dir', help="Output directory in which others will be created", type=str,required=True)
@@ -43,7 +47,7 @@ if __name__ == "__main__":
             os.mkdir(output)
 
         for pair in range(args.pairs):
-            pair_dir = mod_dir + "pair_0.02_{}/".format(pair)
+            pair_dir = mod_dir + "pair_{}_{}/".format(args.delta_near, pair)
             pair_out_dir = output + "pair_0.02_{}/".format(pair)
             if not os.path.exists(pair_out_dir):
                 os.mkdir(pair_out_dir)
@@ -78,7 +82,7 @@ if __name__ == "__main__":
                 fin.write(str(metadata['y_mean']) + "\n")
                 fin.write(str(metadata['y_std']) + "\n")
 
-        cut_dir = mod_dir + "cut_0.02/"
+        cut_dir = mod_dir + "cut_{}/".format(args.delta_cut)
         cut_out_dir = output + "cut_0.02/"
         if not os.path.exists(cut_out_dir):
                 os.mkdir(cut_out_dir)
@@ -90,7 +94,7 @@ if __name__ == "__main__":
             architecture = cut_dir + '/model_arch.json',
             weights = cut_dir + '/model_weights.h5',
             output = cut_out_dir + '/model.nnet',
-            verbose = False
+            verbose = False,
             init = True
         )
         

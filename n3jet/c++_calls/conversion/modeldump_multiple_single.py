@@ -16,8 +16,10 @@ def parse():
     """
     
     parser = argparse.ArgumentParser(description=
-                                     'This is a simple script to dump Keras model into 
-                                     simple format suitable for porting into pure C++ model'
+                                     """
+                                     This is a simple script to dump Keras model into 
+                                     simple format suitable for porting into pure C++ model
+                                     """
     )
 
     parser.add_argument('-t', '--training_reruns', help="Number of training reruns", type=int, required=True)
