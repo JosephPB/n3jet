@@ -28,6 +28,14 @@ parser = argparse.ArgumentParser(description=
 )
 
 parser.add_argument(
+    '--yaml_file',
+    dest='yaml_file',
+    help='YAML file with config parameters',
+    type=str,
+    default = "False"
+)
+
+parser.add_argument(
     '--test_mom_file',
     dest='test_mom_file',
     help='destination of testing momenta file',
@@ -95,6 +103,7 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+yaml_file = args.yaml_file
 test_mom_file = args.test_mom_file
 test_nj_file = args.test_nj_file
 delta_cut = args.delta_cut
@@ -110,6 +119,22 @@ def file_exists(file_path):
         pass
     else:
         raise ValueError('{} does not exist'.format(file_path))
+
+if yaml_file != "False":
+    file_exists(yaml_file)
+
+    with open(yaml_file) as f:
+        yaml = yaml.load(f, Loader=yaml.FullLoader)
+    
+    test_mom_file = yaml["testing"]["mom_file"]
+    test_nj_file = yaml["testing"]["nj_file"]
+    delta_cut = yaml["delta_cut"]
+    delta_near = yaml["delta_near"]
+    model_base_dir = yaml["model_base_dir"]
+    model_dir = yaml["model_dir"]
+    training_reruns = yaml["training_reruns"]
+    all_legs = yaml["all_legs"]
+    all_pairs = yaml["all_pairs"]
 
 file_exists(test_mom_file)
 file_exists(test_nj_file)
@@ -143,7 +168,7 @@ if all_legs == 'False':
         delta_cut = delta_cut,
         delta_near = delta_near
     )
-else:
+elif all_legs == "True":
     fks = FKSPartition(
         momenta = test_momenta,
         labels = test_nj,
@@ -154,6 +179,9 @@ else:
         delta_cut = delta_cut,
         delta_near = delta_near
     )
+
+else:
+    raise ValueError("all_legs is neither True nor False, but is {}".format(all_legs))
 
 pairs, test_near_nj_split = fks.weighting()
     

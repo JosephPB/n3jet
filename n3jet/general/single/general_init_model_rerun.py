@@ -21,6 +21,14 @@ parser = argparse.ArgumentParser(description=
 )
 
 parser.add_argument(
+    '--yaml_file',
+    dest='yaml_file',
+    help='YAML file with config parameters',
+    type=str,
+    default = "False"
+)
+
+parser.add_argument(
     '--mom_file',
     dest='mom_file',
     help='destination of momenta file',
@@ -32,6 +40,14 @@ parser.add_argument(
     dest='nj_file',
     help='NJet file',
     type=str,
+)
+
+parser.add_argument(
+    '--delta_cut',
+    dest='delta_cut',
+    help='proximity of jets according to JADE algorithm',
+    type=float,
+    default=0.01,
 )
 
 parser.add_argument(
@@ -67,8 +83,10 @@ parser.add_argument(
 
 
 args = parser.parse_args()
+yaml_file = args.yaml_file
 mom_file = args.mom_file
 nj_file = args.nj_file
+delta_cut = args.delta_cut
 model_base_dir = args.model_base_dir
 model_dir = args.model_dir
 training_reruns = args.training_reruns
@@ -82,6 +100,20 @@ def file_exists(file_path):
     else:
         raise ValueError('{} does not exist'.format(file_path))
 
+if yaml_file != "False":
+    file_exists(yaml_file)
+
+    with open(yaml_file) as f:
+        yaml = yaml.load(f, Loader=yaml.FullLoader)
+    
+    mom_file = yaml["training"]["mom_file"]
+    nj_file = yaml["training"]["nj_file"]
+    delta_cut = yaml["delta_cut"]
+    model_base_dir = yaml["model_base_dir"]
+    model_dir = yaml["model_dir"]
+    training_reruns = yaml["training_reruns"]
+    all_legs = yaml["all_legs"]
+    
 file_exists(mom_file)
 file_exists(nj_file)
 file_exists(model_base_dir)
@@ -117,14 +149,14 @@ if all_legs == 'False':
         all_legs=False
     )
 
-else:
+elif all_legs == "True":
     print ('Recutting for all legs')
     fks = FKSPartition(
         momenta = momenta,
         labels = nj,
         all_legs = True
     )
-    cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=0.01, delta_near=0.02)
+    cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=delta_cut, delta_near=0.02)
     momenta = np.concatenate((cut_momenta, near_momenta))
     nj = np.concatenate((cut_nj, near_nj))
     indices = np.arange(len(nj))
@@ -140,6 +172,9 @@ else:
         all_jets=False,
         all_legs=True
     )
+
+else:
+    raise ValueError("all_legs is neither True nor False, but is {}".format(all_legs))
 
 for i in range(training_reruns):
     print ('Working on model {}'.format(i))
