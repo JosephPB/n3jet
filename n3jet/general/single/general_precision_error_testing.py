@@ -10,6 +10,7 @@ import time
 import cPickle as pickle
 import multiprocessing
 import argparse
+import yaml
 
 from n3jet.utils import FKSPartition
 from n3jet.models import Model

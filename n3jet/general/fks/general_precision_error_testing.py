@@ -9,6 +9,7 @@ from matplotlib import rc
 import time
 import cPickle as pickle
 import argparse
+import yaml
 
 from n3jet.utils import FKSPartition
 from n3jet.utils.fks_utils import (

@@ -8,6 +8,7 @@ import time
 import pickle
 import argparse
 from tqdm import tqdm
+import yaml
 
 from n3jet.utils import FKSPartition
 from n3jet.models import Model
