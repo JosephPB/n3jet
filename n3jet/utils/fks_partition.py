@@ -86,7 +86,7 @@ class FKSPartition:
         D_1,_ = self.D_ij(mom)
         return (1/(D_1*self.d_ij(mom,i,j)))
 
-    def weighting(self):
+    def weighting(self, return_weights = False):
         '''
         Weights scattering amplitudes according to the different partition function for pairs of particle
         '''
@@ -106,4 +106,8 @@ class FKSPartition:
         for i in S_near:
             labs_split.append(self.near_labels*i)
 
-        return pairs, labs_split
+        if return_weights:
+            return pairs, labs_split, S_near
+
+        else:
+            return pairs, labs_split

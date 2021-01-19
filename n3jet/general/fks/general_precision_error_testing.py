@@ -133,7 +133,7 @@ if yaml_file != "False":
     delta_near = yaml["delta_near"]
     model_base_dir = yaml["model_base_dir"]
     model_dir = yaml["model_dir"]
-    training_reruns = yaml["training_reruns"]
+    training_reruns = yaml["training"]["training_reruns"]
     all_legs = yaml["all_legs"]
     all_pairs = yaml["all_pairs"]
 
