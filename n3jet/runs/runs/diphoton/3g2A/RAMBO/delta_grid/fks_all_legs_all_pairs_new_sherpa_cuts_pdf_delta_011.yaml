@@ -1,10 +1,10 @@
-date: 19/01/21
+date: 20/01/21
 
 delta_cut: 0.0
 delta_near: 0.11
 
 model_base_dir: /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/delta_grid/
-model_dir: events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf
+model_dir: events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_delta_011
 all_legs: "True"
 all_pairs: "True"
 
