@@ -4,6 +4,7 @@ np.random.seed(1337)
 import json
 import argparse
 import cPickle as pickle
+import yaml
 
 from keras.models import Sequential, model_from_json
 from keras.optimizers import Adam
@@ -42,10 +43,10 @@ if __name__ == "__main__":
     args = parse()
 
     def file_exists(file_path):
-    if os.path.exists(file_path) == True:
-        pass
-    else:
-        raise ValueError('{} does not exist'.format(file_path))
+        if os.path.exists(file_path) == True:
+            pass
+        else:
+            raise ValueError('{} does not exist'.format(file_path))
 
     if yaml_file != "False":
         file_exists(yaml_file)
