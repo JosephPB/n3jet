@@ -22,14 +22,16 @@ def parse():
                                      """
     )
 
-    parser.add_argument('-t', '--training_reruns', help="Number of training reruns", type=int, required=True)
+    parser.add_argument('-y', '--yaml_file', help="YAML file", type=str, default="False")
+    parser.add_argument('-t', '--training_reruns', help="Number of training reruns", type=int)
     parser.add_argument('-p', '--pairs', help="Number of pairs of particles", type=int, required=True)
-    parser.add_argument('-dc', '--delta_cut', help="Delta cut value", type=float, required=True)
-    parser.add_argument('-dn', '--delta_near', help="Delta_near_value", type=float, required=True)
-    parser.add_argument('-b', '--model_base_dir', help="Model base directory", type=str, required=True)
-    parser.add_argument('-m', '--model_dir', help="Model directory", type=str,required=True)
-    parser.add_argument('-o', '--out_dir', help="Output directory in which others will be created", type=str,required=True)
-    parser.add_argument('-v', '--verbose', help="Verbose", type=bool, required=False)
+    parser.add_argument('-dc', '--delta_cut', help="Delta cut value", type=float)
+    parser.add_argument('-dn', '--delta_near', help="Delta_near_value", type=float)
+    parser.add_argument('-b', '--model_base_dir', help="Model base directory", type=str)
+    parser.add_argument('-m', '--model_dir', help="Model directory", type=str)
+    parser.add_argument('-ob', '--out_base_dir', help="Output base directory in which others will be created", type=str, required=True)
+    parser.add_argument('-o', '--out_dir', help="Output directory", type=str)
+    parser.add_argument('-v', '--verbose', help="Verbose", type=bool)
     args = parser.parse_args()
 
     return args
@@ -39,10 +41,33 @@ if __name__ == "__main__":
 
     args = parse()
 
+    def file_exists(file_path):
+    if os.path.exists(file_path) == True:
+        pass
+    else:
+        raise ValueError('{} does not exist'.format(file_path))
+
+    if yaml_file != "False":
+        file_exists(yaml_file)
+
+        with open(yaml_file) as f:
+            yaml = yaml.load(f, Loader=yaml.FullLoader)
+    
+        args.delta_cut = yaml["delta_cut"]
+        args.delta_near = yaml["delta_near"]
+        args.model_base_dir = yaml["model_base_dir"]
+        args.model_dir = yaml["model_dir"]
+        args.training_reruns = yaml["training"]["training_reruns"]
+        args.out_dir = yaml["model_dir"]
+
+
     for i in range(args.training_reruns):
         print ('Working on training run {}'.format(i))
         mod_dir = args.model_base_dir + args.model_dir + '_{}/'.format(i)
-        output = args.out_dir + '_{}/'.format(i)
+        output = args.out_base_dir + '/' + args.out_dir
+        if not os.path.exists(output):
+            os.mkdir(output)
+        output += '/{}/'.format(i)
         if not os.path.exists(output):
             os.mkdir(output)
 
