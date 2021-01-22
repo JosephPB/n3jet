@@ -48,10 +48,10 @@ if __name__ == "__main__":
         else:
             raise ValueError('{} does not exist'.format(file_path))
 
-    if yaml_file != "False":
-        file_exists(yaml_file)
+    if args.yaml_file != "False":
+        file_exists(args.yaml_file)
 
-        with open(yaml_file) as f:
+        with open(args.yaml_file) as f:
             yaml = yaml.load(f, Loader=yaml.FullLoader)
     
         args.delta_cut = yaml["delta_cut"]
