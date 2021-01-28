@@ -7,3 +7,4 @@ tensorflow==1.14.0
 tqdm==4.32.2
 pytest==4.6.11
 matplotlib==2.2.5
+PyYAML==5.3.1
