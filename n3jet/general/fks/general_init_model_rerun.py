@@ -136,6 +136,7 @@ if yaml_file != "False":
     training_reruns = yaml["training"]["training_reruns"]
     all_legs = yaml["all_legs"]
     all_pairs = yaml["all_pairs"]
+    layers = yaml["training"].get("layers", [20,40,20])
     
 file_exists(mom_file)
 file_exists(nj_file)
@@ -224,7 +225,8 @@ for i in range(training_reruns):
                 model_dir = model_dir_new,
                 all_jets=True,
                 all_legs=False,
-                lr=lr
+                lr=lr,
+                layers=layers
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
                 input_size = (nlegs)*4,
@@ -234,7 +236,8 @@ for i in range(training_reruns):
                 model_dir = model_dir_new,
                 all_jets=True,
                 all_legs=False,
-                lr=lr
+                lr=lr,
+                layers=layers
             )
             
         else:
@@ -247,7 +250,8 @@ for i in range(training_reruns):
                 model_dir = model_dir_new,
                 all_jets=False,
                 all_legs=True,
-                lr=lr
+                lr=lr,
+                layers=layers
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
                 input_size = (nlegs+2)*4,
@@ -257,7 +261,8 @@ for i in range(training_reruns):
                 model_dir = model_dir_new,
                 all_jets=False,
                 all_legs=True,
-                lr=lr
+                lr=lr,
+                layers=layers
             )
             
         
