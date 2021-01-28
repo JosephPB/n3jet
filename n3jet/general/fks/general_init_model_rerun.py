@@ -187,23 +187,23 @@ else:
 
 pairs, near_nj_split = fks.weighting()
     
-if all_legs == 'False':
-    NN = Model(
-        input_size = (nlegs)*4,
-        momenta = near_momenta,
-        labels = near_nj_split[0],
-        all_jets=True,
-        all_legs=False
-    )
+# if all_legs == 'False':
+#     NN = Model(
+#         input_size = (nlegs)*4,
+#         momenta = near_momenta,
+#         labels = near_nj_split[0],
+#         all_jets=True,
+#         all_legs=False
+#     )
     
-else:
-    NN = Model(
-        input_size = (nlegs+2)*4,
-        momenta = near_momenta,
-        labels = near_nj_split[0],
-        all_jets=False,
-        all_legs=True
-    )
+# else:
+#     NN = Model(
+#         input_size = (nlegs+2)*4,
+#         momenta = near_momenta,
+#         labels = near_nj_split[0],
+#         all_jets=False,
+#         all_legs=True
+#     )
 
 for i in range(training_reruns):
     print ('Working on model {}'.format(i))
