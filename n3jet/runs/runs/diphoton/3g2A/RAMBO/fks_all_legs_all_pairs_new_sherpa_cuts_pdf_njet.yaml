@@ -14,6 +14,6 @@ training:
   training_reruns: 20
 
 testing:
-  mom_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/momenta_events_1M_new_sherpa_cuts_PDF_njet.npy
-  nj_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/events_1M_new_sherpa_cuts_PDF_loop_njet.npy
+  mom_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/hepmc_extraction/momenta_events_1M_new_sherpa_cuts_PDF_njet.npy
+  nj_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/hepmc_extraction/events_1M_new_sherpa_cuts_PDF_loop_njet.npy
   testing_points: 1000000
