@@ -114,6 +114,7 @@ if yaml_file != "False":
     model_dir = yaml["model_dir"]
     training_reruns = yaml["training_reruns"]
     all_legs = yaml["all_legs"]
+    layers = yaml["training"].get("layers", [20,40,20])
     
 file_exists(mom_file)
 file_exists(nj_file)
@@ -141,16 +142,7 @@ else:
 
 nlegs = len(momenta[0])-2
 
-if all_legs == 'False':    
-    NN = Model(
-        intput_size = nlegs*4,
-        momenta = momenta,
-        labels = nj,
-        all_jets=True,
-        all_legs=False
-    )
-
-elif all_legs == "True":
+if all_legs == "True":
     print ('Recutting for all legs')
     fks = FKSPartition(
         momenta = momenta,
@@ -166,17 +158,6 @@ elif all_legs == "True":
     nj = nj[indices]
     momenta = momenta.tolist()
     
-    NN = Model(
-        intput_size = (nlegs + 2)*4,
-        momenta = momenta,
-        labels = nj,
-        all_jets=False,
-        all_legs=True
-    )
-
-else:
-    raise ValueError("all_legs is neither True nor False, but is {}".format(all_legs))
-
 for i in range(training_reruns):
     print ('Working on model {}'.format(i))
     model_dir_new = model_base_dir + model_dir + '_{}/'.format(i)
@@ -186,7 +167,29 @@ for i in range(training_reruns):
         print ('Directory created')
     else:
         print ('Directory already exists')
-    model, x_mean, x_std, y_mean, y_std = NN.fit(layers=[20,40,20], lr=lr, epochs=1000000)
+
+    if all_legs == 'False':    
+        NN = Model(
+            intput_size = nlegs*4,
+            momenta = momenta,
+            labels = nj,
+            all_jets=True,
+            all_legs=False
+        )
+    elif all_legs == 'True':
+        NN = Model(
+            intput_size = nlegs*4,
+            momenta = momenta,
+            labels = nj,
+            all_jets=False,
+            all_legs=True
+        )
+
+    else:
+        raise ValueError("all_legs is neither True nor False, but is {}".format(all_legs))
+
+
+    model, x_mean, x_std, y_mean, y_std = NN.fit(layers=layers, lr=lr, epochs=1000000)
     
     if model_dir != '':
         model.save(model_dir_new + '/model')
