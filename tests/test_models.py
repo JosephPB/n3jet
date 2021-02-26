@@ -109,6 +109,23 @@ def test__process_training_data(model, model_all_legs, model_all_legs_dataset):
     assert len(y_train) == len(X_train)
     assert len(y_test) == len(X_test)
 
+def test__destandardise_data(dummy_data_all_legs_training, model_all_legs):
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs.process_training_data(
+        moms = momenta,
+        labs = labels
+    )
+
+    x_destandard, y_destandard = model_all_legs.destandardise_data(y_pred=y_train, x_pred=X_train)
+
+    momenta = np.round(momenta,6)
+    labels = np.round(labels, 6)
+    x_destandard = np.round(x_destandard, 6)
+    y_destandard = np.round(y_destandard, 6)
+
+    assert len(np.where(np.all(momenta==x_destandard[0],axis=(1,2)))[0]) > 0
+    assert len(np.where(labels==y_destandard[1])[0]) > 0
     
 def test__fit(model, model_all_legs, model_all_legs_dataset):
 
