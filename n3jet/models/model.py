@@ -58,7 +58,7 @@ class Model:
     
     def process_training_data(self, random_state=42, **kwargs):
         '''
-        trainind data must be standardised and split for training and validation
+        training data must be standardised and split for training and validation
         **kwargs can take on:
         :param moms: the PS points in format [no_PS_points, points, 4]
         :param labs: ground truth labels of squared matrix elements
