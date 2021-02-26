@@ -144,16 +144,31 @@ def test__process_testing_data(
 ):
 
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training
-    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model.process_training_data()
-    x_standard = model.process_testing_data(moms = cut_mom)
-    x_standard, y_standard = model.process_testing_data(moms = cut_mom, labs = cut_labs)
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model.process_training_data(
+        moms=momenta,
+        labs=labels
+    )
+    x_standard = model.process_testing_data(moms = momenta)
+    x_standard, y_standard = model.process_testing_data(moms = momenta, labs = labels)
+
+    assert len(np.where(y_standard==y_train[0])[0]) > 0
 
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
-    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs.process_training_data()
-    x_standard = model_all_legs.process_testing_data(moms = cut_mom)
-    x_standard, y_standard = model_all_legs.process_testing_data(moms = cut_mom, labs = cut_labs)
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs.process_training_data(
+        moms=momenta,
+        labs=labels
+    )
+    x_standard = model_all_legs.process_testing_data(moms = momenta)
+    x_standard, y_standard = model_all_legs.process_testing_data(moms = momenta, labs = labels)
+
+    assert len(np.where(y_standard==y_train[0])[0]) > 0
 
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
-    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.process_training_data()
-    x_standard = model_all_legs_dataset.process_testing_data(moms = cut_mom)
-    x_standard, y_standard = model_all_legs_dataset.process_testing_data(moms = cut_mom, labs = cut_labs)
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.process_training_data(
+        moms=momenta,
+        labs=labels
+    )
+    x_standard = model_all_legs_dataset.process_testing_data(moms = momenta)
+    x_standard, y_standard = model_all_legs_dataset.process_testing_data(moms = momenta, labs = labels)
+
+    assert len(np.where(y_standard==y_train[0])[0]) > 0
