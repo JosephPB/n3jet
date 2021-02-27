@@ -186,7 +186,7 @@ class Model:
         '''
         random_state = kwargs.get('random_state', 42)
         
-        X_train, X_test, y_train, y_test,_,_,_,_ = self.process_training_data(random_state = random_state)
+        X_train, X_test, y_train, y_test,_,_,_,_ = self.process_training_data(random_state=random_state, scaling=scaling)
         print ('The training dataset has size {}'.format(X_train.shape))
 
         if self.model_dataset:
