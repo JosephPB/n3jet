@@ -244,7 +244,9 @@ class Model:
     def process_testing_data(self, moms, scaling='standardise', **kwargs):
         '''
         **kwargs can take on:
-        :param x_mean, x_std, y_mean, y_std: mean and std of x and y values if not (properly) provided by class e.g. if using a pretrained model with known mean and std
+        :param x_mean, x_std, y_mean, y_std: mean and std of x and y values if 
+        not (properly) provided by class e.g. if using a pretrained model with 
+        known mean and std
         '''
             
         labs = kwargs.get('labs', None)
