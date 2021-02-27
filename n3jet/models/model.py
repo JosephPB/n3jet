@@ -27,7 +27,7 @@ class Model:
             labels,
             all_jets = False,
             all_legs = False,
-            model_dataset = False
+            model_dataset = False,
     ):
         '''
         :param input_size: the flattened input dim for the model
@@ -95,7 +95,7 @@ class Model:
         
         return X_train, X_test, y_train, y_test, self.x_mean, self.x_std, self.y_mean, self.y_std   
     
-    def baseline_model_dataset(self, layers, lr=0.001):
+    def baseline_model_dataset(self, layers, lr=0.001, loss='mean_squared_error'):
         'define and compile model with fixing weight initialisers and a random dataset'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
@@ -135,11 +135,11 @@ class Model:
 
         model.add(Dense(1, kernel_initializer = glorot_uniform(seed=seeds[-1])))
         # Compile model
-        model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
+        model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = loss)
         
         return model
 
-    def baseline_model(self, layers, lr=0.001):
+    def baseline_model(self, layers, lr=0.001, loss='mean_squared_error'):
         'define and compile model with a fixed dataset but random weights'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
@@ -153,12 +153,12 @@ class Model:
 
         model.add(Dense(1))
         # Compile model
-        model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = 'mean_squared_error')
+        model.compile(optimizer = Adam(lr=lr, beta_1=0.9, beta_2=0.999, amsgrad=False), loss = loss)
         
         return model
 
     
-    def fit(self, layers=[32,16,8], epochs=10000, lr=0.001, **kwargs):
+    def fit(self, layers=[32,16,8], epochs=10000, lr=0.001, loss='mean_squared_error', **kwargs):
         '''
         fit model
         :param layers: an array of lengeth 3 providing the number of hidden nodes in the three layers
@@ -169,9 +169,9 @@ class Model:
         print ('The training dataset has size {}'.format(X_train.shape))
 
         if self.model_dataset:
-            self.model = self.baseline_model_dataset(layers=layers, lr=lr)
+            self.model = self.baseline_model_dataset(layers=layers, lr=lr, loss=loss)
         else:
-            self.model = self.baseline_model(layers=layers, lr=lr)
+            self.model = self.baseline_model(layers=layers, lr=lr, loss=loss)
         ES = EarlyStopping(monitor='val_loss', min_delta=0, patience=100, verbose=0, restore_best_weights=True)
 
         if self.model_dataset:
