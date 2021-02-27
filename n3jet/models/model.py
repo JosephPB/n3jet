@@ -116,7 +116,7 @@ class Model:
         
         return X_train, X_test, y_train, y_test, self.x_mean, self.x_std, self.y_mean, self.y_std   
     
-    def baseline_model_dataset(self, layers, lr=0.001, loss='mean_squared_error'):
+    def baseline_model_dataset(self, layers, lr=0.001, activation='tanh', loss='mean_squared_error'):
         'define and compile model with fixing weight initialisers and a random dataset'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
@@ -148,11 +148,19 @@ class Model:
         
         model = Sequential()
         model.add(Dense(layers[0], input_dim=(self.input_size), kernel_initializer = glorot_uniform(seed=seeds[0])))
-        model.add(Activation(activations.tanh))
+        if activation == 'tanh':
+            model.add(Activation(activations.tanh))
+        elif activation == 'relu':
+            model.add(Activation(activations.relu))
+        else:
+            raise ValueError('activation supported are either tanh or relu, you have used {}'.format(activation))
 
         for i in range(1,len(layers)):
             model.add(Dense(layers[i], kernel_initializer = glorot_uniform(seed=seeds[i])))
-            model.add(Activation(activations.tanh))
+            if activation == 'tanh':
+                model.add(Activation(activations.tanh))
+            elif activation == 'relu':
+                model.add(Activation(activations.relu))
 
         model.add(Dense(1, kernel_initializer = glorot_uniform(seed=seeds[-1])))
         # Compile model
@@ -160,17 +168,25 @@ class Model:
         
         return model
 
-    def baseline_model(self, layers, lr=0.001, loss='mean_squared_error'):
+    def baseline_model(self, layers, lr=0.001, activation='tanh', loss='mean_squared_error'):
         'define and compile model with a fixed dataset but random weights'
         # create model
         # at some point can use new Keras tuning feature for optimising this model
         model = Sequential()
         model.add(Dense(layers[0], input_dim=(self.input_size)))
-        model.add(Activation(activations.tanh))
+        if activation == 'tanh':
+            model.add(Activation(activations.tanh))
+        elif activation == 'relu':
+            model.add(Activation(activations.relu))
+        else:
+            raise ValueError('activation supported are either tanh or relu, you have used {}'.format(activation))
         
         for i in range(1, len(layers)):
             model.add(Dense(layers[i]))
-            model.add(Activation(activations.tanh))
+            if activation == 'tanh':
+                model.add(Activation(activations.tanh))
+            elif activation == 'relu':
+                model.add(Activation(activations.relu))
 
         model.add(Dense(1))
         # Compile model
@@ -179,20 +195,33 @@ class Model:
         return model
 
     
-    def fit(self, scaling='standardise', layers=[32,16,8], epochs=10000, lr=0.001, loss='mean_squared_error', **kwargs):
+    def fit(
+            self,
+            scaling='standardise',
+            layers=[32,16,8],
+            epochs=10000,
+            lr=0.001,
+            activation='tanh',
+            loss='mean_squared_error',
+            **kwargs
+    ):
         '''
         fit model
         :param layers: an array of lengeth 3 providing the number of hidden nodes in the three layers
         '''
+
+        if activation == 'relu' and scaling !='normalise':
+            raise ValueError('if activation is set to relu then scaling must be normalised')
+        
         random_state = kwargs.get('random_state', 42)
         
         X_train, X_test, y_train, y_test,_,_,_,_ = self.process_training_data(random_state=random_state, scaling=scaling)
         print ('The training dataset has size {}'.format(X_train.shape))
 
         if self.model_dataset:
-            self.model = self.baseline_model_dataset(layers=layers, lr=lr, loss=loss)
+            self.model = self.baseline_model_dataset(layers=layers, lr=lr, activation=activation, loss=loss)
         else:
-            self.model = self.baseline_model(layers=layers, lr=lr, loss=loss)
+            self.model = self.baseline_model(layers=layers, lr=lr, activation=activation, loss=loss)
         ES = EarlyStopping(monitor='val_loss', min_delta=0, patience=100, verbose=0, restore_best_weights=True)
 
         if self.model_dataset:
