@@ -51,12 +51,19 @@ class Model:
         std = np.std(array)
         standard = (array-mean)/(std)
         return mean, std, standard
+
+    def normalise(self, data):
+        array = np.array(data)
+        minimum = np.min(array)
+        maximum = np.max(array)
+        norm = (array-minimum)/(maximum-minimum)
+        return minimum, maximum, norm
         
     def root_mean_squared_error(self, y_true, y_pred):
         'custom loss function RMSE'
         return K.sqrt(K.mean(K.square(y_pred - y_true)))
     
-    def process_training_data(self, random_state=42, **kwargs):
+    def process_training_data(self, random_state=42, scaling='standardise', **kwargs):
         '''
         training data must be standardised and split for training and validation
         **kwargs can take on:
@@ -78,15 +85,29 @@ class Model:
         x_standard = momenta.reshape(-1,4).copy() #shape for standardising each momentum element
         self.x_mean = np.zeros(4)
         self.x_std = np.zeros(4)
+
+        if standardise == 'standardise':
         
-        self.x_mean[0],self.x_std[0],x_standard[:,0] = self.standardise(momenta.reshape(-1,4)[:,0])
-        self.x_mean[1],self.x_std[1],x_standard[:,1] = self.standardise(momenta.reshape(-1,4)[:,1])
-        self.x_mean[2],self.x_std[2],x_standard[:,2] = self.standardise(momenta.reshape(-1,4)[:,2])
-        self.x_mean[3],self.x_std[3],x_standard[:,3] = self.standardise(momenta.reshape(-1,4)[:,3])
+            self.x_mean[0],self.x_std[0],x_standard[:,0] = self.standardise(momenta.reshape(-1,4)[:,0])
+            self.x_mean[1],self.x_std[1],x_standard[:,1] = self.standardise(momenta.reshape(-1,4)[:,1])
+            self.x_mean[2],self.x_std[2],x_standard[:,2] = self.standardise(momenta.reshape(-1,4)[:,2])
+            self.x_mean[3],self.x_std[3],x_standard[:,3] = self.standardise(momenta.reshape(-1,4)[:,3])
+
+            self.y_mean, self.y_std, y_standard = self.standardise(labels)
+
+        elif standardise == 'normalise':
+
+            self.x_mean[0],self.x_std[0],x_standard[:,0] = self.normalise(momenta.reshape(-1,4)[:,0])
+            self.x_mean[1],self.x_std[1],x_standard[:,1] = self.normalise(momenta.reshape(-1,4)[:,1])
+            self.x_mean[2],self.x_std[2],x_standard[:,2] = self.normalise(momenta.reshape(-1,4)[:,2])
+            self.x_mean[3],self.x_std[3],x_standard[:,3] = self.normalise(momenta.reshape(-1,4)[:,3])
+
+            self.y_mean, self.y_std, y_standard = self.normalise(labels)
+            
+        else:
+            raise ValueError('scaling must being either normalise or standardise and you have used {}'.format(scaling))
         
         x_standard = x_standard.reshape(-1,self.input_size) #shape for passing into network
-        
-        self.y_mean, self.y_std, y_standard = self.standardise(labels)
 
         if self.model_dataset:
             X_train, X_test, y_train, y_test = train_test_split(x_standard, y_standard, test_size=0.2)
@@ -158,7 +179,7 @@ class Model:
         return model
 
     
-    def fit(self, layers=[32,16,8], epochs=10000, lr=0.001, loss='mean_squared_error', **kwargs):
+    def fit(self, scaling='standardise', layers=[32,16,8], epochs=10000, lr=0.001, loss='mean_squared_error', **kwargs):
         '''
         fit model
         :param layers: an array of lengeth 3 providing the number of hidden nodes in the three layers
@@ -185,8 +206,13 @@ class Model:
         array = np.array(data)
         standard = (array-mean)/(std)
         return standard
+
+    def normalise_test(self, data, minimum, maximum):
+        array = np.array(data)
+        norm = (array-minimum)/(maximum-minimum)
+        return norm
         
-    def process_testing_data(self, moms, **kwargs):
+    def process_testing_data(self, moms, scaling='standardise', **kwargs):
         '''
         **kwargs can take on:
         :param x_mean, x_std, y_mean, y_std: mean and std of x and y values if not (properly) provided by class e.g. if using a pretrained model with known mean and std
@@ -213,27 +239,52 @@ class Model:
             labels = np.array(labs)
         
         x_standard = momenta.reshape(-1,4).copy() #shape for standardising each momentum element
+
+        if scaling == 'standardise':
         
-        x_standard[:,0] = self.standardise_test(momenta.reshape(-1,4)[:,0],x_mean[0],x_std[0])
-        x_standard[:,1] = self.standardise_test(momenta.reshape(-1,4)[:,1],x_mean[1],x_std[1])
-        x_standard[:,2] = self.standardise_test(momenta.reshape(-1,4)[:,2],x_mean[2],x_std[2])
-        x_standard[:,3] = self.standardise_test(momenta.reshape(-1,4)[:,3],x_mean[3],x_std[3])
+            x_standard[:,0] = self.standardise_test(momenta.reshape(-1,4)[:,0],x_mean[0],x_std[0])
+            x_standard[:,1] = self.standardise_test(momenta.reshape(-1,4)[:,1],x_mean[1],x_std[1])
+            x_standard[:,2] = self.standardise_test(momenta.reshape(-1,4)[:,2],x_mean[2],x_std[2])
+            x_standard[:,3] = self.standardise_test(momenta.reshape(-1,4)[:,3],x_mean[3],x_std[3])
+            
+            x_standard = x_standard.reshape(-1,self.input_size) #shape for passing into network
         
-        x_standard = x_standard.reshape(-1,self.input_size) #shape for passing into network
+            if labs is not None:
+                y_standard = self.standardise_test(labels,y_mean,y_std)
+                return x_standard, y_standard
+            else:
+                return x_standard
+    
+
+            
+        elif scaling == 'normalise':
+
+            x_standard[:,0] = self.normalise_test(momenta.reshape(-1,4)[:,0],x_mean[0],x_std[0])
+            x_standard[:,1] = self.normalise_test(momenta.reshape(-1,4)[:,1],x_mean[1],x_std[1])
+            x_standard[:,2] = self.normalise_test(momenta.reshape(-1,4)[:,2],x_mean[2],x_std[2])
+            x_standard[:,3] = self.normalise_test(momenta.reshape(-1,4)[:,3],x_mean[3],x_std[3])
+            
+            x_standard = x_standard.reshape(-1,self.input_size) #shape for passing into network
         
-        if labs is not None:
-            y_standard = self.standardise_test(labels,y_mean,y_std)
-            return x_standard, y_standard
-        
+            if labs is not None:
+                y_standard = self.standardise_test(labels,y_mean,y_std)
+                return x_standard, y_standard
+            else:
+                return x_standard
+
         else:
-            return x_standard
+            raise ValueError('scaling must being either normalise or standardise and you have used {}'.format(scaling))
     
     def destandardise(self, data, mean, std):
         'destandardise array for inference and comparison'
         array = np.array(data)
         return (array*std) + mean
+
+    def denormalise(seld, data, minimum, maximum):
+        array = np.array(data)
+        return array*(maximum-minimum) + minimum
     
-    def destandardise_data(self, y_pred, x_pred=None, **kwargs):
+    def destandardise_data(self, y_pred, x_pred=None, scaling='standardise', **kwargs):
         '''
         destandardise any standardised data
         :param y_pred: squared matrix element values
@@ -249,26 +300,46 @@ class Model:
         x_mean = kwargs.get('x_mean', self.x_mean)
         x_std = kwargs.get('x_std', self.x_std)
         
+        if scaling == 'standardise':
+            y_destandard = self.destandardise(y_pred,y_mean,y_std)
         
-        y_destandard = self.destandardise(y_pred,y_mean,y_std)
+            if x_pred is not None:
+                x_pred = x_pred.reshape(-1,4)
+                x_destandard = x_pred.copy()
+                
+                x_destandard[:,0] = self.destandardise(x_pred[:,0],x_mean[0],x_std[0])
+                x_destandard[:,1] = self.destandardise(x_pred[:,1],x_mean[1],x_std[1])
+                x_destandard[:,2] = self.destandardise(x_pred[:,2],x_mean[2],x_std[2])
+                x_destandard[:,3] = self.destandardise(x_pred[:,3],x_mean[3],x_std[3])
+            
+                x_destandard = x_destandard.reshape(-1,int((self.input_size)/4),4)
+            
+                return x_destandard, y_destandard
         
-        if x_pred is not None:
-            x_pred = x_pred.reshape(-1,4)
-            x_destandard = x_pred.copy()
+            else:
+                return y_destandard
+        
+        elif scaling == 'normalise':
+            y_destandard = self.denormalise(y_pred,y_mean,y_std)
+        
+            if x_pred is not None:
+                x_pred = x_pred.reshape(-1,4)
+                x_destandard = x_pred.copy()
+                
+                x_destandard[:,0] = self.denormalise(x_pred[:,0],x_mean[0],x_std[0])
+                x_destandard[:,1] = self.denormalise(x_pred[:,1],x_mean[1],x_std[1])
+                x_destandard[:,2] = self.denormalise(x_pred[:,2],x_mean[2],x_std[2])
+                x_destandard[:,3] = self.denormalise(x_pred[:,3],x_mean[3],x_std[3])
             
-            x_destandard[:,0] = self.destandardise(x_pred[:,0],x_mean[0],x_std[0])
-            x_destandard[:,1] = self.destandardise(x_pred[:,1],x_mean[1],x_std[1])
-            x_destandard[:,2] = self.destandardise(x_pred[:,2],x_mean[2],x_std[2])
-            x_destandard[:,3] = self.destandardise(x_pred[:,3],x_mean[3],x_std[3])
+                x_destandard = x_destandard.reshape(-1,int((self.input_size)/4),4)
             
-            x_destandard = x_destandard.reshape(-1,int((self.input_size)/4),4)
-            
-            return x_destandard, y_destandard
+                return x_destandard, y_destandard
+        
+            else:
+                return y_destandard
         
         else:
-            return y_destandard
-        
-        
+            raise ValueError('scaling must being either normalise or standardise and you have used {}'.format(scaling))
         
         
         
