@@ -129,12 +129,30 @@ def test__destandardise_data(dummy_data_all_legs_training, model_all_legs):
     
 def test__fit(model, model_all_legs, model_all_legs_dataset):
 
+    baseline_model = model.baseline_model(layers=[32,16,8])
+    weights = baseline_model.get_weights()
     model, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
-    
-    model, x_mean, x_std, y_mean, y_std = model_all_legs.fit(layers=[10,20,30,40], epochs=2)
-    
-    model, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.fit(epochs=2, lr = 0.01)
+    weights_trained = model.model.get_weights()
 
+    for idx, i in enumerate(weights):
+        assert np.array_equal(i, weights_trained[idx]) == False
+
+    baseline_model = model_all_legs.baseline_model(layers=[32,16,8])
+    weights = baseline_model.get_weights()
+    model, x_mean, x_std, y_mean, y_std = model_all_legs.fit(layers=[10,20,30,40], epochs=2)
+    weights_trained = model.model.get_weights()
+
+    for idx, i in enumerate(weights):
+        assert np.array_equal(i, weights_trained[idx]) == False
+
+    baseline_model = model_all_legs_dataset.baseline_model_dataset(layers=[32,16,8])
+    weights = baseline_model.get_weights()
+    model, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.fit(epochs=2, lr = 0.01)
+    weights_trained = model.model.get_weights()
+
+    for idx, i in enumerate(weights):
+        assert np.array_equal(i, weights_trained[idx]) == False
+    
 def test__process_testing_data(
         model,
         model_all_legs,
