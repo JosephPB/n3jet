@@ -86,7 +86,7 @@ class Model:
         self.x_mean = np.zeros(4)
         self.x_std = np.zeros(4)
 
-        if standardise == 'standardise':
+        if scaling == 'standardise':
         
             self.x_mean[0],self.x_std[0],x_standard[:,0] = self.standardise(momenta.reshape(-1,4)[:,0])
             self.x_mean[1],self.x_std[1],x_standard[:,1] = self.standardise(momenta.reshape(-1,4)[:,1])
@@ -95,7 +95,7 @@ class Model:
 
             self.y_mean, self.y_std, y_standard = self.standardise(labels)
 
-        elif standardise == 'normalise':
+        elif scaling == 'normalise':
 
             self.x_mean[0],self.x_std[0],x_standard[:,0] = self.normalise(momenta.reshape(-1,4)[:,0])
             self.x_mean[1],self.x_std[1],x_standard[:,1] = self.normalise(momenta.reshape(-1,4)[:,1])
