@@ -134,6 +134,7 @@ def test__fit(model, model_all_legs, model_all_legs_dataset):
     model, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
     weights_trained = model.model.get_weights()
 
+    assert len(weights) != 0
     for idx, i in enumerate(weights):
         assert np.array_equal(i, weights_trained[idx]) == False
 
@@ -142,6 +143,7 @@ def test__fit(model, model_all_legs, model_all_legs_dataset):
     model, x_mean, x_std, y_mean, y_std = model_all_legs.fit(layers=[10,20,30,40], epochs=2)
     weights_trained = model.model.get_weights()
 
+    assert len(weights) != 0
     for idx, i in enumerate(weights):
         assert np.array_equal(i, weights_trained[idx]) == False
 
@@ -150,6 +152,7 @@ def test__fit(model, model_all_legs, model_all_legs_dataset):
     model, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.fit(epochs=2, lr = 0.01)
     weights_trained = model.model.get_weights()
 
+    assert len(weights) != 0
     for idx, i in enumerate(weights):
         assert np.array_equal(i, weights_trained[idx]) == False
     
