@@ -44,16 +44,6 @@ class FKSModelRun:
         self.layers = layers
         self.lr=lr
 
-        file_exists(mom_file)
-        file_exists(nj_file)
-        file_exists(model_base_dir)
-
-        if os.path.exists(model_base_dir) == False:
-            os.mkdir(model_base_dir)
-            print ('Creating base directory')
-        else:
-            print ('Base directory already exists')
-
     @classmethod
     def from_yaml(yaml_file, training=True):
         "Initiate from YAML file"
@@ -94,6 +84,9 @@ class FKSModelRun:
 
     def load_data(self):
 
+        file_exists(mom_file)
+        file_exists(nj_file)
+
         momenta = np.load(mom_file,allow_pickle=True)
         print ('############### Momenta loaded ###############')
         
@@ -126,6 +119,15 @@ class FKSModelRun:
         return cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split
 
     def train_networks(self, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split):
+
+        file_exists(model_base_dir)
+        
+        if os.path.exists(model_base_dir) == False:
+            os.mkdir(model_base_dir)
+            print ('Creating base directory')
+        else:
+            print ('Base directory already exists')
+        
 
         for i in range(self.training_reruns):
             print ('Working on model {}'.format(i))
