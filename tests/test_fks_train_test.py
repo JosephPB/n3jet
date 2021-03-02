@@ -35,3 +35,6 @@ def test__split_data(dummy_data_all_legs_training):
 
     assert len(np.where(np.all(np.array(cut_momenta)==np.array(cut_mom)[0],axis=(1,2)))[0]) > 0
     assert len(np.where(np.array(cut_nj)==cut_labs)) > 0
+
+    assert len(np.where(np.all(np.array(near_momenta)==np.array(near_mom)[0],axis=(1,2)))[0]) > 0
+    assert len(np.where(np.array(near_nj)==near_labs)) > 0
