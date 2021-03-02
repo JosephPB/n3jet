@@ -123,10 +123,10 @@ class FKSModelRun:
 
     def train_networks(self, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split):
 
-        file_exists(model_base_dir)
-        
-        if os.path.exists(model_base_dir) == False:
-            os.mkdir(model_base_dir)
+        if self.model_base_dir == "":
+            pass
+        elif os.path.exists(self.model_base_dir) == False:
+            os.mkdir(self.model_base_dir)
             print ('Creating base directory')
         else:
             print ('Base directory already exists')
@@ -134,20 +134,25 @@ class FKSModelRun:
 
         for i in range(self.training_reruns):
             print ('Working on model {}'.format(i))
-            model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
-            print ('Looking for directory {}'.format(model_dir_new))
-            
-            if os.path.exists(model_dir_new) == False:
-                os.mkdir(model_dir_new)
-                print ('Directory created')
+            if self.model_base_dir == "":
+                model_dir_new = ""
+            elif self.model_dir == "":
+                model_dir_new = ""
             else:
-                print ('Directory already exists')
+                model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
+                print ('Looking for directory {}'.format(model_dir_new))
+            
+                if os.path.exists(model_dir_new) == False:
+                    os.mkdir(model_dir_new)
+                    print ('Directory created')
+                else:
+                    print ('Directory already exists')
 
             
             if self.all_legs:
-                all_jets = True
-            else:
                 all_jets = False
+            else:
+                all_jets = True
             
             model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general(
                 input_size = (self.nlegs)*4,
@@ -176,9 +181,9 @@ class FKSModelRun:
     def load_models(self, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split):
 
         if self.all_legs:
-                all_jets = True
-        else:
             all_jets = False
+        else:
+            all_jets = True
 
         NN = Model(
             input_size = (self.nlegs)*4,
