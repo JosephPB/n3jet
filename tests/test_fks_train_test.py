@@ -9,7 +9,11 @@ example_config = configs_path / "example_config.yaml"
 
 def test__yaml_readin():
 
-    fksmodel = FKSModelRun.from_yaml(example_config)
+    example_config = configs_path / "example_config.yaml"
+
+    print (example_config)
+
+    fksmodel = FKSModelRun.from_yaml(yaml_file = example_config)
     
     with open(example_config) as f:
         y = yaml.load(f, Loader=yaml.FullLoader)

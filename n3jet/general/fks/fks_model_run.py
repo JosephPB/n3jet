@@ -20,6 +20,7 @@ from n3jet.models import Model
 class FKSModelRun:
 
     def __init__(
+            self,
             mom_file,
             nj_file,
             delta_cut,
@@ -45,28 +46,30 @@ class FKSModelRun:
         self.lr=lr
 
     @classmethod
-    def from_yaml(yaml_file, training=True):
+    def from_yaml(self, yaml_file, training=True):
         "Initiate from YAML file"
+
+        print (yaml_file)
         file_exists(yaml_file)
 
         with open(yaml_file) as f:
-            yaml = yaml.load(f, Loader=yaml.FullLoader)
+            y = yaml.load(f, Loader=yaml.FullLoader)
 
         if training:
-            mom_file = yaml["training"]["mom_file"]
-            nj_file = yaml["training"]["nj_file"]
+            mom_file = y["training"]["mom_file"]
+            nj_file = y["training"]["nj_file"]
         else:
-            mom_file = yaml["testing"]["mom_file"]
-            nj_file = yaml["testing"]["nj_file"]
-        delta_cut = yaml["delta_cut"]
-        delta_near = yaml["delta_near"]
-        model_base_dir = yaml["model_base_dir"]
-        model_dir = yaml["model_dir"]
-        training_reruns = yaml["training"]["training_reruns"]
-        all_legs = bool_convert(yaml["all_legs"])
-        all_pairs = bool_convert(yaml["all_pairs"])
-        layers = yaml["training"].get("layers", [20,40,20])
-        lr = yaml["training"].get("lr", 0.01)
+            mom_file = y["testing"]["mom_file"]
+            nj_file = y["testing"]["nj_file"]
+        delta_cut = y["delta_cut"]
+        delta_near = y["delta_near"]
+        model_base_dir = y["model_base_dir"]
+        model_dir = y["model_dir"]
+        training_reruns = y["training"]["training_reruns"]
+        all_legs = bool_convert(y["all_legs"])
+        all_pairs = bool_convert(y["all_pairs"])
+        layers = y["training"].get("layers", [20,40,20])
+        lr = y["training"].get("lr", 0.01)
         
         return FKSModelRun(
             mom_file = mom_file,
@@ -245,6 +248,7 @@ class FKSModelRun:
         return model_nears, model_cuts, x_mean_nears, x_mean_cuts, x_std_nears, x_std_cuts, y_mean_nears, y_mean_cuts, y_std_nears, y_std_cuts
 
     def test_networks(
+            self,
             near_momenta,
             cut_momenta,
             near_nj_split,
