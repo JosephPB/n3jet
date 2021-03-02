@@ -3,8 +3,9 @@ import yaml
 import pytest
 
 from n3jet.general import FKSModelRun
+from n3jet.paths import configs_path
 
-example_config = "./tests/example_config.yaml"
+example_config = configs_path / "example_config.yaml"
 
 def test__yaml_readin():
 
