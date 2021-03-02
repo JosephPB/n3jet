@@ -4,14 +4,14 @@ import pytest
 
 from n3jet.general import FKSModelRun
 
-example_config = "example_config.yaml"
+example_config = "./tests/example_config.yaml"
 
 def test__yaml_readin():
-    
-    with open(yaml_file) as f:
-        y = yaml.load(f, Loader=yaml.FullLoader)
 
     fksmodel = FKSModelRun.from_yaml(example_config)
+    
+    with open(example_config) as f:
+        y = yaml.load(f, Loader=yaml.FullLoader)
 
     assert fksmodel.mom_file == y["training"]["mom_file"]
     assert fksmodel.nj_file == y["training"]["nj_file"]
