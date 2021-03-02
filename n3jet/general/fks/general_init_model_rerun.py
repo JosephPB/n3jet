@@ -212,7 +212,10 @@ class FKSModelRun:
             all_legs = self.all_legs
         )
             
-        cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=self.delta_cut, delta_near=self.delta_near)
+        cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(
+            delta_cut = self.delta_cut,
+            delta_near = self.delta_near
+        )
 
         pairs, near_nj_split = fks.weighting()
 
@@ -242,7 +245,7 @@ class FKSModelRun:
                 pairs = pairs,
                 near_momenta = near_momenta,
                 NJ_split = near_nj_split,
-                delta_near = delta_near,
+                delta_near = self.delta_near,
                 model_dir = model_dir_new,
                 all_jets=all_jets,
                 all_legs=self.all_legs,
@@ -253,7 +256,7 @@ class FKSModelRun:
                 input_size = (self.nlegs)*4,
                 cut_momenta = cut_momenta,
                 NJ_cut = cut_nj,
-                delta_cut = delta_cut,
+                delta_cut = self.delta_cut,
                 model_dir = model_dir_new,
                 all_jets=all_jets,
                 all_legs=self.all_legs,
@@ -270,8 +273,8 @@ class FKSModelRun:
 
         NN = Model(
             input_size = (self.nlegs)*4,
-            momenta = test_near_momenta,
-            labels = test_near_nj_split[0],
+            momenta = near_momenta,
+            labels = near_nj_split[0],
             all_jets=all_jets,
             all_legs=self.all_legs
         )
@@ -296,9 +299,9 @@ class FKSModelRun:
         y_mean_cuts = []
         y_std_cuts = []
 
-        for i in range(training_reruns):
+        for i in range(self.training_reruns):
             print ('Working on model {}'.format(i))
-            model_dir_new = model_base_dir + model_dir + '_{}/'.format(i)
+            model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
             print ('Looking for directory {}'.format(model_dir_new))
             if os.path.exists(model_dir_new) == False:
                 os.mkdir(model_dir_new)
@@ -309,12 +312,12 @@ class FKSModelRun:
             model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = get_near_networks_general(
                 NN = NN,
                 pairs = pairs,
-                delta_near = delta_near,
+                delta_near = self.delta_near,
                 model_dir = model_dir_new
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(
                 NN = NN,
-                delta_cut = delta_cut,
+                delta_cut = self.delta_cut,
                 model_dir = model_dir_new
             )
 
@@ -331,11 +334,62 @@ class FKSModelRun:
             y_mean_cuts.append(y_mean_cut)
             y_std_cuts.append(y_std_cut)
 
+        print ('############### All models loaded ###############')
+
         return model_nears, model_cuts, x_mean_nears, x_mean_cuts, x_std_nears, x_std_cuts, y_mean_nears, y_mean_cuts, y_std_nears, y_std_cuts
 
+    def test_networks(
+            near_momenta,
+            cut_momenta,
+            near_nj_split,
+            model_nears,
+            model_cuts,
+            x_mean_nears,
+            x_mean_cuts,
+            x_std_nears,
+            x_std_cuts,
+            y_mean_nears,
+            y_mean_cuts,
+            y_std_nears,
+            y_std_cuts
+    ):
+
+        NN = Model(
+            input_size = (self.nlegs)*4,
+            momenta = near_momenta,
+            labels = near_nj_split[0],
+            all_jets=all_jets,
+            all_legs=self.all_legs
+        )
+
+        for i in range(self.training_reruns):
+            print ('Predicting on model {}'.format(i))
+            model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
+            y_pred_near = infer_on_near_splits(
+                NN = NN,
+                moms = near_momenta,
+                models = model_nears[i],
+                x_mean_near = x_mean_nears[i],
+                x_std_near = x_std_nears[i],
+                y_mean_near = y_mean_nears[i],
+                y_std_near = y_std_nears[i]
+            )
+            np.save(model_dir_new + '/pred_near_{}'.format(len(near_momenta + cut_momenta)), y_pred_near)
+            
+        for i in range(self.training_reruns):
+            print ('Predicting on model {}'.format(i))
+            model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
+            y_pred_cut = infer_on_cut(
+                NN = NN,
+                moms = cut_momenta,
+                model = model_cuts[i],
+                x_mean_cut = x_mean_cuts[i],
+                x_std_cut = x_std_cuts[i],
+                y_mean_cut = y_mean_cuts[i],
+                y_std_cut = y_std_cuts[i]
+            )
+            np.save(model_dir_new + '/pred_cut_{}'.format(len(near_momenta + cut_momenta)), y_pred_cut)
     
-    
-print ('############### All models loaded ###############')   
 
     def train(self):
 
@@ -347,8 +401,28 @@ print ('############### All models loaded ###############')
 
     def test(self):
         momenta, nj = self.load_data()
-        cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = self.split_data(momenta, nj)
         
+        cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = self.split_data(momenta, nj)
+    
+        model_nears, model_cuts, x_mean_nears, x_mean_cuts, x_std_nears, x_std_cuts, y_mean_nears, y_mean_cuts, y_std_nears, y_std_cuts = self.load_models(NN, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split)
+        
+        self.test_networks(
+            near_momenta,
+            cut_momenta,
+            near_nj_split,
+            model_nears,
+            model_cuts,
+            x_mean_nears,
+            x_mean_cuts,
+            x_std_nears,
+            x_std_cuts,
+            y_mean_nears,
+            y_mean_cuts,
+            y_std_nears,
+            y_std_cuts
+        )
+        
+        print ('############### Finished ###############')
         
 
 if __name__ == "__main__":
