@@ -33,5 +33,5 @@ def test__split_data(dummy_data_all_legs_training):
 
     cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = fksmodel.split_data(momenta, labels)
 
-    assert len(np.where(np.all(cut_momenta==cut_mom[0],axis=(1,2)))[0]) > 0
-    assert len(np.where(cut_nj==cut_labs[0])[0]) > 0
+    assert len(np.where(np.all(np.array(cut_momenta)==np.array(cut_mom)[0],axis=(1,2)))[0]) > 0
+    assert len(np.where(np.array(cut_nj)==cut_labs)) > 0
