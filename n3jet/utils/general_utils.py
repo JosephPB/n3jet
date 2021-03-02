@@ -6,6 +6,20 @@ from matplotlib import rc
 import time
 import pickle
 
+def bool_convert(value):
+    if value == "True":
+        return True
+    elif value == "False":
+        return False
+    else:
+        raise ValueError("Value is neither True not False")
+
+def file_exists(file_path):
+    if os.path.exists(file_path) == True:
+        pass
+    else:
+        raise ValueError('{} does not exist'.format(file_path))
+
 def load_momenta(data_dir, file, python_3 = False):
     if python_3 == True:
         momenta = np.load(data_dir + file, allow_pickle = True, encoding='latin1')
