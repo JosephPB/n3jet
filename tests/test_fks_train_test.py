@@ -45,6 +45,8 @@ def test__train(dummy_data_all_legs_training):
     fksmodel.model_base_dir = configs_path
     fksmodel.model_dir = ""
     fksmodel.nlegs = 3
+    fksmodel.epochs = 1
+    fksmodel.training_reruns = 1
     
     cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = fksmodel.split_data(momenta, labels)
 

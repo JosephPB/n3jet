@@ -31,7 +31,8 @@ class FKSModelRun:
             all_legs,
             all_pairs,
             layers=[20,40,20],
-            lr=0.01
+            lr=0.01,
+            epochs=1000000
     ):
         self.mom_file = mom_file
         self.nj_file = nj_file
@@ -165,7 +166,8 @@ class FKSModelRun:
                 all_jets=all_jets,
                 all_legs=self.all_legs,
                 lr=self.lr,
-                layers=self.layers
+                layers=self.layers,
+                epochs=self.epochs
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
                 input_size = (self.nlegs)*4,
@@ -176,7 +178,8 @@ class FKSModelRun:
                 all_jets=all_jets,
                 all_legs=self.all_legs,
                 lr=self.lr,
-                layers=self.layers
+                layers=self.layers,
+                epochs=self.epochs
             )
 
     def load_models(self, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split):
