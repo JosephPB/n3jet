@@ -40,8 +40,8 @@ def test__train(dummy_data_all_legs_training):
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
 
     fksmodel = FKSModelRun.from_yaml(example_config)
-    fksmodel.delta_cut = 0.0
-    fksmodel.delta_near = 0.02
+    fksmodel.delta_cut = delta_cut
+    fksmodel.delta_near = delta_near
     fksmodel.model_base_dir = configs_path
     fksmodel.model_dir = ""
     fksmodel.nlegs = 3

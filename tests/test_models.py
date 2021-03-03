@@ -90,22 +90,22 @@ def test__process_training_data(model, model_all_legs, model_all_legs_dataset):
 
     X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model.process_training_data()
 
-    assert len(X_train) == 4
-    assert len(X_test) == 1
+    assert len(X_train) == 8
+    assert len(X_test) == 2
     assert len(y_train) == len(X_train)
     assert len(y_test) == len(X_test)
     
     X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs.process_training_data()
 
-    assert len(X_train) == 4
-    assert len(X_test) == 1
+    assert len(X_train) == 8
+    assert len(X_test) == 2
     assert len(y_train) == len(X_train)
     assert len(y_test) == len(X_test)
     
     X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_all_legs_dataset.process_training_data()
 
-    assert len(X_train) == 4
-    assert len(X_test) == 1
+    assert len(X_train) == 8
+    assert len(X_test) == 2
     assert len(y_train) == len(X_train)
     assert len(y_test) == len(X_test)
 
