@@ -30,9 +30,13 @@ class FKSModelRun:
             training_reruns,
             all_legs,
             all_pairs,
+            scaling='standardise',
             layers=[20,40,20],
             lr=0.01,
-            epochs=1000000
+            activation='tanh',
+            loss='mean_squared_error',
+            epochs=1000000,
+            
     ):
         self.mom_file = mom_file
         self.nj_file = nj_file
@@ -43,8 +47,12 @@ class FKSModelRun:
         self.training_reruns = training_reruns
         self.all_legs = all_legs
         self.all_pairs = all_pairs
+        self.scaling = scaling
         self.layers = layers
         self.lr=lr
+        self.activation = activation
+        self.loss = loss
+        self.epochs = epochs
 
     @classmethod
     def from_yaml(self, yaml_file, training=True):
@@ -69,8 +77,12 @@ class FKSModelRun:
         training_reruns = y["training"]["training_reruns"]
         all_legs = bool_convert(y["all_legs"])
         all_pairs = bool_convert(y["all_pairs"])
+        scaling = y.get("scaling", "standardise")
         layers = y["training"].get("layers", [20,40,20])
         lr = y["training"].get("lr", 0.01)
+        activation = y["training"].get("activation", "tanh")
+        loss = y["training"].get("loss", "mean_squared_error")
+        epochs = y["training"].get("epochs", 1000000)
         
         return FKSModelRun(
             mom_file = mom_file,
@@ -82,8 +94,12 @@ class FKSModelRun:
             training_reruns = training_reruns,
             all_legs = all_legs,
             all_pairs = all_pairs,
+            scaling = scaling,
             layers = layers,
-            lr = lr
+            lr = lr,
+            activation = activation,
+            loss = loss,
+            epochs = epochs
         )
 
     def load_data(self):
@@ -165,8 +181,11 @@ class FKSModelRun:
                 model_dir = model_dir_new,
                 all_jets=all_jets,
                 all_legs=self.all_legs,
+                scaling = self.scaling,
                 lr=self.lr,
                 layers=self.layers,
+                activation = self.activation,
+                loss = self.loss,
                 epochs=self.epochs
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
@@ -177,8 +196,11 @@ class FKSModelRun:
                 model_dir = model_dir_new,
                 all_jets=all_jets,
                 all_legs=self.all_legs,
+                scaling = self.scaling,
                 lr=self.lr,
                 layers=self.layers,
+                activation = self.activation,
+                loss = self.loss,
                 epochs=self.epochs
             )
 

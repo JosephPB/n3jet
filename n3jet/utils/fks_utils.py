@@ -100,10 +100,13 @@ def train_near_networks_general(
     '''
     Train 'near' networks on pairs of jets
     '''
-    
+
+    scaling = kwargs.get('scaling', 'standardise')
     lr = kwargs.get('lr', 0.001)
     layers = kwargs.get('layers', [20,40,20])
     print ('Using learning rate {}'.format(lr))
+    activation = kwargs.get('activation', 'tanh')
+    loss = kwargs.get('loss', 'mean_squared_error')
     epochs = kwargs.get('epochs', 1000000)
     
     if type(near_momenta) != list:
@@ -119,7 +122,13 @@ def train_near_networks_general(
     for idx,i in enumerate(pairs):
         NN = Model(input_size, near_momenta, NJ_split[idx], all_jets, all_legs, model_dataset)
         
-        model, x_mean, x_std, y_mean, y_std = NN.fit(layers=layers, lr=lr, epochs=epochs)
+        model, x_mean, x_std, y_mean, y_std = NN.fit(
+            scaling = scaling,
+            layers=layers,
+            lr=lr,
+            activation = activation,
+            loss = loss,
+            epochs=epochs)
         
         NN_near.append(NN)
         model_near.append(model)
@@ -271,13 +280,23 @@ def train_cut_network_general(
         **kwargs
 ):
 
+    scaling = kwargs.get('scaling', 'standardise')
     lr = kwargs.get('lr', 0.001)
     layers = kwargs.get('layers', [20,40,20])
     print ('Using learning rate {}'.format(lr))
+    activation = kwargs.get('activation', 'tanh')
+    loss = kwargs.get('loss', 'mean_squared_error')
     epochs = kwargs.get('epochs', 1000000)
     
     NN_cut = Model(input_size, cut_momenta, NJ_cut, all_jets, all_legs)
-    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(layers=layers, lr=lr, epochs=epochs)
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(
+        scaling = scaling,
+        layers = layers,
+        lr = lr,
+        activation = activation,
+        loss = loss,
+        epochs = epochs
+    )
     
     if model_dir != '':
         cut_dir = model_dir + 'cut_{}'.format(delta_cut)
