@@ -151,6 +151,7 @@ class FKSModelRun:
             
             if self.all_legs:
                 all_jets = False
+                self.nlegs += 2
             else:
                 all_jets = True
             
