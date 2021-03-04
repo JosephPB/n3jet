@@ -105,7 +105,7 @@ if __name__ == "__main__":
     all_pairs = bool_convert(args.all_pairs)
 
     if yaml_file:
-        fksmodel = FKSModelRun.from_yaml(yaml_file)
+        fksmodel = FKSModelRun.from_yaml(yaml_file, training=False)
     else:
         fksmodel = FKSModelRun(
             mom_file = mom_file,

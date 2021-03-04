@@ -168,12 +168,12 @@ class FKSModelRun:
             
             if self.all_legs:
                 all_jets = False
-                self.nlegs += 2
+                nlegs = self.nlegs + 2
             else:
                 all_jets = True
             
             model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general(
-                input_size = (self.nlegs)*4,
+                input_size = (nlegs)*4,
                 pairs = pairs,
                 near_momenta = near_momenta,
                 NJ_split = near_nj_split,
@@ -189,7 +189,7 @@ class FKSModelRun:
                 epochs=self.epochs
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
-                input_size = (self.nlegs)*4,
+                input_size = (nlegs)*4,
                 cut_momenta = cut_momenta,
                 NJ_cut = cut_nj,
                 delta_cut = self.delta_cut,
@@ -208,11 +208,13 @@ class FKSModelRun:
 
         if self.all_legs:
             all_jets = False
+            nleg = self.nlegs + 2
         else:
             all_jets = True
+            nlegs = self.nlegs
 
         NN = Model(
-            input_size = (self.nlegs)*4,
+            input_size = (nlegs)*4,
             momenta = near_momenta,
             labels = near_nj_split[0],
             all_jets=all_jets,
@@ -255,6 +257,9 @@ class FKSModelRun:
                 delta_near = self.delta_near,
                 model_dir = model_dir_new
             )
+
+            assert len(model_near) == pairs
+            
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(
                 NN = NN,
                 delta_cut = self.delta_cut,
@@ -295,8 +300,15 @@ class FKSModelRun:
             y_std_cuts
     ):
 
+        if self.all_legs:
+            all_jets = False
+            nleg = self.nlegs + 2
+        else:
+            all_jets = True
+            nlegs = self.nlegs
+
         NN = Model(
-            input_size = (self.nlegs)*4,
+            input_size = (nlegs)*4,
             momenta = near_momenta,
             labels = near_nj_split[0],
             all_jets=all_jets,
@@ -308,6 +320,7 @@ class FKSModelRun:
             model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
             y_pred_near = infer_on_near_splits(
                 NN = NN,
+                scaling = self.scaling
                 moms = near_momenta,
                 models = model_nears[i],
                 x_mean_near = x_mean_nears[i],
@@ -322,6 +335,7 @@ class FKSModelRun:
             model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
             y_pred_cut = infer_on_cut(
                 NN = NN,
+                scaling=self.scaling,
                 moms = cut_momenta,
                 model = model_cuts[i],
                 x_mean_cut = x_mean_cuts[i],
