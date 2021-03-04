@@ -1,0 +1,25 @@
+all_legs: 'True'
+all_pairs: 'True'
+date: 04/03/21
+delta_cut: 0.0
+delta_near: 0.02
+model_base_dir: /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/optimisation_grid/events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet_39/
+model_dir: events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet
+scaling: normalise
+testing:
+  mom_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/integration_grid/NJet_NJet_unit_grid_5_seed/momenta_events_1M_new_sherpa_cuts_PDF.npy
+  nj_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/integration_grid/NJet_NJet_unit_grid_5_seed/events_1M_new_sherpa_cuts_PDF_loop.npy
+  testing_points: 1000000
+training:
+  activation: relu
+  layers:
+  - 30
+  - 40
+  - 50
+  - 40
+  - 30
+  loss: mean_squared_logarithmic_error
+  lr: 0.01
+  mom_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/integration_grid/NJet_NJet_unit_grid_5_seed/momenta_events_1k_new_sherpa_cuts_PDF.npy
+  nj_file: /mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/integration_grid/NJet_NJet_unit_grid_5_seed/events_1k_new_sherpa_cuts_PDF_loop.npy
+  training_reruns: 20
