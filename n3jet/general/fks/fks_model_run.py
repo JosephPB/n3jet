@@ -320,7 +320,7 @@ class FKSModelRun:
             model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
             y_pred_near = infer_on_near_splits(
                 NN = NN,
-                scaling = self.scaling
+                scaling = self.scaling,
                 moms = near_momenta,
                 models = model_nears[i],
                 x_mean_near = x_mean_nears[i],
