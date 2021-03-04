@@ -70,7 +70,7 @@ def path_for_name(name):
         path = Path(argv[argv.index(flag) + 1])
         if not path.exists():
             raise FileNotFoundError(
-                f"No such folder {}".format(path)
+                "No such folder {}".format(path)
             )
     except (IndexError, ValueError):
         path = find_default(name)
