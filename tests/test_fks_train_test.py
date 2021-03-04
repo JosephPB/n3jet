@@ -41,7 +41,7 @@ def test__train(dummy_data_all_legs_training):
     fksmodel = FKSModelRun.from_yaml(example_config)
     fksmodel.delta_cut = delta_cut
     fksmodel.delta_near = delta_near
-    fksmodel.model_base_dir = configs_path
+    fksmodel.model_base_dir = ""
     fksmodel.model_dir = ""
     fksmodel.nlegs = 3
     fksmodel.epochs = 1
