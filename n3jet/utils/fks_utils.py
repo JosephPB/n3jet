@@ -444,7 +444,7 @@ def infer_on_near_splits_separate(
         pred_near = models[test].predict(x_standard_near)
         y_pred_near = NN.destandardise_data(
             y_pred=pred_near.reshape(-1),
-            scaling=scaling
+            scaling=scaling,
             x_mean=x_mean_near[test],
             x_std=x_std_near[test],
             y_mean=y_mean_near[test],
