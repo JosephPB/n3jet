@@ -1,6 +1,9 @@
 import logging
 import os
-from pathlib import Path
+try:
+    from pathlib2 import Path
+except:
+    from pathlib import Path
 from sys import argv
 
 logger = logging.getLogger(
