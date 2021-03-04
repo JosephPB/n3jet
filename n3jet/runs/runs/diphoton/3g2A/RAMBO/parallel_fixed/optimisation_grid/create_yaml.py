@@ -1,8 +1,8 @@
 import yaml
 import copy
 
-base_file = 'fks_all_legs_all_pairs_new_sherpa_cuts_pdf.yaml'
-save_file = 'fks_all_legs_all_pairs_new_sherpa_cuts_pdf'
+base_file = 'fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet.yaml'
+save_file = 'fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet'
 
 model_layers = [
     [20,40,20],
@@ -43,8 +43,10 @@ for layers in model_layers:
 
                 base_copy['training']['mom_file'] = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/integration_grid/NJet_NJet_unit_grid_5_seed/momenta_events_{}_new_sherpa_cuts_PDF.npy'.format(size)
                 base_copy['training']['nj_file'] = '/mt/batch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/parallel_fixed/integration_grid/NJet_NJet_unit_grid_5_seed/events_{}_new_sherpa_cuts_PDF_loop.npy'.format(size)
+
+                base_copy['model_base_dir'] = base['model_base_dir'] + 'events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet_{}/'.format(counter)
                 
-                with open(save_file + '_{}.yaml'.format(counter) 'w') as f:
+                with open(save_file + '_{}.yaml'.format(counter), 'w') as f:
                     yaml.dump(base_copy,f)
 
                 counter += 1
