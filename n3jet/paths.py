@@ -18,7 +18,7 @@ working_directory = Path(
 working_directory_parent = working_directory.parent
 
 
-def find_default(name) -> Path:
+def find_default(name):
     """
     Get a default path when no command line argument is passed.
     - First attempt to find the folder in the current working directory.
@@ -46,11 +46,11 @@ def find_default(name) -> Path:
         ):
             return path
     raise FileNotFoundError(
-        f"Could not find a default path for {name}"
+        "Could not find a default path for {}".format(name)
     )
 
 
-def path_for_name(name) -> Path:
+def path_for_name(name):
     """
     Get a path input using a flag when the program is run.
     If no such argument is given default to the directory above
@@ -65,17 +65,17 @@ def path_for_name(name) -> Path:
     -------
     A path
     """
-    flag = f"--{name}"
+    flag = "--{}".format(name)
     try:
         path = Path(argv[argv.index(flag) + 1])
         if not path.exists():
             raise FileNotFoundError(
-                f"No such folder {path}"
+                f"No such folder {}".format(path)
             )
     except (IndexError, ValueError):
         path = find_default(name)
         logger.warning(
-            f"No {flag} argument given - defaulting to:\n{path}"
+            "No {} argument given - defaulting to:\n{}".format(flag, path)
         )
 
     return path
