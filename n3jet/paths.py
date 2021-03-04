@@ -18,7 +18,7 @@ working_directory = Path(
 working_directory_parent = working_directory.parent
 
 
-def find_default(name: str) -> Path:
+def find_default(name) -> Path:
     """
     Get a default path when no command line argument is passed.
     - First attempt to find the folder in the current working directory.
@@ -50,7 +50,7 @@ def find_default(name: str) -> Path:
     )
 
 
-def path_for_name(name: str) -> Path:
+def path_for_name(name) -> Path:
     """
     Get a path input using a flag when the program is run.
     If no such argument is given default to the directory above
