@@ -171,6 +171,7 @@ class FKSModelRun:
                 nlegs = self.nlegs + 2
             else:
                 all_jets = True
+                nlegs = self.nlegs
             
             model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general(
                 input_size = (nlegs)*4,
@@ -208,7 +209,7 @@ class FKSModelRun:
 
         if self.all_legs:
             all_jets = False
-            nleg = self.nlegs + 2
+            nlegs = self.nlegs + 2
         else:
             all_jets = True
             nlegs = self.nlegs
@@ -302,7 +303,7 @@ class FKSModelRun:
 
         if self.all_legs:
             all_jets = False
-            nleg = self.nlegs + 2
+            nlegs = self.nlegs + 2
         else:
             all_jets = True
             nlegs = self.nlegs
@@ -359,7 +360,7 @@ class FKSModelRun:
         
         cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = self.split_data(momenta, nj)
     
-        model_nears, model_cuts, x_mean_nears, x_mean_cuts, x_std_nears, x_std_cuts, y_mean_nears, y_mean_cuts, y_std_nears, y_std_cuts = self.load_models(NN, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split)
+        model_nears, model_cuts, x_mean_nears, x_mean_cuts, x_std_nears, x_std_cuts, y_mean_nears, y_mean_cuts, y_std_nears, y_std_cuts = self.load_models(cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split)
         
         self.test_networks(
             near_momenta,
