@@ -1,7 +1,8 @@
 #!/bin/bash
 
 shopt -s nullglob
-for f in *.yaml
+for d in */
 do
-    python /mt/home/jbullock/n3jet/n3jet/general/fks/general_init_model_rerun.py --yaml_file $f &
+   $d/run_grid.sh
+   wait
 done
