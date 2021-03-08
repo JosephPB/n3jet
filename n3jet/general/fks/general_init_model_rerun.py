@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     args = parse()
     
-    yaml_file = bool_convert(args.yaml_file)
+    yaml_file = args.yaml_file
     mom_file = args.mom_file
     nj_file = args.nj_file
     delta_cut = args.delta_cut
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     all_pairs = bool_convert(args.all_pairs)
     lr = args.lr
 
-    if yaml_file:
+    if yaml_file != "False":
         fksmodel = FKSModelRun.from_yaml(yaml_file)
     else:
         fksmodel = FKSModelRun(

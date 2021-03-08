@@ -88,12 +88,14 @@ def parse():
         default='False',
     )
 
+    args = parser.parse_args()
+
     return args
 
 if __name__ == "__main__":
 
     args = parse()
-    yaml_file = bool_convert(args.yaml_file)
+    yaml_file = args.yaml_file
     mom_file = args.test_mom_file
     nj_file = args.test_nj_file
     delta_cut = args.delta_cut
@@ -104,7 +106,7 @@ if __name__ == "__main__":
     all_legs = bool_convert(args.all_legs)
     all_pairs = bool_convert(args.all_pairs)
 
-    if yaml_file:
+    if yaml_file != "False":
         fksmodel = FKSModelRun.from_yaml(yaml_file, training=False)
     else:
         fksmodel = FKSModelRun(

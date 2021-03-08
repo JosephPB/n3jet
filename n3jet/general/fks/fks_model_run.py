@@ -104,13 +104,13 @@ class FKSModelRun:
 
     def load_data(self):
 
-        file_exists(mom_file)
-        file_exists(nj_file)
+        file_exists(self.mom_file)
+        file_exists(self.nj_file)
 
-        momenta = np.load(mom_file,allow_pickle=True)
+        momenta = np.load(self.mom_file,allow_pickle=True)
         print ('############### Momenta loaded ###############')
         
-        nj = np.load(nj_file,allow_pickle=True)
+        nj = np.load(self.nj_file,allow_pickle=True)
         print ('############### NJet loaded ###############')
 
         momenta = momenta.tolist()
