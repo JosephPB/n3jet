@@ -108,6 +108,7 @@ def train_near_networks_general(
     activation = kwargs.get('activation', 'tanh')
     loss = kwargs.get('loss', 'mean_squared_error')
     epochs = kwargs.get('epochs', 1000000)
+    high_precision = kwargs.get('high_precision', False)
     
     if type(near_momenta) != list:
         raise AssertionError('Momentum must be in the form of a list')
@@ -120,15 +121,24 @@ def train_near_networks_general(
     y_mean_near = []
     y_std_near = []
     for idx,i in enumerate(pairs):
-        NN = Model(input_size, near_momenta, NJ_split[idx], all_jets, all_legs, model_dataset)
+        NN = Model(
+            input_size = input_size,
+            momenta = near_momenta,
+            labels = NJ_split[idx],
+            all_jets = all_jets,
+            all_legs = all_legs,
+            model_dataset = model_dataset,
+            high_precision = high_precision
+        )
         
         model, x_mean, x_std, y_mean, y_std = NN.fit(
             scaling = scaling,
-            layers=layers,
-            lr=lr,
+            layers = layers,
+            lr = lr,
             activation = activation,
             loss = loss,
-            epochs=epochs)
+            epochs = epochs,
+        )
         
         NN_near.append(NN)
         model_near.append(model)
@@ -277,6 +287,7 @@ def train_cut_network_general(
         model_dir = '',
         all_jets = False,
         all_legs = False,
+        model_dataset=False,
         **kwargs
 ):
 
@@ -287,8 +298,17 @@ def train_cut_network_general(
     activation = kwargs.get('activation', 'tanh')
     loss = kwargs.get('loss', 'mean_squared_error')
     epochs = kwargs.get('epochs', 1000000)
+    high_precision = kwargs.get('high_precision', False)
     
-    NN_cut = Model(input_size, cut_momenta, NJ_cut, all_jets, all_legs)
+    NN_cut = Model(
+        input_size = input_size,
+        momenta = cut_momenta,
+        labels = NJ_cut,
+        all_jets = all_jets,
+        all_legs = all_legs,
+        model_dataset = model_dataset,
+        high_precision = high_precision
+    )
     model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = NN_cut.fit(
         scaling = scaling,
         layers = layers,
