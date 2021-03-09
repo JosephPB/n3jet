@@ -28,6 +28,7 @@ class Model:
             all_jets = False,
             all_legs = False,
             model_dataset = False,
+            high_precision = False
     ):
         '''
         :param input_size: the flattened input dim for the model
@@ -41,6 +42,10 @@ class Model:
         self.all_jets = all_jets
         self.all_legs = all_legs
         self.model_dataset = model_dataset
+        self.high_precision = high_precision
+
+        if self.high_precision:
+            K.set_floatx('float64')
     
     def standardise(self, data):
         '''standardise data

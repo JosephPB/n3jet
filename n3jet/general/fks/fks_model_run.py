@@ -36,6 +36,7 @@ class FKSModelRun:
             activation='tanh',
             loss='mean_squared_error',
             epochs=1000000,
+            high_precision
             
     ):
         self.mom_file = mom_file
@@ -53,6 +54,7 @@ class FKSModelRun:
         self.activation = activation
         self.loss = loss
         self.epochs = epochs
+        self.high_precision
 
     @classmethod
     def from_yaml(self, yaml_file, training=True):
@@ -83,6 +85,7 @@ class FKSModelRun:
         activation = y["training"].get("activation", "tanh")
         loss = y["training"].get("loss", "mean_squared_error")
         epochs = y["training"].get("epochs", 1000000)
+        high_precision = bool_convert(y["training"].get("high_precision", "False"))
         
         return FKSModelRun(
             mom_file = mom_file,
@@ -99,7 +102,8 @@ class FKSModelRun:
             lr = lr,
             activation = activation,
             loss = loss,
-            epochs = epochs
+            epochs = epochs,
+            high_precision = high_precision
         )
 
     def load_data(self):
@@ -180,14 +184,15 @@ class FKSModelRun:
                 NJ_split = near_nj_split,
                 delta_near = self.delta_near,
                 model_dir = model_dir_new,
-                all_jets=all_jets,
-                all_legs=self.all_legs,
+                all_jets = all_jets,
+                all_legs = self.all_legs,
                 scaling = self.scaling,
-                lr=self.lr,
-                layers=self.layers,
+                lr = self.lr,
+                layers = self.layers,
                 activation = self.activation,
                 loss = self.loss,
-                epochs=self.epochs
+                epochs = self.epochs,
+                high_precision = self.high_precision
             )
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut =  train_cut_network_general(
                 input_size = (nlegs)*4,
@@ -195,14 +200,15 @@ class FKSModelRun:
                 NJ_cut = cut_nj,
                 delta_cut = self.delta_cut,
                 model_dir = model_dir_new,
-                all_jets=all_jets,
-                all_legs=self.all_legs,
+                all_jets = all_jets,
+                all_legs = self.all_legs,
                 scaling = self.scaling,
-                lr=self.lr,
-                layers=self.layers,
+                lr = self.lr,
+                layers = self.layers,
                 activation = self.activation,
                 loss = self.loss,
-                epochs=self.epochs
+                epochs = self.epochs,
+                high_precision = self.high_precision
             )
 
     def load_models(self, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split):
@@ -219,7 +225,8 @@ class FKSModelRun:
             momenta = near_momenta,
             labels = near_nj_split[0],
             all_jets=all_jets,
-            all_legs=self.all_legs
+            all_legs=self.all_legs,
+            high_precision = self.high_precision
         )
         
         _,_,_,_,_,_,_,_ = NN.process_training_data()
@@ -312,8 +319,9 @@ class FKSModelRun:
             input_size = (nlegs)*4,
             momenta = near_momenta,
             labels = near_nj_split[0],
-            all_jets=all_jets,
-            all_legs=self.all_legs
+            all_jets = all_jets,
+            all_legs = self.all_legs,
+            high_precision = high_precision
         )
 
         for i in range(self.training_reruns):
