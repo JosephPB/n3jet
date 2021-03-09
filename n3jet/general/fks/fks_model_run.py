@@ -36,7 +36,7 @@ class FKSModelRun:
             activation='tanh',
             loss='mean_squared_error',
             epochs=1000000,
-            high_precision
+            high_precision=False
             
     ):
         self.mom_file = mom_file
@@ -54,7 +54,7 @@ class FKSModelRun:
         self.activation = activation
         self.loss = loss
         self.epochs = epochs
-        self.high_precision
+        self.high_precision = high_precision
 
     @classmethod
     def from_yaml(self, yaml_file, training=True):
