@@ -87,7 +87,15 @@ def parse():
         type=str,
         default='False',
     )
-
+    
+    parser.add_argument(
+        '--hp',
+        dest='hp',
+        help='use float64 precision',
+        type=str,
+        default="False",
+    )
+  
     args = parser.parse_args()
 
     return args
@@ -105,6 +113,7 @@ if __name__ == "__main__":
     training_reruns = args.training_reruns
     all_legs = bool_convert(args.all_legs)
     all_pairs = bool_convert(args.all_pairs)
+    hp = bool_convert(args.hp)
 
     if yaml_file != "False":
         fksmodel = FKSModelRun.from_yaml(yaml_file, training=False)
@@ -119,6 +128,7 @@ if __name__ == "__main__":
             training_reruns = training_reruns,
             all_legs = all_legs,
             all_pairs = all_pairs,
+            high_precision = high_precision
         )
 
     fksmodel.test()

@@ -8,6 +8,7 @@ We provide a series of tests to check the models are working correctlty and then
 ## Tests running
 
 - [x] Single model python + C++ matching
+- [x] Single model python + C++ matching with high precision (float64 weights)
 - [x] `ex_3g2A_test` python + C++ matching
 - [x] `ex_3g2A_multiple_single` python + C++ matching
 - [x] `ex_3g2A_multipls_fks` cut network python + C++ matching
@@ -26,6 +27,10 @@ Run model training:
 cd tests/
 python single_test_train.py -w /scratch/jbullock/Sherpa_NJet/runs/diphoton/3g2A/RAMBO/single_test_weights.h5
 ```
+
+**Optional:"** If you want to train with high precision weights
+  (i.e. float64 weights) then add the flag `-hp True` to the above
+  `python` call
 
 Dump network:
 ```

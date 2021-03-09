@@ -19,6 +19,7 @@ from n3jet.models import Model
 parser = argparse.ArgumentParser(description='Script for training a network and saving out the data in a .dat file')
 
 parser.add_argument('-w', '--weights', help="Model weights in HDF5 format", required=True)
+parser.add_argument('-hp', '--high_precision', help="Use float64 precision for weights", required=False, default=False)
 args = parser.parse_args()
 
 mom_file = './data/3g2A_test_momenta.npy'
@@ -41,7 +42,8 @@ NN = Model(
     momenta = test_momenta,
     labels = test_nj,
     all_jets = False,
-    all_legs = True
+    all_legs = True,
+    high_precision = args.high_precision
 )
 
 X_train,X_test,y_train,y_test,_,_,_,_ = NN.process_training_data()
