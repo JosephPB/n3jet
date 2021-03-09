@@ -57,33 +57,26 @@ class ModelDump:
                 if self.verbose:
                     print str(ind), l['class_name']
                 layers += [l['class_name']]
-                if l['class_name'] == 'Convolution2D':
-                    W = self.model.layers[ind].get_weights()[0]
-                    if self.verbose:
-                        print W.shape
-                    fout.write(
-                        str(W.shape[0]) + ' ' +
-                        str(W.shape[1]) + ' ' +
-                        str(W.shape[2]) + ' ' +
-                        str(W.shape[3]) + ' ' +
-                        l['config']['border_mode'] + '\n'
-                    )
-
-                    for i in range(W.shape[0]):
-                        for j in range(W.shape[1]):
-                            for k in range(W.shape[2]):
-                                fout.write(str(W[i,j,k]) + '\n')
-                    fout.write(str(self.model.layers[ind].get_weights()[1]) + '\n')
 
                 if l['class_name'] == 'Activation':
                     fout.write(l['config']['activation'] + '\n')
                 if l['class_name'] == 'MaxPooling2D':
                     fout.write(str(l['config']['pool_size'][0]) + ' ' + str(l['config']['pool_size'][1]) + '\n')
                 if l['class_name'] == 'Dense':
-                    W = self.model.layers[ind].get_weights()[0]
-                    if self.verbose:
-                        print W.shape
+
+                    # go through weight layers
+                    W = model.layers[ind].get_weights()[0]
                     fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
+                    fout.write('[')
                     for w in W:
-                        fout.write(str(w) + '\n')
-                    fout.write(str(self.model.layers[ind].get_weights()[1]) + '\n')
+                        for i in w:
+                            fout.write(str(i) + ' ')
+                        fout.write(']' + '\n')
+
+                    # go through bias terms
+                    W = model.layers[ind].get_weights()[1]
+                    fout.write('[ ')
+                    for i in W:
+                        fout.write(str(i) + ' ')
+                    fout.write(']' + '\n')
+
