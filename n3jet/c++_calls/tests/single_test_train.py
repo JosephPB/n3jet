@@ -9,7 +9,7 @@ import time
 try:
     import cPickle as pickle
 except:
-import pickle
+    import pickle
 import argparse
 from tqdm import tqdm
 from keras.models import load_model
