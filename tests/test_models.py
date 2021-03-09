@@ -32,6 +32,35 @@ def create_model(dummy_data_training):
 
     return model
 
+@pytest.fixture(name="model_high_precision")
+def create_model(dummy_data_training):
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training
+
+    nlegs = len(momenta[0])-2
+    n_gluon = 1
+    
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = labels,
+        all_legs = False
+    )
+
+    cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
+    pairs, labs_split = fks.weighting()
+
+
+    model = Model(
+        input_size = (n_gluon+2-1)*4,
+        momenta = cut_momenta,
+        labels = cut_labels,
+        all_jets = False,
+        all_legs = False,
+        high_precision = True
+    )
+
+    return model
+
 @pytest.fixture(name="model_all_legs")
 def create_model_all_legs(dummy_data_all_legs_training):
 
@@ -86,9 +115,16 @@ def create_model_all_legs_dataset(dummy_data_all_legs_training):
 
     return model
 
-def test__process_training_data_standardise(model, model_all_legs, model_all_legs_dataset):
+def test__process_training_data_standardise(model, model_high_precision, model_all_legs, model_all_legs_dataset):
 
     X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model.process_training_data()
+
+    assert len(X_train) == 8
+    assert len(X_test) == 2
+    assert len(y_train) == len(X_train)
+    assert len(y_test) == len(X_test)
+
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_high_precision.process_training_data()
 
     assert len(X_train) == 8
     assert len(X_test) == 2
@@ -109,9 +145,22 @@ def test__process_training_data_standardise(model, model_all_legs, model_all_leg
     assert len(y_train) == len(X_train)
     assert len(y_test) == len(X_test)
 
-def test__process_training_data_normalise(model, model_all_legs, model_all_legs_dataset):
+def test__process_training_data_normalise(model, model_high_precision, model_all_legs, model_all_legs_dataset):
 
     X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model.process_training_data(
+        scaling='normalise'
+    )
+
+    assert len(X_train) == 8
+    assert np.max(X_train) <= 1
+    assert np.min(X_train) >= 0
+    assert len(X_test) == 2
+    assert len(y_train) == len(X_train)
+    assert np.max(y_train) <= 1
+    assert np.min(y_train) >= 0
+    assert len(y_test) == len(X_test)
+
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_high_precision.process_training_data(
         scaling='normalise'
     )
 
@@ -191,12 +240,21 @@ def test__destandardise_data_normalise(dummy_data_all_legs_training, model_all_l
     assert len(np.where(np.all(momenta==x_destandard[0],axis=(1,2)))[0]) > 0
     assert len(np.where(labels==y_destandard[1])[0]) > 0
     
-def test__fit(model, model_all_legs, model_all_legs_dataset):
+def test__fit(model, model_high_precision, model_all_legs, model_all_legs_dataset):
 
     baseline_model = model.baseline_model(layers=[32,16,8])
     weights = baseline_model.get_weights()
     model_fit, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
     weights_trained = model.model.get_weights()
+
+    assert len(weights) != 0
+    for idx, i in enumerate(weights):
+        assert np.array_equal(i, weights_trained[idx]) == False
+
+    baseline_model = model_high_precision.baseline_model(layers=[32,16,8])
+    weights = baseline_model.get_weights()
+    model_fit, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
+    weights_trained = model_high_precision.model.get_weights()
 
     assert len(weights) != 0
     for idx, i in enumerate(weights):
@@ -237,8 +295,20 @@ def test__fit(model, model_all_legs, model_all_legs_dataset):
     for idx, i in enumerate(weights):
         assert np.array_equal(i, weights_trained[idx]) == False
     
+def test__high_precision_fitting(model_high_precision):
+
+    baseline_model = model_high_precision.baseline_model(layers=[32,16,8])
+    weights = baseline_model.get_weights()
+    model_fit, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
+    weights_trained = model_high_precision.model.get_weights()[0]
+
+    for w in weights_trained:
+        for i in w:
+            assert type(i) == np.float64
+
 def test__process_testing_data(
         model,
+        model_high_precision,
         model_all_legs,
         model_all_legs_dataset,
         dummy_data_training,
@@ -252,6 +322,16 @@ def test__process_testing_data(
     )
     x_standard = model.process_testing_data(moms = momenta)
     x_standard, y_standard = model.process_testing_data(moms = momenta, labs = labels)
+
+    assert len(np.where(y_standard==y_train[0])[0]) > 0
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training
+    X_train, X_test, y_train, y_test, x_mean, x_std, y_mean, y_std = model_high_precision.process_training_data(
+        moms=momenta,
+        labs=labels
+    )
+    x_standard = model_high_precision.process_testing_data(moms = momenta)
+    x_standard, y_standard = model_high_precision.process_testing_data(moms = momenta, labs = labels)
 
     assert len(np.where(y_standard==y_train[0])[0]) > 0
 
