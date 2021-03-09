@@ -9,7 +9,11 @@ import yaml
 from n3jet.utils import FKSPartition
 from n3jet.utils.fks_utils import (
     train_near_networks_general,
-    train_cut_network_general
+    train_cut_network_general,
+    get_near_networks_general,
+    get_cut_network_general,
+    infer_on_near_splits,
+    infer_on_cut
 )
 from n3jet.utils.general_utils import (
     bool_convert,
@@ -108,13 +112,13 @@ class FKSModelRun:
 
     def load_data(self):
 
-        file_exists(mom_file)
-        file_exists(nj_file)
+        file_exists(self.mom_file)
+        file_exists(self.nj_file)
 
-        momenta = np.load(mom_file,allow_pickle=True)
+        momenta = np.load(self.mom_file,allow_pickle=True)
         print ('############### Momenta loaded ###############')
         
-        nj = np.load(nj_file,allow_pickle=True)
+        nj = np.load(self.nj_file,allow_pickle=True)
         print ('############### NJet loaded ###############')
 
         momenta = momenta.tolist()
@@ -265,8 +269,8 @@ class FKSModelRun:
                 delta_near = self.delta_near,
                 model_dir = model_dir_new
             )
-
-            assert len(model_near) == pairs
+            
+            assert len(model_near) == len(pairs)
             
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(
                 NN = NN,
