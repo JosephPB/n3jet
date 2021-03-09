@@ -67,8 +67,8 @@ class ModelDump:
                     # go through weight layers
                     W = model.layers[ind].get_weights()[0]
                     fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
-                    fout.write('[')
                     for w in W:
+                        fout.write('[')
                         for i in w:
                             fout.write(str(i) + ' ')
                         fout.write(']' + '\n')

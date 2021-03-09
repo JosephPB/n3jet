@@ -64,13 +64,3 @@ with open(args.output, 'w') as fout:
             for i in W:
                 fout.write(str(i) + ' ')
             fout.write(']' + '\n')
-
-            # W = model.layers[ind].get_weights()[0]
-
-            # if args.verbose:
-            #     print (W.shape)
-            # fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
-
-            # for w in W:
-            #     fout.write(str(w) + '\n')
-            # fout.write(str(model.layers[ind].get_weights()[1]) + '\n')
