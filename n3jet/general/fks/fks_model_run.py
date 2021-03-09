@@ -262,8 +262,8 @@ class FKSModelRun:
                 delta_near = self.delta_near,
                 model_dir = model_dir_new
             )
-
-            assert len(model_near) == pairs
+            
+            assert len(model_near) == len(pairs)
             
             model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = get_cut_network_general(
                 NN = NN,
