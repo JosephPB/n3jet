@@ -328,6 +328,8 @@ class FKSModelRun:
             high_precision = high_precision
         )
 
+        _,_,_,_,_,_,_,_ = NN.process_training_data()
+
         for i in range(self.training_reruns):
             print ('Predicting on model {}'.format(i))
             model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
