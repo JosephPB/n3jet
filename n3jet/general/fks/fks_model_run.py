@@ -9,7 +9,11 @@ import yaml
 from n3jet.utils import FKSPartition
 from n3jet.utils.fks_utils import (
     train_near_networks_general,
-    train_cut_network_general
+    train_cut_network_general,
+    get_near_networks_general,
+    get_cut_network_general,
+    infer_on_near_splits,
+    infer_on_cut
 )
 from n3jet.utils.general_utils import (
     bool_convert,
