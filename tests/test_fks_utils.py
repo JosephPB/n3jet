@@ -94,7 +94,7 @@ def test__train_near_networks_general_high_precision(dummy_data_all_legs_trainin
         all_legs = True,
         model_dataset = False,
         epochs = 1,
-        high_precision = high_precision
+        high_precision = True
     )
 
 def test__train_cut_network(dummy_data_training):
@@ -168,7 +168,7 @@ def test__train_cut_network_general_high_precision(dummy_data_all_legs_training)
         all_jets = True,
         all_legs = True,
         epochs = 1,
-        high_precision = high_precision
+        high_precision = True
     )
 
 def test__infer_on_near_splits(dummy_data_training):

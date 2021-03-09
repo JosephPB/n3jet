@@ -33,7 +33,7 @@ def create_model(dummy_data_training):
     return model
 
 @pytest.fixture(name="model_high_precision")
-def create_model(dummy_data_training):
+def create_model_high_precision(dummy_data_training):
 
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_training
 
@@ -253,7 +253,7 @@ def test__fit(model, model_high_precision, model_all_legs, model_all_legs_datase
 
     baseline_model = model_high_precision.baseline_model(layers=[32,16,8])
     weights = baseline_model.get_weights()
-    model_fit, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
+    model_fit, x_mean, x_std, y_mean, y_std = model_high_precision.fit(epochs=2)
     weights_trained = model_high_precision.model.get_weights()
 
     assert len(weights) != 0
@@ -299,7 +299,7 @@ def test__high_precision_fitting(model_high_precision):
 
     baseline_model = model_high_precision.baseline_model(layers=[32,16,8])
     weights = baseline_model.get_weights()
-    model_fit, x_mean, x_std, y_mean, y_std = model.fit(epochs=2)
+    model_fit, x_mean, x_std, y_mean, y_std = model_high_precision.fit(epochs=2)
     weights_trained = model_high_precision.model.get_weights()[0]
 
     for w in weights_trained:
