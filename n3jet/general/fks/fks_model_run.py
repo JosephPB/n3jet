@@ -325,7 +325,7 @@ class FKSModelRun:
             labels = near_nj_split[0],
             all_jets = all_jets,
             all_legs = self.all_legs,
-            high_precision = high_precision
+            high_precision = self.high_precision
         )
 
         _,_,_,_,_,_,_,_ = NN.process_training_data()
