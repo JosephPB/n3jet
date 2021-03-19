@@ -129,7 +129,7 @@ class FKSModelRun:
         return momenta, nj
     
     
-    def split_data(self, momenta, nj):
+    def split_data(self, momenta, nj, return_weights = False):
 
         fks = FKSPartition(
             momenta = momenta,
@@ -141,10 +141,14 @@ class FKSModelRun:
             delta_cut = self.delta_cut,
             delta_near = self.delta_near
         )
+        
+        if return_weights:
+            pairs, near_nj_split, weights = fks.weighting(return_weights = return_weights)
+            return cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split, weights
+        else:
+            pairs, near_nj_split = fks.weighting(return_weights = return_weights)
+            return cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split
 
-        pairs, near_nj_split = fks.weighting()
-
-        return cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split
 
     def train_networks(self, cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split):
 
@@ -309,7 +313,8 @@ class FKSModelRun:
             y_mean_nears,
             y_mean_cuts,
             y_std_nears,
-            y_std_cuts
+            y_std_cuts,
+            return_predictions = False
     ):
 
         if self.all_legs:
@@ -343,7 +348,9 @@ class FKSModelRun:
                 y_mean_near = y_mean_nears[i],
                 y_std_near = y_std_nears[i]
             )
-            np.save(model_dir_new + '/pred_near_{}'.format(len(near_momenta + cut_momenta)), y_pred_near)
+            if not return_predictions:
+                np.save(model_dir_new + '/pred_near_{}'.format(len(near_momenta + cut_momenta)), y_pred_near)
+                
             
         for i in range(self.training_reruns):
             print ('Predicting on model {}'.format(i))
@@ -358,7 +365,11 @@ class FKSModelRun:
                 y_mean_cut = y_mean_cuts[i],
                 y_std_cut = y_std_cuts[i]
             )
-            np.save(model_dir_new + '/pred_cut_{}'.format(len(near_momenta + cut_momenta)), y_pred_cut)
+            if not return_predictions:
+                np.save(model_dir_new + '/pred_cut_{}'.format(len(near_momenta + cut_momenta)), y_pred_cut)
+                
+            if return_predictions:
+                return y_pred_near, y_pred_cut
     
 
     def train(self):
