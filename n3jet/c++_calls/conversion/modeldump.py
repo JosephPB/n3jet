@@ -65,7 +65,7 @@ class ModelDump:
                 if l['class_name'] == 'Dense':
 
                     # go through weight layers
-                    W = model.layers[ind].get_weights()[0]
+                    W = self.model.layers[ind].get_weights()[0]
                     fout.write(str(W.shape[0]) + ' ' + str(W.shape[1]) + '\n')
                     for w in W:
                         fout.write('[')
@@ -74,7 +74,7 @@ class ModelDump:
                         fout.write(']' + '\n')
 
                     # go through bias terms
-                    W = model.layers[ind].get_weights()[1]
+                    W = self.model.layers[ind].get_weights()[1]
                     fout.write('[ ')
                     for i in W:
                         fout.write(str(i) + ' ')
