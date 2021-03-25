@@ -17,34 +17,33 @@ int main()
   std::cout << std::endl;
 
   const int legs = 5;
-  const int pspoints = 1;
+  const int pspoints = 2;
   const int pairs = 9;
   const int training_reruns = 20;
   const double delta = 0.02;
-  const double s_com = 500000.0;
+  double s_com = 500000.0;
 
   //raw momenta input
 
   double Momenta[pspoints][legs][4] = {
 				     {
-				       {133.28805423,   0.        ,   0.        , 133.28805423},
-				       { 65.25258185,   0.        ,   0.        , -65.25258185},
-				       { 57.39830598,  55.55970704, -12.08621746,   7.8490656 },
-				       {102.94323061, -63.72531512, -20.60633548,  78.17782218},
-				       { 38.19909948,   8.16560808,  32.69255294, -17.9914154 }
+				       {80.80323390148537, 0.0, 0.0, 80.8032339014854},
+				       {53.57113343015938, 0.0, 0.0, -53.571133430159385},
+				       {42.47353254764989, 26.671855251549694, 29.511816381880454, 14.88844512898612},
+				       {52.68325739804988, -51.14726465398362, 1.1299491037855054, 12.578002365534454},
+				       {39.21757738594496, 24.475409402433904, -30.641765485665946, -0.2343470231945908}
 				     },
 				     {
-				       {500.,   0.,   0., 500.},
-				       {500.,   0.,   0., -500.},
-				       { 126.69820582,  120.01853098,  -31.03838326,   26.16498318},
-				       { 397.08701945,  157.11405855, -345.48658337, -116.75741663},
-				       { 476.21477472, -277.13258953,  376.52496662,   90.59243344}
+				       {88.48800215647898, 0.0, 0.0, 88.48800215647898},
+				       {30.862002335592713, 0.0, 0.0, -30.862002335592702},
+				       {37.52777986769674, -20.535557255118455, 24.668353258793047, 19.444729299207314},
+				       {58.90087277950353, 24.239611461766692, -45.272650711571636, 28.846856811754705},
+				       {22.921351844871374, -3.704054206648225, 20.604297452778603, 9.334413709924226}
 				     }
   };
   
   std::string model_base = "./models/diphoton/3g2A/RAMBO/parallel_fixed/";
   std::string model_dir = {"events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet/"};
-
   std::string pair_dirs[pairs] = {"/pair_0.02_0/",
 				  "/pair_0.02_1/",
 				  "/pair_0.02_2/",
@@ -56,11 +55,11 @@ int main()
 				  "/pair_0.02_8/"	  
   };
 
-  std::string cut_dirs = "cut_0.02/";
+  std::string cut_dirs = "/cut_0.02/";
 
-  int python_cut_near[2] = {1, 0};
+  int python_cut_near[2] = {0, 1};
   //double python_check[2] = {0.01885435257459624, 0.04757045055113991};
-  double python_outputs[2] = {5.540148890759156e-07, 1.62700327877e-08};
+  double python_outputs[2] = {2.2266408e-07, 1.430258598666967e-06};
 
   std::vector<std::vector<std::vector<double> > > metadatas(training_reruns, std::vector<std::vector<double> > (pairs+1, std::vector<double>(10)));
   std::string model_dir_models[training_reruns][pairs+1];
@@ -128,6 +127,7 @@ int main()
     std::cout << "Checking how near we are" << std::endl;
 #endif
     //cut/near check
+    s_com = Momenta[i][0][0]*Momenta[i][1][0]-(Momenta[i][0][1]*Momenta[i][1][1]+Momenta[i][0][2]*Momenta[i][1][2]+Momenta[i][0][3]*Momenta[i][1][3]);
     int cut_near = 0;
     for (int j = 0; j < legs-1; j++){
       for (int k = j+1; k < legs; k++){
