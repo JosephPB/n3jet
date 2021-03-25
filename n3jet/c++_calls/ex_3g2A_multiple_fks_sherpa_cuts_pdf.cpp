@@ -17,7 +17,7 @@ int main()
   std::cout << std::endl;
 
   const int legs = 5;
-  const int pspoints = 2;
+  const int pspoints = 1;
   const int pairs = 9;
   const int training_reruns = 20;
   const double delta = 0.02;
@@ -27,11 +27,11 @@ int main()
 
   double Momenta[pspoints][legs][4] = {
 				     {
-				       {500.,   0,    0.,  500.},
-				       {500.,   0.,   0., -500.},
-				       { 478.90769254,  179.71954662, -115.72193182,  428.55792728},
-				       {  89.06015462,  -76.15029226,   43.54647889,  -15.38012701},
-				       { 432.03215284, -103.56925437,   72.17545292, -413.17780026}
+				       {133.28805423,   0.        ,   0.        , 133.28805423},
+				       { 65.25258185,   0.        ,   0.        , -65.25258185},
+				       { 57.39830598,  55.55970704, -12.08621746,   7.8490656 },
+				       {102.94323061, -63.72531512, -20.60633548,  78.17782218},
+				       { 38.19909948,   8.16560808,  32.69255294, -17.9914154 }
 				     },
 				     {
 				       {500.,   0.,   0., 500.},
@@ -42,46 +42,25 @@ int main()
 				     }
   };
   
-  std::string model_base = "./models/diphoton/3g2A/RAMBO/";
-  std::string model_dirs[training_reruns] = {"events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_0/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_1/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_2/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_3/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_4/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_5/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_6/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_7/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_8/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_9/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_10/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_11/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_12/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_13/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_14/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_15/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_16/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_17/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_18/",
-					     "events_100k_fks_all_legs_all_pairs_sherpa_cuts_pdf_19/"
-  };
+  std::string model_base = "./models/diphoton/3g2A/RAMBO/parallel_fixed/";
+  std::string model_dir = {"events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet/"};
 
-  std::string pair_dirs[pairs] = {"pair_0.02_0/",
-				  "pair_0.02_1/",
-				  "pair_0.02_2/",
-				  "pair_0.02_3/",
-				  "pair_0.02_4/",
-				  "pair_0.02_5/",
-				  "pair_0.02_6/",
-				  "pair_0.02_7/",
-				  "pair_0.02_8/"
-				  
+  std::string pair_dirs[pairs] = {"/pair_0.02_0/",
+				  "/pair_0.02_1/",
+				  "/pair_0.02_2/",
+				  "/pair_0.02_3/",
+				  "/pair_0.02_4/",
+				  "/pair_0.02_5/",
+				  "/pair_0.02_6/",
+				  "/pair_0.02_7/",
+				  "/pair_0.02_8/"	  
   };
 
   std::string cut_dirs = "cut_0.02/";
 
   int python_cut_near[2] = {1, 0};
-  double python_check[2] = {0.01885435257459624, 0.04757045055113991};
-  double python_outputs[2] = {8.79497694672e-07, 1.62700327877e-08};
+  //double python_check[2] = {0.01885435257459624, 0.04757045055113991};
+  double python_outputs[2] = {5.540148890759156e-07, 1.62700327877e-08};
 
   std::vector<std::vector<std::vector<double> > > metadatas(training_reruns, std::vector<std::vector<double> > (pairs+1, std::vector<double>(10)));
   std::string model_dir_models[training_reruns][pairs+1];
@@ -91,12 +70,12 @@ int main()
 
     // Near networks
     for (int j = 0; j < pairs; j++){
-      std::string metadata_file = model_base + model_dirs[i] + pair_dirs[j] + "dataset_metadata.dat";
+      std::string metadata_file = model_base + model_dir + std::to_string(i) + pair_dirs[j] + "dataset_metadata.dat";
       std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
       for (int k = 0; k < 10 ; k++){
 	metadatas[i][j][k] = metadata[k];
       };
-      model_dir_models[i][j] = model_base + model_dirs[i] + pair_dirs[j] + "model.nnet";
+      model_dir_models[i][j] = model_base + model_dir + std::to_string(i) + pair_dirs[j] + "model.nnet";
 #ifdef DEBUG
       std::cout << "Loading from: " << model_dir_models[i][j] << std::endl;
 #endif
@@ -104,12 +83,12 @@ int main()
     };
 
     // Cut networks
-    std::string metadata_file = model_base + model_dirs[i] + cut_dirs + "dataset_metadata.dat";
+    std::string metadata_file = model_base + model_dir + std::to_string(i) + cut_dirs + "dataset_metadata.dat";
     std::vector<double> metadata = nn::read_metadata_from_file(metadata_file);
     for (int k = 0; k < 10 ; k++){
       metadatas[i][pairs][k] = metadata[k];
     };
-    model_dir_models[i][pairs] = model_base + model_dirs[i] + cut_dirs + "model.nnet";
+    model_dir_models[i][pairs] = model_base + model_dir + std::to_string(i) + cut_dirs + "model.nnet";
 #ifdef DEBUG
     std::cout << "Loading from: " << model_dir_models[i][pairs] << std::endl;
 #endif
@@ -121,13 +100,16 @@ int main()
 
 
     // standardise momenta
-    double moms[training_reruns][pairs+1][legs*4];
+    //double moms[training_reruns][pairs+1][legs*4];
+    std::vector<std::vector<std::vector<double>>> moms(training_reruns, std::vector<std::vector<double>>(pairs + 1, std::vector<double>(legs * 4)));
 
     // flatten momenta
     for (int p = 0; p < legs; p++){
       for (int mu = 0; mu < 4; mu++){
 	// standardise input
+#ifdef DEBUG
 	std::cout << Momenta[i][p][mu] << " ";
+#endif
 	for (int k = 0; k < training_reruns; k++){
 	  for (int j = 0; j < pairs; j++){
 	    moms[k][j][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][j][mu], metadatas[k][j][4+mu]);
@@ -135,9 +117,13 @@ int main()
 	  moms[k][pairs][p*4+mu] = nn::standardise(Momenta[i][p][mu], metadatas[k][pairs][mu], metadatas[k][pairs][4+mu]);
 	}
       }
+#ifdef DEBUG
       std::cout << std::endl;
+#endif
     }
+#ifdef DEBUG
     std::cout << std::endl;
+#endif
 #ifdef DEBUG
     std::cout << "Checking how near we are" << std::endl;
 #endif
@@ -147,7 +133,6 @@ int main()
       for (int k = j+1; k < legs; k++){
 	double prod = Momenta[i][j][0]*Momenta[i][k][0]-(Momenta[i][j][1]*Momenta[i][k][1]+Momenta[i][j][2]*Momenta[i][k][2]+Momenta[i][j][3]*Momenta[i][k][3]);
 	double distance = prod/s_com;
-	//double distance = nn::pair_check(Momenta[i][j], Momenta[i][k], delta, s_com);
 #ifdef DEBUG
 	std::cout << "Distance is: " << distance << std::endl;
 #endif
@@ -158,7 +143,7 @@ int main()
     }
 
 #ifdef DEBUG
-    std::cout << "Python min distance is:   " << python_check[i]  << std::endl;
+    //std::cout << "Python min distance is:   " << python_check[i]  << std::endl;
     std::cout << "Python cut/near check is: " << python_cut_near[i] << std::endl;
     std::cout << "C++    cut/near check is: " << cut_near << std::endl;
     std::cout << "Note: here checking if cut/near >0 or not, not the actual value" <<std::endl;
@@ -172,25 +157,25 @@ int main()
 	// infer over all pairs
 	double results_pairs = 0;
 	for (int k = 0; k < pairs; k++){
-	  std::vector<double> input_vec(std::begin(moms[j][k]), std::end(moms[j][k]));
-	  std::vector<double> result = kerasModels[j][k].compute_output(input_vec);
+	  //std::vector<double> input_vec(std::begin(moms[j][k]), std::end(moms[j][k]));
+	  std::vector<double> result = kerasModels[j][k].compute_output(moms[j][k]);
 #ifdef DEBUG
 	  std::cout << "Before destandardisation = " << result[0] << std::endl;
 #endif
 	  double output = nn::destandardise(result[0], metadatas[j][k][8], metadatas[j][k][9]);
 #ifdef DEBUG
 	  std::cout << "After destandardisation = " << output << std::endl;
-	  if (output < 0){
-	    std::cout << "Output is less than zero" << std::endl;
-	  }
+	  //if (output < 0){
+	  //  std::cout << "Output is less than zero" << std::endl;
+	  //}
 #endif
 	  results_pairs += output;
 	}
 	results_sum += results_pairs;
       }
       else{
-	std::vector<double> input_vec(std::begin(moms[j][pairs]), std::end(moms[j][pairs]));
-	std::vector<double> result = kerasModels[j][pairs].compute_output(input_vec);
+	//std::vector<double> input_vec(std::begin(moms[j][pairs]), std::end(moms[j][pairs]));
+	std::vector<double> result = kerasModels[j][pairs].compute_output(moms[j][pairs]);
 #ifdef DEBUG
 	  std::cout << "Before destandardisation = " << result[0] << std::endl;
 #endif
@@ -206,11 +191,11 @@ int main()
 
     double average_output = results_sum/training_reruns;
 
-#ifdef DEBUG
-    if (average_output < 0){
-      std::cout << "Average output is less than zero" << std::endl;
-    }
-#endif
+    //#ifdef DEBUG
+    //if (average_output < 0){
+    //  std::cout << "Average output is less than zero" << std::endl;
+    //}
+    //#endif
 
     std::cout << "Python Loop( 0) = " << python_outputs[i] << std::endl;
     std::cout << "C++    Loop( 0) = " << average_output << std::endl;
