@@ -43,7 +43,7 @@ int main()
   };
   
   std::string model_base = "./models/diphoton/3g2A/RAMBO/parallel_fixed/";
-  std::string model_dir = {"events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet/"};
+  std::string model_dir = {"events_100k_fks_all_legs_all_pairs_new_sherpa_cuts_pdf_njet_test/"};
   std::string pair_dirs[pairs] = {"/pair_0.02_0/",
 				  "/pair_0.02_1/",
 				  "/pair_0.02_2/",

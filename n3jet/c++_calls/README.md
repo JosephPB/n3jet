@@ -12,7 +12,7 @@ We provide a series of tests to check the models are working correctlty and then
 - [x] `ex_3g2A_test` python + C++ matching
 - [x] `ex_3g2A_multiple_single` python + C++ matching
 - [x] `ex_3g2A_multiple_fks` cut network python + C++ matching
-- [] `ex_3g2A_multipls_fks_sherpa_cuts_pdf` near networks python + C++ matching
+- [x] `ex_3g2A_multipls_fks_sherpa_cuts_pdf` near networks python + C++ matching
 
 ## End to end single model example
 
@@ -90,6 +90,15 @@ Script should output a comparison between the Python and C++ implementations for
 ```
 make ex_3g2A_multiple_fks
 ./ex_3g2A_multiple_fks
+```
+
+Script should output a comparison between the Python and C++ implementations for testing on phase-space points given
+
+### Full 3g2A partitioned approach with additional cuts
+
+```
+make ex_3g2A_multiple_fks_sherpa_cuts
+./ex_3g2A_multiple_fks_sherpa_cuts
 ```
 
 Script should output a comparison between the Python and C++ implementations for testing on phase-space points given
