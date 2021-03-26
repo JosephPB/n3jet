@@ -8,7 +8,7 @@ We provide a series of tests to check the models are working correctlty and then
 ## Tests running
 
 - [x] Single model python + C++ matching
-- [] Single model python + C++ matching with high precision (float64 weights)
+- [x] Single model python + C++ matching with high precision (float64 weights)
 - [] `ex_3g2A_test` python + C++ matching
 - [] `ex_3g2A_multiple_single` python + C++ matching
 - [] `ex_3g2A_multiple_fks` cut network python + C++ matching
