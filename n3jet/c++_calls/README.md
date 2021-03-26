@@ -11,7 +11,7 @@ We provide a series of tests to check the models are working correctlty and then
 - [x] Single model python + C++ matching with high precision (float64 weights)
 - [x] `ex_3g2A_test` python + C++ matching
 - [x] `ex_3g2A_multiple_single` python + C++ matching
-- [] `ex_3g2A_multiple_fks` cut network python + C++ matching
+- [x] `ex_3g2A_multiple_fks` cut network python + C++ matching
 - [] `ex_3g2A_multipls_fks_sherpa_cuts_pdf` near networks python + C++ matching
 
 ## End to end single model example
