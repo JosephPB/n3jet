@@ -306,15 +306,15 @@ class SingleModelRun:
     def train(self):
 
         momenta, nj = self.load_data()
-        momenta, nj = self.recut_data()
-        self.train_networks(momena, nj)
+        momenta, nj = self.recut_data(momenta, nj)
+        self.train_networks(momenta, nj)
 
         print ('############### Finished ###############')
 
     def test(self):
 
         momenta, nj = self.load_data()
-        momenta, nj = self.recut_data()
+        momenta, nj = self.recut_data(momenta, nj)
         models, x_means, x_stds, y_means, y_stds = self.load_models(momenta, nj)
         self.test_networks(momenta, nj, models, x_means, x_stds, y_means, y_stds)
         
