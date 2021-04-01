@@ -42,14 +42,14 @@ def test__train(dummy_data_all_legs_training):
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
 
     singlemodel = SingleModelRun.from_yaml(example_config)
-    fksmodel.delta_cut = delta_cut
-    fksmodel.delta_near = delta_near
-    fksmodel.model_base_dir = ""
-    fksmodel.model_dir = ""
-    fksmodel.nlegs = 3
-    fksmodel.epochs = 1
-    fksmodel.training_reruns = 1
-    
-    cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = fksmodel.split_data(momenta, labels)
+    singlemodel.delta_cut = 0.0
+    singlemodel.delta_near = delta_near
+    singlemodel.model_base_dir = ""
+    singlemodel.model_dir = ""
+    singlemodel.nlegs = 3
+    singlemodel.epochs = 1
+    singlemodel.training_reruns = 1
 
-    fksmodel.train_networks(cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split)
+    mom, nj = singlemodel.recut_data(momenta, labels)
+
+    singlemodel.train_networks(mom, nj)
