@@ -171,7 +171,7 @@ class SingleModelRun:
                 nlegs = self.nlegs
                     
             NN = Model(
-                intput_size = nlegs*4,
+                input_size = nlegs*4,
                 momenta = momenta,
                 labels = nj,
                 all_jets = all_jets,

@@ -16,7 +16,6 @@ def test__yaml_readin():
     assert singlemodel.mom_file == y["training"]["mom_file"]
     assert singlemodel.nj_file == y["training"]["nj_file"]
     assert singlemodel.delta_cut == y["delta_cut"]
-    assert singlemodel.delta_near == y["delta_near"]
 
 def test__recut_data(dummy_data_all_legs_training):
 
@@ -24,7 +23,6 @@ def test__recut_data(dummy_data_all_legs_training):
 
     singlemodel = SingleModelRun.from_yaml(example_config)
     singlemodel.delta_cut = 0.0
-    singlemodel.delta_near = 0.02
 
     mom, nj = singlemodel.recut_data(momenta, labels)
 
@@ -43,7 +41,6 @@ def test__train(dummy_data_all_legs_training):
 
     singlemodel = SingleModelRun.from_yaml(example_config)
     singlemodel.delta_cut = 0.0
-    singlemodel.delta_near = delta_near
     singlemodel.model_base_dir = ""
     singlemodel.model_dir = ""
     singlemodel.nlegs = 3
