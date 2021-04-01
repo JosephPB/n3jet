@@ -28,7 +28,7 @@ class SingleModelRun:
             model_base_dir,
             model_dir,
             training_reruns,
-            all_legs
+            all_legs,
             all_pairs,
             scaling='standardise',
             layers=[20,40,20],
@@ -76,7 +76,7 @@ class SingleModelRun:
         model_base_dir = y["model_base_dir"]
         model_dir = y["model_dir"]
         training_reruns = y["training"]["training_reruns"]
-        all_legs = bool_convert(y["all_legs"])if training:
+        all_legs = bool_convert(y["all_legs"])
         all_pairs = bool_convert(y["all_pairs"])
         scaling = y.get("scaling", "standardise")
         layers = y["training"].get("layers", [20,40,20])
