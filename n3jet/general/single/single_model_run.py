@@ -24,7 +24,6 @@ class SingleModelRun:
             mom_file,
             nj_file,
             delta_cut,
-            delta_near,
             model_base_dir,
             model_dir,
             training_reruns,
@@ -41,7 +40,6 @@ class SingleModelRun:
         self.mom_file = mom_file
         self.nj_file = nj_file
         self.delta_cut = delta_cut
-        self.delta_near = delta_near
         self.model_base_dir = model_base_dir
         self.model_dir = model_dir
         self.training_reruns = training_reruns
@@ -72,7 +70,6 @@ class SingleModelRun:
             mom_file = y["testing"]["mom_file"]
             nj_file = y["testing"]["nj_file"]
         delta_cut = y["delta_cut"]
-        delta_near = y["delta_near"]
         model_base_dir = y["model_base_dir"]
         model_dir = y["model_dir"]
         training_reruns = y["training"]["training_reruns"]
@@ -90,7 +87,6 @@ class SingleModelRun:
             mom_file = mom_file,
             nj_file = nj_file,
             delta_cut = delta_cut,
-            delta_near = delta_near,
             model_base_dir = model_base_dir,
             model_dir = model_dir,
             training_reruns = training_reruns,
@@ -130,7 +126,7 @@ class SingleModelRun:
             labels = nj,
             all_legs = self.all_legs
         )
-        cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=delta_cut, delta_near=0.02)
+        cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=self.delta_cut, delta_near=0.02)
         momenta = np.concatenate((cut_momenta, near_momenta))
         nj = np.concatenate((cut_nj, near_nj))
         indices = np.arange(len(nj))

@@ -44,13 +44,6 @@ def parse():
     )
 
     parser.add_argument(
-        '--delta_near',
-        dest='delta_near',
-        help='proximity of jets according to JADE algorithm',
-        type=float,
-    )
-
-    parser.add_argument(
         '--model_base_dir',
         dest='model_base_dir',
         help='model base directory in which folders will be created',
@@ -107,7 +100,6 @@ if __name__ == "__main__":
     mom_file = args.test_mom_file
     nj_file = args.test_nj_file
     delta_cut = args.delta_cut
-    delta_near = args.delta_near
     model_base_dir = args.model_base_dir
     model_dir = args.model_dir
     training_reruns = args.training_reruns
@@ -122,7 +114,6 @@ if __name__ == "__main__":
             mom_file = mom_file,
             nj_file = nj_file,
             delta_cut = delta_cut,
-            delta_near = delta_near,
             model_base_dir = model_base_dir,
             model_dir = model_dir,
             training_reruns = training_reruns,
