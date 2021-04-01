@@ -132,7 +132,4 @@ equivalent for NLO can be achieved by using
 ### FKS inspired ensemble
 
 ## TODO
-- Create requirements file
-- Write script with flags for piecewise generation
-- Add more to model sections
-- Write a script for training models without generating data
+- Update README for new package details
