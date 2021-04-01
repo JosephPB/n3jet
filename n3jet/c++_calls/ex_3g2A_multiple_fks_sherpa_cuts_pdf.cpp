@@ -21,7 +21,6 @@ int main()
   const int pairs = 9;
   const int training_reruns = 20;
   const double delta = 0.02;
-  double s_com = 500000.0;
 
   //raw momenta input
 
