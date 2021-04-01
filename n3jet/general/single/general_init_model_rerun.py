@@ -151,7 +151,6 @@ class SingleModelRun:
         else:
             print ('Base directory already exists')
 
-
         for i in range(training_reruns):
             print ('Working on model {}'.format(i))
             if self.model_base_dir == "":
@@ -203,6 +202,7 @@ class SingleModelRun:
                 pickle.dump(metadata, pickle_out)
                 pickle_out.close()
 
+    def load_models(self)
 
     def train(self):
 
@@ -214,4 +214,6 @@ class SingleModelRun:
 
     def test(self):
 
+        momenta, nj = self.load_data()
+        momenta, nj = self.recut_data()
         
