@@ -46,5 +46,8 @@ ex_3g2A_multiple_fks.o: ex_3g2A_multiple_fks.cpp
 ex_3g2A_multiple_fks_sherpa_cuts_pdf.o: ex_3g2A_multiple_fks_sherpa_cuts_pdf.cpp
 	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS) $(DEFS)
 
+ex_4g2A_multiple_fks_sherpa_cuts_pdf.o: ex_4g2A_multiple_fks_sherpa_cuts_pdf.cpp
+	$(CXX) $(CXXFLAGS) -o $@ -c $< $(CPPFLAGS) $(DEFS)
+
 clean:
 	-rm -f *.o __pycache__ ex_4g2A_multiple_fks_sherpa_cuts_pdf ex_3g2A_multiple_fks_sherpa_cuts_pdf ex_3g2A_multiple_fks ex_3g2A_multiple_single ex_3g2A_test single_test
