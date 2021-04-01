@@ -151,14 +151,14 @@ class SingleModelRun:
         else:
             print ('Base directory already exists')
 
-        for i in range(training_reruns):
+        for i in range(self.training_reruns):
             print ('Working on model {}'.format(i))
             if self.model_base_dir == "":
                 model_dir_new = ""
             elif self.model_dir == "":
                 model_dir_new = ""
             else:
-                model_dir_new = model_base_dir + model_dir + '_{}/'.format(i)
+                model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
                 print ('Looking for directory {}'.format(model_dir_new))
 
                 if os.path.exists(model_dir_new) == False:
@@ -202,8 +202,111 @@ class SingleModelRun:
                 pickle.dump(metadata, pickle_out)
                 pickle_out.close()
 
-    def load_models(self)
+    def load_models(self, momenta, nj):
 
+        if self.all_legs:
+            all_jets = False
+            nlegs = self.nlegs + 2
+        else:
+            all_jets = True
+            nlegs = self.nlegs
+
+        NN = Model(
+            input_size = (nlegs)*4,
+            momenta = momenta,
+            labels = nj,
+            all_jets = all_jets,
+            all_legs = self.all_legs,
+            high_precision = self.high_precision
+        )
+
+        _,_,_,_,_,_,_,_ = NN.process_training_data()
+
+        models = []
+        x_means = []
+        y_means = []
+        x_stds = []
+        y_stds = []
+
+        for i in range(self.training_reruns):
+            print ('Working on model {}'.format(i))
+            model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
+            print ('Looking for directory {}'.format(model_dir_new))
+            if os.path.exists(model_dir_new) == False:
+                os.mkdir(model_dir_new)
+                print ('Directory created')
+            else:
+                print ('Directory already exists')
+            model = load_model(model_dir_new + 'model',custom_objects={'root_mean_squared_error':NN.root_mean_squared_error})
+            models.append(model)
+
+            pickle_out = open(model_dir_new + "/dataset_metadata.pickle","rb")
+            metadata = pickle.load(pickle_out)
+            pickle_out.close()
+
+            x_means.append(metadata['x_mean'])
+            y_means.append(metadata['y_mean'])
+            x_stds.append(metadata['x_std'])
+            y_stds.append(metadata['y_std'])
+
+        print ('############### All models loaded ###############')
+
+        return models, x_means, x_stds, y_means, y_stds
+
+    def test_networks(
+            self,
+            momenta,
+            nj,
+            models,
+            x_means,
+            x_stds,
+            y_means,
+            y_stds,
+            return_predictions = False
+    ):
+        
+        if self.all_legs:
+            all_jets = False
+            nlegs = self.nlegs + 2
+        else:
+            all_jets = True
+            nlegs = self.nlegs
+
+        NN = Model(
+            input_size = (nlegs)*4,
+            momenta = momenta,
+            labels = nj,
+            all_jets=all_jets,
+            all_legs=self.all_legs,
+            high_precision = self.high_precision
+        )
+
+        for i in range(self.training_reruns):
+            print ('Predicting on model {}'.format(i))
+            model_dir_new = self.model_base_dir + self.model_dir + '_{}/'.format(i)
+            x_standard = NN.process_testing_data(
+                moms = momenta,
+                x_mean = x_means[i],
+                x_std = x_stds[i],
+                y_mean = y_means[i],
+                y_std = y_stds[i]
+            )
+            pred = models[i].predict(x_standard)
+            y_pred = NN.destandardise_data(
+                y_pred = pred.reshape(-1),
+                x_mean = x_means[i],
+                x_std = x_stds[i],
+                y_mean = y_means[i],
+                y_std = y_stds[i]
+            )
+
+            if not return_predictions:
+                np.save(model_dir_new + '/pred_{}'.format(len(momenta)), y_pred)
+            else:
+                return y_pred
+
+        print ('############### Finished ###############')
+    
     def train(self):
 
         momenta, nj = self.load_data()
@@ -216,4 +319,7 @@ class SingleModelRun:
 
         momenta, nj = self.load_data()
         momenta, nj = self.recut_data()
+        models, x_means, x_stds, y_means, y_stds = self.load_models(momenta, nj)
+        self.test_networks(momenta, nj, models, x_means, x_stds, y_means, y_stds)
+        
         
