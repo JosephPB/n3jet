@@ -22,14 +22,14 @@ def test__recut_data(dummy_data_all_legs_training):
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
 
     singlemodel = SingleModelRun.from_yaml(example_config)
-    singlemodel.delta_cut = 0.0
+    singlemodel.delta_cut = delta_cut
 
     mom, nj = singlemodel.recut_data(momenta, labels)
 
     assert len(mom) == len(momenta)
     assert len(nj) == len(labels)
 
-    singlemodel.delta_cut = 0.1
+    singlemodel.delta_cut = 0.5
     mom, nj = singlemodel.recut_data(momenta, labels)
 
     assert len(mom) < len(momenta)
