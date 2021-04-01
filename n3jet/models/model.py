@@ -114,6 +114,7 @@ class Model:
         
         x_standard = x_standard.reshape(-1,self.input_size) #shape for passing into network
 
+        # Note: shuffling is on by default for train_test_split
         if self.model_dataset:
             X_train, X_test, y_train, y_test = train_test_split(x_standard, y_standard, test_size=0.2)
         else:

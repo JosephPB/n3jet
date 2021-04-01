@@ -381,10 +381,10 @@ class FKSModelRun:
         print ('############### Finished ###############')
 
     def test(self):
-        momenta, nj = self.load_data()
-        
+
+        momenta, nj = self.load_data()        
         cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split = self.split_data(momenta, nj)
-    
+
         model_nears, model_cuts, x_mean_nears, x_mean_cuts, x_std_nears, x_std_cuts, y_mean_nears, y_mean_cuts, y_std_nears, y_std_cuts = self.load_models(cut_momenta, near_momenta, cut_nj, near_nj, pairs, near_nj_split)
         
         self.test_networks(
