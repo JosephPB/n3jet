@@ -9,6 +9,7 @@ import yaml
 from keras.models import Sequential, model_from_json
 from keras.optimizers import Adam
 
+from n3jet.utils.general_utils import file_exists
 from modeldump import ModelDump
 
 def parse():
@@ -41,12 +42,6 @@ def parse():
 if __name__ == "__main__":
 
     args = parse()
-
-    def file_exists(file_path):
-        if os.path.exists(file_path) == True:
-            pass
-        else:
-            raise ValueError('{} does not exist'.format(file_path))
 
     if args.yaml_file != "False":
         file_exists(args.yaml_file)

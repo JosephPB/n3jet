@@ -16,7 +16,7 @@ def bool_convert(value):
         raise ValueError("Value is neither True not False")
 
 def file_exists(file_path):
-    if os.path.exists(file_path) == True:
+    if os.path.exists(file_path):
         pass
     else:
         raise ValueError('{} does not exist'.format(file_path))
