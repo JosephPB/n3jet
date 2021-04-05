@@ -10,6 +10,8 @@ import argparse
 from tqdm import tqdm
 import yaml
 
+from keras.models import load_model
+
 from n3jet.utils import FKSPartition
 from n3jet.utils.general_utils import (
     bool_convert,
@@ -129,16 +131,17 @@ class SingleModelRun:
         cut_momenta, near_momenta, cut_nj, near_nj = fks.cut_near_split(delta_cut=self.delta_cut, delta_near=0.02)
         momenta = np.concatenate((cut_momenta, near_momenta))
         nj = np.concatenate((cut_nj, near_nj))
-        indices = np.arange(len(nj))
-        np.random.shuffle(indices)
-        momenta = momenta[indices]
-        nj = nj[indices]
-        momenta = momenta.tolist()
 
         return momenta, nj
 
     def train_networks(self, momenta, nj):
 
+        indices = np.arange(len(nj))
+        np.random.shuffle(indices)
+        momenta = momenta[indices]
+        nj = nj[indices]
+        momenta = momenta.tolist()
+        
         if self.model_base_dir == "":
             pass
         elif os.path.exists(self.model_base_dir) == False:
@@ -200,6 +203,11 @@ class SingleModelRun:
 
     def load_models(self, momenta, nj):
 
+        try:
+            momenta = momenta.tolist()
+        except:
+            pass
+        
         if self.all_legs:
             all_jets = False
             nlegs = self.nlegs + 2
@@ -215,8 +223,6 @@ class SingleModelRun:
             all_legs = self.all_legs,
             high_precision = self.high_precision
         )
-
-        _,_,_,_,_,_,_,_ = NN.process_training_data()
 
         models = []
         x_means = []
@@ -261,6 +267,11 @@ class SingleModelRun:
             return_predictions = False
     ):
         
+        try:
+            momenta = momenta.tolist()
+        except:
+            pass
+        
         if self.all_legs:
             all_jets = False
             nlegs = self.nlegs + 2
@@ -276,6 +287,8 @@ class SingleModelRun:
             all_legs=self.all_legs,
             high_precision = self.high_precision
         )
+
+        _,_,_,_,_,_,_,_ = NN.process_training_data()
 
         for i in range(self.training_reruns):
             print ('Predicting on model {}'.format(i))

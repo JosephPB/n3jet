@@ -108,7 +108,7 @@ if __name__ == "__main__":
     hp = bool_convert(args.hp)
 
     if yaml_file != "False":
-        fksmodel = SingleModelRun.from_yaml(yaml_file, training=False)
+        singlemodel = SingleModelRun.from_yaml(yaml_file, training=False)
     else:
         singlemodel = SingleModelRun(
             mom_file = mom_file,
