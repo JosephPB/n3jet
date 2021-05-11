@@ -20,7 +20,7 @@ class FKSPartition:
         if type(self.momenta) != list:
             raise AssertionError('Momentum must be in the form of a list')
         
-    def cut_near_split(self, delta_cut, delta_near):
+    def cut_near_split(self, delta_cut, delta_near, return_indices = False):
         '''
         Split momenta into near and cut arrays - 
           near is the region close to the PS cuts and the cut region is the rest of the cut PS
@@ -33,6 +33,8 @@ class FKSPartition:
         self.near_momenta = []
         cut_labels = []
         self.near_labels = []
+        cut_indices = []
+        near_indices = []
 
         for idx, i in tqdm(enumerate(self.momenta), total = len(self.momenta)):
             close, min_distance = check_all(
@@ -45,11 +47,13 @@ class FKSPartition:
                 if min_distance < delta_near:
                     self.near_momenta.append(i)
                     self.near_labels.append(self.labels[idx])
+                    near_indices.append(idx)
                 else:
                     cut_momenta.append(i)
                     cut_labels.append(self.labels[idx])
+                    cut_indices.append(idx)
 
-        return cut_momenta, self.near_momenta, cut_labels, self.near_labels
+        return cut_momenta, self.near_momenta, cut_labels, self.near_labels, cut_indices, near_indices
 
     def s(self, p_1,p_2):
         'CoM energy of two massless jets'
