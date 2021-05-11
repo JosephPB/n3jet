@@ -52,8 +52,11 @@ class FKSPartition:
                     cut_momenta.append(i)
                     cut_labels.append(self.labels[idx])
                     cut_indices.append(idx)
-
-        return cut_momenta, self.near_momenta, cut_labels, self.near_labels, cut_indices, near_indices
+                    
+        if return_indices:
+            return cut_momenta, self.near_momenta, cut_labels, self.near_labels, cut_indices, near_indices
+        else:
+            return cut_momenta, self.near_momenta, cut_labels, self.near_labels
 
     def s(self, p_1,p_2):
         'CoM energy of two massless jets'
