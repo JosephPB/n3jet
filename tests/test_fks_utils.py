@@ -68,6 +68,34 @@ def test__train_near_networks_general(dummy_data_all_legs_training):
         epochs = 1,
     )
 
+def test__train_near_networks_general_dataset(dummy_data_all_legs_training):
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
+
+    nlegs = len(momenta[0])-2
+    
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = labels,
+        all_legs = True
+    )
+
+    cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
+    pairs, labs_split = fks.weighting()    
+
+    model_near, x_mean_near, x_std_near, y_mean_near, y_std_near = train_near_networks_general(
+        input_size = (nlegs+2)*4,
+        pairs = pairs,
+        near_momenta = near_momenta,
+        NJ_split = labs_split,
+        delta_near = delta_near,
+        model_dir = '',
+        all_jets = True,
+        all_legs = True,
+        model_dataset = True,
+        epochs = 1,
+    )
+
 def test__train_near_networks_general_high_precision(dummy_data_all_legs_training):
 
     momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
@@ -142,6 +170,33 @@ def test__train_cut_network_general(dummy_data_all_legs_training):
         model_dir = '',
         all_jets = True,
         all_legs = True,
+        model_dataset = False,
+        epochs = 1
+    )
+
+def test__train_cut_network_general_dataset(dummy_data_all_legs_training):
+
+    momenta, cut_mom, near_mom, labels, cut_labs, near_labs, delta_cut, delta_near = dummy_data_all_legs_training
+
+    nlegs = len(momenta[0])-2
+    
+    fks = FKSPartition(
+        momenta = momenta,
+        labels = labels,
+        all_legs = True
+    )
+
+    cut_momenta, near_momenta, cut_labels, near_labels = fks.cut_near_split(delta_cut, delta_near)
+
+    model_cut, x_mean_cut, x_std_cut, y_mean_cut, y_std_cut = train_cut_network_general(
+        input_size = (nlegs+2)*4,
+        cut_momenta = cut_momenta,
+        NJ_cut = cut_labels,
+        delta_cut = delta_cut,
+        model_dir = '',
+        all_jets = True,
+        all_legs = True,
+        model_dataset = True,
         epochs = 1
     )
 
