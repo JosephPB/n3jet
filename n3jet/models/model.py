@@ -291,8 +291,6 @@ class Model:
                 return x_standard, y_standard
             else:
                 return x_standard
-    
-
             
         elif scaling == 'normalise':
 

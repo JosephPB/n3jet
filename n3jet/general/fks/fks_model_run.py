@@ -60,6 +60,7 @@ class FKSModelRun:
         self.loss = loss
         self.epochs = epochs
         self.high_precision = high_precision
+        self.model_dataset = model_dataset
 
     @classmethod
     def from_yaml(self, yaml_file, training=True):
@@ -91,6 +92,7 @@ class FKSModelRun:
         loss = y["training"].get("loss", "mean_squared_error")
         epochs = y["training"].get("epochs", 1000000)
         high_precision = bool_convert(y["training"].get("high_precision", "False"))
+        model_dataset = bool_convert(y["training"].get("model_dataset"), "False")
         
         return FKSModelRun(
             mom_file = mom_file,
@@ -108,7 +110,8 @@ class FKSModelRun:
             activation = activation,
             loss = loss,
             epochs = epochs,
-            high_precision = high_precision
+            high_precision = high_precision,
+            model_dataset = model_dataset,
         )
 
     def load_data(self):
@@ -195,6 +198,7 @@ class FKSModelRun:
                 model_dir = model_dir_new,
                 all_jets = all_jets,
                 all_legs = self.all_legs,
+                model_dataset = self.model_dataset,
                 scaling = self.scaling,
                 lr = self.lr,
                 layers = self.layers,
@@ -211,6 +215,7 @@ class FKSModelRun:
                 model_dir = model_dir_new,
                 all_jets = all_jets,
                 all_legs = self.all_legs,
+                model_dataset = self.model_dataset,
                 scaling = self.scaling,
                 lr = self.lr,
                 layers = self.layers,
@@ -233,8 +238,9 @@ class FKSModelRun:
             input_size = (nlegs)*4,
             momenta = near_momenta,
             labels = near_nj_split[0],
-            all_jets=all_jets,
-            all_legs=self.all_legs,
+            all_jets = all_jets,
+            all_legs = self.all_legs,
+            model_dataset = self.model_dataset,
             high_precision = self.high_precision
         )
         
@@ -331,6 +337,7 @@ class FKSModelRun:
             labels = near_nj_split[0],
             all_jets = all_jets,
             all_legs = self.all_legs,
+            model_dataset = self.model_dataset,
             high_precision = self.high_precision
         )
 
