@@ -107,6 +107,14 @@ def parse():
         default="False",
     )
 
+    parser.add_argument(
+        '--md',
+        dest='md',
+        help='train using model_dataset flag',
+        type=str,
+        default="False",
+    )
+
 
     args = parser.parse_args()
 
@@ -128,6 +136,7 @@ if __name__ == "__main__":
     all_pairs = bool_convert(args.all_pairs)
     lr = args.lr
     hp = bool_convert(args.hp)
+    md = bool_convert(args.md)
 
     if yaml_file != "False":
         fksmodel = FKSModelRun.from_yaml(yaml_file)
@@ -143,7 +152,8 @@ if __name__ == "__main__":
             all_legs = all_legs,
             all_pairs = all_pairs,
             lr = lr,
-            high_precision = hp
+            high_precision = hp,
+            model_dataset = md
         )
 
     fksmodel.train()

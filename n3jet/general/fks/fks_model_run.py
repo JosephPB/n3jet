@@ -40,7 +40,8 @@ class FKSModelRun:
             activation='tanh',
             loss='mean_squared_error',
             epochs=1000000,
-            high_precision=False
+            high_precision=False,
+            model_dataset=False,
             
     ):
         self.mom_file = mom_file
