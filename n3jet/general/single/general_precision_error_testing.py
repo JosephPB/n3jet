@@ -88,6 +88,14 @@ def parse():
         type=str,
         default="False",
     )
+
+    parser.add_argument(
+        '--md',
+        dest='md',
+        help='train using model_dataset flag',
+        type=str,
+        default="False",
+    )
   
     args = parser.parse_args()
 
@@ -106,6 +114,7 @@ if __name__ == "__main__":
     all_legs = bool_convert(args.all_legs)
     all_pairs = bool_convert(args.all_pairs)
     hp = bool_convert(args.hp)
+    md = bool_convert(args.md)
 
     if yaml_file != "False":
         singlemodel = SingleModelRun.from_yaml(yaml_file, training=False)
@@ -119,7 +128,8 @@ if __name__ == "__main__":
             training_reruns = training_reruns,
             all_legs = all_legs,
             all_pairs = all_pairs,
-            high_precision = high_precision
+            high_precision = high_precision,
+            model_dataset = md
         )
 
     singlemodel.test()
