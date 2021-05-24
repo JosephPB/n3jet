@@ -92,7 +92,7 @@ class FKSModelRun:
         loss = y["training"].get("loss", "mean_squared_error")
         epochs = y["training"].get("epochs", 1000000)
         high_precision = bool_convert(y["training"].get("high_precision", "False"))
-        model_dataset = bool_convert(y["training"].get("model_dataset"), "False")
+        model_dataset = bool_convert(y["training"].get("model_dataset", "False"))
         
         return FKSModelRun(
             mom_file = mom_file,

@@ -37,7 +37,8 @@ class SingleModelRun:
             activation='tanh',
             loss='mean_squared_error',
             epochs=1000000,
-            high_precision=False
+            high_precision=False,
+            model_dataset=False,
     ):
         self.mom_file = mom_file
         self.nj_file = nj_file
@@ -54,6 +55,7 @@ class SingleModelRun:
         self.loss = loss
         self.epochs = epochs
         self.high_precision = high_precision
+        self.model_dataset = model_dataset
 
     @classmethod
     def from_yaml(self, yaml_file, training=True):
@@ -84,6 +86,7 @@ class SingleModelRun:
         loss = y["training"].get("loss", "mean_squared_error")
         epochs = y["training"].get("epochs", 1000000)
         high_precision = bool_convert(y["training"].get("high_precision", "False"))
+        model_dataset = bool_convert(y["training"].get("model_dataset", "False"))
 
         return SingleModelRun(
             mom_file = mom_file,
@@ -100,7 +103,8 @@ class SingleModelRun:
             activation = activation,
             loss = loss,
             epochs = epochs,
-            high_precision = high_precision
+            high_precision = high_precision,
+            model_dataset = model_dataset,
         )
 
     def load_data(self):
@@ -179,6 +183,7 @@ class SingleModelRun:
                 labels = nj,
                 all_jets = all_jets,
                 all_legs = self.all_legs,
+                model_dataset = self.model_dataset,
                 high_precision = self.high_precision
             )
 
@@ -221,6 +226,7 @@ class SingleModelRun:
             labels = nj,
             all_jets = all_jets,
             all_legs = self.all_legs,
+            model_dataset = self.model_dataset,
             high_precision = self.high_precision
         )
 
@@ -283,8 +289,9 @@ class SingleModelRun:
             input_size = (nlegs)*4,
             momenta = momenta,
             labels = nj,
-            all_jets=all_jets,
-            all_legs=self.all_legs,
+            all_jets = all_jets,
+            all_legs = self.all_legs,
+            model_datset = self.model_dataset,
             high_precision = self.high_precision
         )
 
