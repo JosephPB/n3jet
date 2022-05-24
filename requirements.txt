@@ -3,7 +3,7 @@ numpy==1.16.4
 pandas==0.24.2
 scikit-learn==0.20.3
 scipy==1.2.2
-tensorflow==1.14.0
+tensorflow==2.6.4
 tqdm==4.32.2
 pytest==4.6.11
 matplotlib==2.2.5
